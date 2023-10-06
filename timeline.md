@@ -1,4 +1,4 @@
-# Project Plan for Movie Script Writing App - 14 Days Timeline
+# Movie Script Writing App Project Timeline - 14 Days
 
 **Day 1: Project Setup and Planning**
 - Set up the development environment for both frontend and backend.
@@ -40,7 +40,8 @@
 - Deploy the frontend and backend to Cloudways or your preferred hosting platform.
 - Set up logging on the server for monitoring and debugging.
 
-**Day 14: Testing, Documentation, and SEO**
+**Day 14: Password Reset, Testing, Documentation, and SEO**
+- Implement password reset functionality via email and OTP (One-Time Password).
 - Conduct thorough testing, including unit tests and end-to-end tests (consider using Jest and other testing tools).
 - Document the setup instructions, API documentation, and user guides for developers and end-users.
 - Implement basic SEO optimizations, including meta tags and sitemaps.
@@ -51,3 +52,5 @@
 - Plan for future updates, including maintenance, scalability, and additional features.
 - Gather user feedback and make improvements to enhance the user experience.
 - Consider implementing an update and maintenance plan for long-term support.
+
+This timeline accounts for the entire project, including the "Reset Password" feature. Adjust the plan as needed to accommodate your specific requirements and development pace.
