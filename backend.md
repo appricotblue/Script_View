@@ -82,4 +82,35 @@
 
 This backend plan provides a structured approach to building the backend of your Movie Script Writing App. Adjust the plan as needed to accommodate your specific requirements and development pace.
 -----------------------------------------------------------------
+- backend/
+  - src/
+    - config/
+      - database.js                // Database configuration
+      - express.js                 // Express.js configuration
+      - jwt.js                     // JWT configuration
+    - controllers/
+      - authController.js         // User authentication controllers
+      - scriptController.js       // Script management controllers
+      - subscriptionController.js // Subscription management controllers
+    - middleware/
+      - authMiddleware.js         // Authentication middleware
+    - models/
+      - User.js                   // User model
+      - Script.js                 // Script model
+      - ScriptShare.js            // ScriptShare model
+      - Subscription.js           // Subscription model
+    - routes/
+      - authRoutes.js             // Authentication routes
+      - scriptRoutes.js           // Script management routes
+      - subscriptionRoutes.js     // Subscription management routes
+    - services/
+      - emailService.js           // Email service for password reset
+    - utils/
+      - logger.js                 // Logging utility
+    - app.js                      // Express.js application entry point
+  - node_modules/                  // Node.js modules (generated)
+  - package.json                   // Dependencies and scripts
+  - package-lock.json              // Dependency lock file
+  - .env                          // Environment variables (not in version control)
+  - .gitignore                    // Gitignore file
 
