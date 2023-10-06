@@ -1,4 +1,4 @@
-# Movie Script Writing App Backend Plan
+# Movie Script Writing App Backend Plan (Including Reset Password)
 
 ## Project Structure
 
@@ -9,7 +9,7 @@
 
 - **User Registration**: Implement user registration with validation (email, password, first name, last name).
 - **User Login**: Set up user login with JWT (JSON Web Tokens) for secure authentication.
-- **Password Reset**: Implement password reset functionality with email confirmation.
+- **Password Reset via Email and OTP**: Implement password reset functionality using email confirmation and OTP.
 - **Authentication Middleware**: Create middleware to protect routes that require authentication.
 
 ## Database Integration
@@ -35,6 +35,11 @@
 - **Subscription Validation**: Verify and validate user subscriptions based on payment status and dates.
 - **Subscription API**: Create API endpoints for managing subscriptions.
 
+## OTP Management
+
+- **OTP Generation**: Implement OTP generation for password reset.
+- **OTP Verification**: Create APIs for OTP verification during password reset.
+
 ## Deployment and Hosting
 
 - **Server Deployment**: Deploy your Express.js server to a hosting platform (e.g., Cloudways).
@@ -45,7 +50,7 @@
 
 - **Unit Testing**: Write unit tests for critical backend components and routes.
 - **Integration Testing**: Conduct integration testing for API endpoints.
-- **User Acceptance Testing**: Test user flows, including registration, login, script creation, and sharing.
+- **User Acceptance Testing**: Test user flows, including registration, login, script creation, sharing, and password reset.
 - **Performance Testing**: Assess the backend's performance under load conditions.
 
 ## Documentation
@@ -80,7 +85,8 @@
 
 - Gather user feedback and plan for future enhancements and updates.
 
-This backend plan provides a structured approach to building the backend of your Movie Script Writing App. Adjust the plan as needed to accommodate your specific requirements and development pace.
+This backend plan now includes the "Reset Password" feature with OTP (One-Time Password) alongside the existing features. Adjust the plan as needed to accommodate your specific requirements and development pace.
+
 -----------------------------------------------------------------
 - backend/
   - src/
