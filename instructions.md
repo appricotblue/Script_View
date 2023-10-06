@@ -98,3 +98,40 @@ Here's a suggested folder structure for your frontend:
 - `react-icons`: Provides a wide range of icon libraries for Material UI components.
 
 Remember to continuously test your app with real users, gather feedback, and iterate on your design and features to make the development process engaging and playful.
+
+
+
+
+
+----------------------------------------------------------------------
+- backend/
+  - src/
+    - config/
+      - database.js                // Database configuration
+      - express.js                 // Express.js configuration
+      - jwt.js                     // JWT configuration
+    - controllers/
+      - authController.js         // User authentication controllers
+      - scriptController.js       // Script management controllers
+      - subscriptionController.js // Subscription management controllers
+    - middleware/
+      - authMiddleware.js         // Authentication middleware
+    - models/
+      - User.js                   // User model
+      - Script.js                 // Script model
+      - ScriptShare.js            // ScriptShare model
+      - Subscription.js           // Subscription model
+    - routes/
+      - authRoutes.js             // Authentication routes
+      - scriptRoutes.js           // Script management routes
+      - subscriptionRoutes.js     // Subscription management routes
+    - services/
+      - emailService.js           // Email service for password reset
+    - utils/
+      - logger.js                 // Logging utility
+    - app.js                      // Express.js application entry point
+  - node_modules/                  // Node.js modules (generated)
+  - package.json                   // Dependencies and scripts
+  - package-lock.json              // Dependency lock file
+  - .env                          // Environment variables (not in version control)
+  - .gitignore                    // Gitignore file
