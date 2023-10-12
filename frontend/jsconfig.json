@@ -2,21 +2,21 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@Pages/*": [
+      "@pages/*": [
         "src/pages/*"
       ],
-      "@Common/*": [
+      "@common/*": [
         "src/components/common/*"
       ],
-      "@Script/*": [
+      "@script/*": [
         "./src/components/script/*"
       ],
       "@assets/*": [
         "./src/assets/*"
-      ]
+      ],
+      "@/*": [
+        "src/*"
+      ],
     },
   },
   "exclude": [

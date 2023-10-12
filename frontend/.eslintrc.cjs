@@ -27,24 +27,14 @@ module.exports = {
   },
   plugins: ['react-refresh'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
-    'prettier/prettier': 'error',
+    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'prettier/prettier': ['error', { printWidth: 100 }],
     'import/no-unresolved': 0,
     'import/order': [
       'error',
       {
         'newlines-between': 'always', // Add a newline between different import groups
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          'parent',
-          'sibling',
-          'index',
-        ],
+        groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
         pathGroups: [
           {
             pattern: '@pages/**',
