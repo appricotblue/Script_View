@@ -1,20 +1,26 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "target": "es6",
     "paths": {
+      "@/*": [
+        "./src/*"
+      ],
       "@Pages/*": [
-        "./src/Pages/*"
+        "src/pages/*"
       ],
       "@Common/*": [
-        "./src/components/Common/*"
+        "src/components/common/*"
       ],
       "@Script/*": [
-        "./src/components/Script/*"
+        "./src/components/script/*"
       ],
-      "@Images/*": [
-        "./src/assets/images/*"
+      "@assets/*": [
+        "./src/assets/*"
       ]
-    }
-  }
+    },
+  },
+  "exclude": [
+    "node_modules",
+    "**/node_modules/*"
+  ]
 }
