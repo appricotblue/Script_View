@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "paths": {
+      "@Pages/*": [
+        "./src/Pages/*"
+      ],
+      "@Common/*": [
+        "./src/components/Common/*"
+      ],
+      "@Script/*": [
+        "./src/components/Script/*"
+      ],
+      "@Images/*": [
+        "./src/assets/images/*"
+      ]
+    }
+  }
+}
