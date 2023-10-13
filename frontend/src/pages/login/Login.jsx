@@ -2,7 +2,7 @@ import { useTheme } from '@emotion/react';
 import { Box, Hidden, Stack, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import LoginForm from '@common/LoginForm';
+import LoginForm from '@common/loginForm';
 
 import full_logo_image from '@assets/images/complete_logo.png';
 import auth_bg_image from '@assets/images/auth_bg_image.jpeg';
@@ -27,7 +27,7 @@ function Login() {
         gap="2.5rem"
         alignItems={{ xs: 'center', lg: 'unset' }}
       >
-        <Box width="9.4rem" height="3.3rem">
+        <Box width="9.4rem" height="3.3rem" ml="-0.5rem">
           <Box width="100%" height="100%" component="img" src={full_logo_image} />
         </Box>
         <LoginForm />

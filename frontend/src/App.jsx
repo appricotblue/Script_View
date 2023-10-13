@@ -11,7 +11,7 @@ function App() {
 
   return (
     <>
-      <PreLoader />
+      {/* <PreLoader /> */}
       {/* Include header only when it is required */}
       <div id="main">
         {shouldIncludeHeader && <Header />}
