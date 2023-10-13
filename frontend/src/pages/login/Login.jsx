@@ -33,7 +33,7 @@ function Login() {
         <LoginForm />
         <Box>
           <Typography> Don&apos;t have an account?</Typography>
-          <Link></Link>
+          <Link to="/">navigate</Link>
         </Box>
       </Stack>
       <Hidden lgDown>
