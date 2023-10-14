@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
 import Header from '@common/header';
-import PreLoader from '@common/preLoader';
+// import PreLoader from '@common/preLoader';
 
 function App() {
   const { pathname } = useLocation();
