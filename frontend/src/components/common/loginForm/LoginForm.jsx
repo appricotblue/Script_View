@@ -12,12 +12,20 @@ const LoginForm = () => {
         <Typography variant="h2">Sign In</Typography>
         <AuthInput placeholder="Email" />
         <AuthInput placeholder="Password" />
-        <Link style={{ textDecoration: 'none' }}>
-          <FormLabel sx={{ fontSize: '1rem', color: palette.primary.lowContrastText }}>
+        <Link style={{ textDecoration: 'none' }} to="/login">
+          <FormLabel
+            sx={{
+              fontSize: '1rem',
+              color: palette.primary.lowContrastText,
+              ':hover': { cursor: 'pointer' },
+            }}
+          >
             Forgot Password?
           </FormLabel>
         </Link>
-        <GradientBtn size="xs">Login</GradientBtn>
+        <GradientBtn size="extra-large" disableRipple>
+          Login
+        </GradientBtn>
       </Stack>
     </Box>
   );
