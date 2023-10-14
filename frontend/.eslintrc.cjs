@@ -21,6 +21,7 @@ module.exports = {
           ['@common', './src/components/common'],
           ['@script', './src/components/script'],
           ['@assets', './src/assets'],
+          ['@hooks', './src/utils/hooks'],
         ],
       },
     },

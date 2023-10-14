@@ -23,6 +23,10 @@ export default defineConfig({
         replacement: path.resolve(__dirname, 'src/assets'),
       },
       {
+        find: '@hooks',
+        replacement: path.resolve(__dirname, 'src/utils/hooks'),
+      },
+      {
         find: '@',
         replacement: path.resolve(__dirname, 'src'),
       },
