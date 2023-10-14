@@ -1,0 +1,51 @@
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { useLocation } from 'react-router-dom';
+
+import './loader.css';
+
+const PreLoader = () => {
+  const { pathname } = useLocation();
+  const loaderRef = useRef(null);
+  const loaderWrapRef = useRef(null);
+
+  useEffect(() => {
+    const main = document.querySelector('#main');
+    const loader = loaderRef.current;
+    const loaderWrap = loaderWrapRef.current;
+
+    const tl = gsap.timeline();
+
+    tl.to(loader, {
+      duration: 1.5,
+      scale: 0,
+      ease: 'expo.inOut',
+      onComplete: () => {
+        const cdLoaderLayer = document.querySelector(
+          pathname === '/' ? '.cd-loader-layer-light' : '.cd-loader-layer',
+        );
+        cdLoaderLayer.classList.add('closing');
+        main.style.opacity = 1;
+        setTimeout(() => {
+          loaderWrap.style.display = 'none';
+        }, 1300);
+      },
+    });
+  }, []);
+
+  const loaderLayerClass = pathname === '/' ? 'cd-loader-layer-light' : 'cd-loader-layer';
+  const loaderLayer = pathname === '/' ? 'loader-layer-light' : 'loader-layer';
+
+  return (
+    <div className="loader-wrap" ref={loaderWrapRef}>
+      <div className="loader-item">
+        <div className={loaderLayerClass} data-frame="25">
+          <div className={loaderLayer}></div>
+        </div>
+        <span className="loader" ref={loaderRef}></span>
+      </div>
+    </div>
+  );
+};
+
+export default PreLoader;

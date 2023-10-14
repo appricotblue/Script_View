@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
-import Header from '@common/Header';
+import Header from '@common/header';
+import PreLoader from '@common/preLoader';
 
 function App() {
   const { pathname } = useLocation();
@@ -10,9 +11,12 @@ function App() {
 
   return (
     <>
+      {/* <PreLoader /> */}
       {/* Include header only when it is required */}
-      {shouldIncludeHeader && <Header />}
-      <Outlet />
+      <div id="main">
+        {shouldIncludeHeader && <Header />}
+        <Outlet />
+      </div>
     </>
   );
 }
