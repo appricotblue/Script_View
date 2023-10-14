@@ -2,7 +2,9 @@ import { useTheme } from '@emotion/react';
 import { Box, Hidden, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
 
-import full_logo_image from '@assets/images/complete_logo.png';
+import AuthLinks from '@common/authLinks';
+
+import full_logo_image from '@assets/images/complete_logo.svg';
 import auth_bg_image from '@assets/images/auth_bg_image.jpeg';
 
 const AuthPageLayout = ({ children }) => {
@@ -15,22 +17,21 @@ const AuthPageLayout = ({ children }) => {
       component="main"
       direction="row"
       height="100vh"
-      overflow="hidden"
       bgcolor={primary.main}
       color={primary.contrastText}
     >
       <Stack
         width={{ lg: '34.625%', xs: '100%' }}
-        p="6rem 4.88rem"
-        gap="2.5rem"
-        alignItems={{ xs: 'center', lg: 'unset' }}
+        p={{ xs: '0 4rem', lg: '0 4.88rem' }}
+        gap={{ xs: '1.5rem', lg: '2.5rem' }}
+        alignItems="center"
         justifyContent="center"
-        mt={{ xs: '-20%', lg: '-5%' }}
       >
-        <Box width="9.4rem" height="3.3rem" ml="-0.5rem">
+        <Box width="9.4rem" height="3.3rem" ml="-0.8rem" alignSelf="flex-start">
           <Box width="100%" height="100%" component="img" src={full_logo_image} />
         </Box>
         {children}
+        <AuthLinks />
       </Stack>
       <Hidden lgDown>
         <Box
@@ -49,6 +50,6 @@ const AuthPageLayout = ({ children }) => {
 };
 
 AuthPageLayout.propTypes = {
-  children: PropTypes.element,
+  children: PropTypes.node.isRequired,
 };
 export default AuthPageLayout;
