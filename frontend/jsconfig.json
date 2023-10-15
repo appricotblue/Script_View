@@ -14,9 +14,12 @@
       "@assets/*": [
         "./src/assets/*"
       ],
-      "@hooks/*": [
-        "src/utils/hooks/*"
+      "@hooks": [
+        "src/utils/hooks/index.js"
       ],
+      "@hooks/*": [
+        "src/utils/hooks"
+      ],      
       "@/*": [
         "src/*"
       ],
