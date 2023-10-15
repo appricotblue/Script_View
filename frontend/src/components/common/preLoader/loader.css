@@ -63,7 +63,7 @@
   top: 50%;
   transform: translateY(-50%) translateX(-98%);
   height: 100%;
-  width: 2500%;
+  width: 3000%;
   background: url(@assets/images/ink2.png) no-repeat 0 0;
   background-size: 100% 100%;
 }
@@ -73,7 +73,7 @@
   top: 50%;
   transform: translateY(-50%) translateX(-98%);
   height: 100%;
-  width: 2500%;
+  width: 3000%;
   background: url(@assets/images/ink3.png) no-repeat 0 0;
   background-size: 100% 100%;
 }
