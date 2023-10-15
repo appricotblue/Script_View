@@ -3,6 +3,8 @@ import { useEffect, useRef } from 'react';
 /**
  * Custom React hook that mimics useEffect but skips the initial render and runs the provided callback on subsequent renders.
  *
+ * This hook is useful for preventing side effects from running on the initial render, such as fetching data from an API or setting up a subscription.
+
  * @param {function} callback @returns {function} - The callback function to run on subsequent renders. A cleanup function is returned(optional)
  * @param {Array} dependencies - An array of dependencies to trigger the callback on change.
  */
