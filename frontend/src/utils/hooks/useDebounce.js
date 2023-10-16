@@ -3,9 +3,9 @@ import { useEffect, useRef } from 'react';
 /**
  * A debounce hook that delays the execution of a callback function.
  *
- * @param {function} callback - The function to be executed.
- * @param {number} delay - The delay in milliseconds.
- * @param {boolean} immediate - Determines whether the callback is executed immediately on initial render.
+ * @param {Function} callback - The function to be executed.
+ * @param {Number} delay - The delay in milliseconds.
+ * @param {Boolean} immediate - Determines whether the callback is executed immediately on initial render.
  */
 const useDebounce = (callback, delay = 300, immediate = false) => {
   const timerRef = useRef(null);

@@ -4,44 +4,39 @@ import useTransliteration from './useTransliteration';
 import useDebounce from './useDebounce';
 
 /**
- * A custom React hook that debounces the transliteration of text.
- *
- * This hook takes a single argument, which is the text to be transliterated. It returns
- * two values:
- *
- * * `translated`: The transliterated text.
- * * `loading`: A boolean value indicating whether the transliteration is in progress.
- *
- * The hook works by using the `useTransliteration` hook to transliterate the text. The
- * `useTransliteration` hook is a separate hook that provides a way to transliterate text in
- * React.
- *
- * The `useDebouncedTransliteration` hook also uses the `useDebounce` hook to debounce the
- * transliteration. The `useDebounce` hook is a separate hook that provides a way to debounce
- * functions in React.
- *
- * @param text The text to be transliterated.
- * @returns {object} An object containing the transliterated text and a boolean value indicating whether
- * the transliteration is in progress.
+ * A Custom React Hook that performs transliteration process in debounce mechanism.
+ * @returns {TransliterationStates}
  */
-const useDebouncedTransliteration = (text) => {
-  const [translated, setTranslated] = useState('');
-  const [loading, setLoading] = useState(false);
-  const transliterate = useTransliteration();
+/**
+ * @typedef TransliterationStates
+ * @property {Array} transliteratedValues - transliterated values
+ * @property {Boolean} isLoading - loading state
+ * @property {Function} transliterate - callback function to transliterate with debounce. Accepts a string parameter
+ */
 
-  const debounceCallBack = (content) => {
+const useDebouncedTransliteration = () => {
+  const [transliterated, setTransliterated] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const transliterateText = useTransliteration();
+
+  /**@param {String} content - text to be transliterated */
+  const debounceCb = (content) => {
     setLoading(true);
-    // translating the text and updating translated value
-    transliterate(content).then((transliteration) => {
+    // translating the text and updating transliterated value
+    transliterateText(content).then((transliteration) => {
       setLoading(false);
-      setTranslated(transliteration);
+      setTransliterated(transliteration);
     });
   };
 
-  // calling the debounced function
-  useDebounce(debounceCallBack)(text);
+  // calling the debounce hook and returns the debouncedCallback
+  const debouncedCallback = useDebounce(debounceCb);
 
-  return { translated, loading };
+  return {
+    transliteratedValues: transliterated,
+    isLoading: loading,
+    transliterate: debouncedCallback,
+  };
 };
 
 export default useDebouncedTransliteration;
