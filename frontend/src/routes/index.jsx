@@ -1,10 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
+import { Header } from '@common';
+import { EditDocument, Home, Login, Signup } from '@pages';
+import { ScriptHeader } from '@script';
 
-import Login from '@pages/login';
-import Home from '@pages/home';
-import Signup from '@pages/signup';
-
-import App from '../App';
+import App from '@/App';
 
 const appRouter = createBrowserRouter([
   {
@@ -13,7 +12,21 @@ const appRouter = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: (
+          <>
+            <Header />
+            <Home />
+          </>
+        ),
+      },
+      {
+        path: '/document/:id',
+        element: (
+          <>
+            <ScriptHeader />
+            <EditDocument />
+          </>
+        ),
       },
       {
         path: '/login',

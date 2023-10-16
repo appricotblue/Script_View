@@ -2,24 +2,21 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@pages/*": [
-        "src/pages/*"
+      "@pages": [
+        "src/pages/index.js"
       ],
-      "@common/*": [
-        "src/components/common/*"
+      "@common": [
+        "src/components/common/index.js"
       ],
-      "@script/*": [
-        "./src/components/script/*"
+      "@script": [
+        "./src/components/script/index.js"
       ],
       "@assets/*": [
         "./src/assets/*"
       ],
       "@hooks": [
         "src/utils/hooks/index.js"
-      ],
-      "@hooks/*": [
-        "src/utils/hooks"
-      ],      
+      ],  
       "@/*": [
         "src/*"
       ],
