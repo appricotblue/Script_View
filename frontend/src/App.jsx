@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import PreLoader from '@common/preLoader';
+import { PreLoader } from '@common';
 
 function App() {
   return (

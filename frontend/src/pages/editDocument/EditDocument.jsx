@@ -1,5 +1,11 @@
+import { ScriptHeader } from '@script';
+
 const EditDocument = () => {
-  return <div>EditDocument</div>;
+  return (
+    <>
+      <ScriptHeader />
+    </>
+  );
 };
 
 export default EditDocument;
