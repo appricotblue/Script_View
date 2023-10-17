@@ -22,7 +22,9 @@ const PreLoader = () => {
       ease: 'expo.inOut',
       onComplete: () => {
         const cdLoaderLayer = document.querySelector(
-          pathname === '/' ? '.cd-loader-layer-light' : '.cd-loader-layer',
+          pathname === '/login' || pathname === '/signup'
+            ? 'cd-loader-layer'
+            : 'cd-loader-layer-light',
         );
         cdLoaderLayer.classList.add('closing');
         main.style.opacity = 1;
