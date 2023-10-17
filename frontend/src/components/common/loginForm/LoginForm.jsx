@@ -1,8 +1,7 @@
 import { FormLabel, Stack, Typography, useTheme } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-import AuthInput from '@common/authInput';
-import GradientBtn from '@common/gradientBtn/GradientBtn';
+import { AuthInput, GradientBtn } from '@common';
 
 const LoginForm = () => {
   const { palette } = useTheme();

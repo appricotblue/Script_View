@@ -5,11 +5,20 @@
       "@pages": [
         "src/pages/index.js"
       ],
+      "@pages/*": [
+        "src/pages/*"
+      ],
       "@common": [
         "src/components/common/index.js"
       ],
+      "@common/*": [
+        "src/components/common/*"
+      ],
       "@script": [
         "./src/components/script/index.js"
+      ],
+      "@script/*": [
+        "./src/components/script/*"
       ],
       "@assets/*": [
         "./src/assets/*"

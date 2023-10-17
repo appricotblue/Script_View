@@ -1,4 +1,4 @@
-import HeaderContainer from '@common/headerContainer';
+import { HeaderContainer } from '@common';
 
 const ScriptHeader = () => {
   return <HeaderContainer>ScriptHeader</HeaderContainer>;

@@ -2,7 +2,7 @@ import { useTheme } from '@emotion/react';
 import { Box, Hidden, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
 
-import AuthLinks from '@common/authLinks';
+import { AuthLinks } from '@common';
 
 import full_logo_image from '@assets/images/complete_logo.svg';
 import auth_bg_image from '@assets/images/auth_bg_image.jpeg';

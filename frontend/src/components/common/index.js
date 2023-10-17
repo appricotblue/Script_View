@@ -1,8 +1,9 @@
-export { default as AuthInput } from './AuthInput';
-export { default as AuthLinks } from './AuthLinks';
-export { default as AuthPageLayout } from './AuthPageLayout';
-export { default as GradientBtn } from './GradientBtn';
-export { default as HeaderContainer } from './HeaderContainer';
-export { default as Header } from './Header';
-export { default as LoginForm } from './LoginForm';
-export { default as SignupForm } from './SignupForm';
+export { default as AuthInput } from './authInput/AuthInput';
+export { default as AuthLinks } from './authLinks/AuthLinks';
+export { default as AuthPageLayout } from './authPageLayout/AuthPageLayout';
+export { default as GradientBtn } from './gradientBtn/GradientBtn';
+export { default as HeaderContainer } from './headerContainer/HeaderContainer';
+export { default as Header } from './header/Header';
+export { default as LoginForm } from './loginForm/LoginForm';
+export { default as SignupForm } from './signupForm/SignupForm';
+export { default as PreLoader } from './preLoader/PreLoader';

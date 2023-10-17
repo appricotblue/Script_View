@@ -1,9 +1,14 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { Header } from '@common';
-import { EditDocument, Home, Login, Signup } from '@pages';
+import { Suspense, lazy } from 'react';
+
+import { Header, PreLoader } from '@common';
+import { Home, Login } from '@pages';
 import { ScriptHeader } from '@script';
 
 import App from '@/App';
+
+const Signup = lazy(() => import('@pages/signup'));
+const EditDocument = lazy(() => import('@pages/editDocument'));
 
 const appRouter = createBrowserRouter([
   {
@@ -22,10 +27,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/document/:id',
         element: (
-          <>
+          <Suspense fallback={<PreLoader />}>
             <ScriptHeader />
             <EditDocument />
-          </>
+          </Suspense>
         ),
       },
       {
@@ -34,7 +39,11 @@ const appRouter = createBrowserRouter([
       },
       {
         path: '/signup',
-        element: <Signup />,
+        element: (
+          <Suspense fallback={<PreLoader />}>
+            <Signup />
+          </Suspense>
+        ),
       },
     ],
   },

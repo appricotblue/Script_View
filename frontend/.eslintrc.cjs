@@ -42,11 +42,23 @@ module.exports = {
             group: 'internal',
           },
           {
+            pattern: '@pages',
+            group: 'internal',
+          },
+          {
             pattern: '@common/**',
             group: 'internal',
           },
           {
+            pattern: '@common',
+            group: 'internal',
+          },
+          {
             pattern: '@script/**',
+            group: 'internal',
+          },
+          {
+            pattern: '@script',
             group: 'internal',
           },
           {

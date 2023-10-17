@@ -1,2 +1,2 @@
-export { default as ScriptHeader } from './ScriptHeader';
-export { default as TextEditor } from './TextEditor';
+export { default as ScriptHeader } from './scriptHeader/ScriptHeader';
+export { default as TextEditor } from './textEditor/TextEditor';

@@ -1,5 +1,4 @@
-import LoginForm from '@common/loginForm';
-import AuthPageLayout from '@common/authPageLayout';
+import { AuthPageLayout, LoginForm } from '@common';
 
 function Login() {
   return (

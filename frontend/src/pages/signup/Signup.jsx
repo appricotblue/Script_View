@@ -1,5 +1,4 @@
-import AuthPageLayout from '@common/authPageLayout';
-import SignupForm from '@common/signupForm';
+import { AuthPageLayout, SignupForm } from '@common';
 
 const Signup = () => {
   return (

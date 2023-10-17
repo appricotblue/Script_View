@@ -1,7 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 
-import AuthInput from '@common/authInput';
-import GradientBtn from '@common/gradientBtn/GradientBtn';
+import { AuthInput, GradientBtn } from '@common';
 
 const SignupForm = () => {
   return (
