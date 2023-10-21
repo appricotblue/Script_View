@@ -28,6 +28,9 @@ const theme = createTheme({
       fontSize: '1.625rem',
       fontWeight: 700,
     },
+    button: {
+      textTransform: 'none',
+    },
   },
 });
 

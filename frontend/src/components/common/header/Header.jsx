@@ -1,7 +1,7 @@
-import { HeaderContainer } from '@common';
+import { Box } from '@mui/material';
 
 const Header = () => {
-  return <HeaderContainer>Header</HeaderContainer>;
+  return <Box>Header</Box>;
 };
 
 export default Header;

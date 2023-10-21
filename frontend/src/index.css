@@ -1,0 +1,14 @@
+:root{
+    --primary-main: #242424;
+    --primary-light: #2D2D2D;
+    --primary-dark: #1C1C1C;
+    --primary-contrast-text: #FFF;
+    --primary-low-contrast-text: rgba(255, 255, 255, 0.50);
+    --secondary-main: #FFF;
+    --secondary-light: #F7F7F7;
+    --secondary-lighter: #F2F2F2;
+    --secondary-contrast-text: #000;
+    --secondary-low-contrast-text: rgba(0, 0, 0, 0.60);
+    --secondary-low-contrast-icons: rgba(0, 0, 0, 0.3);
+    --tertiary-main: linear-gradient(94deg, #C5AC57 10.11%, #C5AC57 46.89%, #E1D5AB 85.01%);
+}
