@@ -1,7 +1,12 @@
-import { Box } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 const ScriptSidebar = () => {
-  return <Box width="20%">ScriptSidebar</Box>;
+  const { palette } = useTheme();
+  return (
+    <Box width="16rem" height="calc(100vh - 4.5rem)" bgcolor={palette.primary.dark}>
+      ScriptSidebar
+    </Box>
+  );
 };
 
 export default ScriptSidebar;

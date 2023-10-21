@@ -25,15 +25,14 @@ const ScriptHeader = () => {
     setIsDrawerOpen(false);
   };
   return (
-    <div>
+    <>
       <AppBar
-        position="static"
         sx={{
           background: palette.secondary.main,
           boxShadow: '0px 0px 17px 0px rgba(0, 0, 0, 0.10)',
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{ height: '4.5rem' }}>
           <Button
             sx={{
               fontSize: '1.125rem',
@@ -52,7 +51,7 @@ const ScriptHeader = () => {
             <Stack direction="row">
               <Button>Page Preferences</Button>
               <Button sx={{}}>
-                അ<Keyboard size={14} weight="thin" />
+                അ <Keyboard size={14} weight="thin" />
               </Button>
               <Button>Page Preferences</Button>
             </Stack>
@@ -78,7 +77,7 @@ const ScriptHeader = () => {
           </li>
         </ul>
       </Drawer>
-    </div>
+    </>
   );
 };
 

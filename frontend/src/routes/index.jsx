@@ -24,10 +24,10 @@ const appRouter = createBrowserRouter([
       {
         path: '/document/:id',
         element: (
-          <div>
+          <>
             <ScriptHeader />
             <EditDocument />
-          </div>
+          </>
         ),
       },
       {

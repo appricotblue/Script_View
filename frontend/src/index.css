@@ -1,14 +1,18 @@
-:root{
-    --primary-main: #242424;
-    --primary-light: #2D2D2D;
-    --primary-dark: #1C1C1C;
-    --primary-contrast-text: #FFF;
-    --primary-low-contrast-text: rgba(255, 255, 255, 0.50);
-    --secondary-main: #FFF;
-    --secondary-light: #F7F7F7;
-    --secondary-lighter: #F2F2F2;
-    --secondary-contrast-text: #000;
-    --secondary-low-contrast-text: rgba(0, 0, 0, 0.60);
-    --secondary-low-contrast-icons: rgba(0, 0, 0, 0.3);
-    --tertiary-main: linear-gradient(94deg, #C5AC57 10.11%, #C5AC57 46.89%, #E1D5AB 85.01%);
+:root {
+  --primary-main: #242424;
+  --primary-light: #2d2d2d;
+  --primary-dark: #1c1c1c;
+  --primary-contrast-text: #fff;
+  --primary-low-contrast-text: rgba(255, 255, 255, 0.5);
+  --secondary-main: #fff;
+  --secondary-light: #f7f7f7;
+  --secondary-lighter: #f2f2f2;
+  --secondary-contrast-text: #000;
+  --secondary-low-contrast-text: rgba(0, 0, 0, 0.6);
+  --secondary-low-contrast-icons: rgba(0, 0, 0, 0.3);
+  --tertiary-main: linear-gradient(94deg, #c5ac57 10.11%, #c5ac57 46.89%, #e1d5ab 85.01%);
+}
+
+html {
+  overflow: hidden;
 }
