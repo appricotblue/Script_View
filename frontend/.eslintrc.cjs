@@ -21,6 +21,7 @@ module.exports = {
           ['@common', './src/components/common'],
           ['@script', './src/components/script'],
           ['@assets', './src/assets'],
+          ['@plugins', './src/plugins'],
           ['@hooks', './src/utils/hooks'],
         ],
       },
@@ -37,6 +38,10 @@ module.exports = {
         'newlines-between': 'always', // Add a newline between different import groups
         groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
         pathGroups: [
+          {
+            pattern: '@/**',
+            group: 'internal',
+          },
           {
             pattern: '@pages/**',
             group: 'internal',

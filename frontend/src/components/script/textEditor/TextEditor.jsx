@@ -1,6 +1,7 @@
 import { Stack } from '@mui/material';
 
-import TextArea from '@script/textArea/TextArea';
+import ToolbarPlugin from '@/plugins/ToolbarPlugin';
+import { TextArea } from '@script';
 
 const TextEditor = () => {
   return (
@@ -9,7 +10,10 @@ const TextEditor = () => {
       maxHeight="calc(100vh - 4.5rem)"
       sx={{ overflowY: 'auto', flexGrow: 1, justifyContent: 'center', py: '1.2rem' }}
     >
-      <TextArea />
+      <Stack height="max-content" gap="1.27rem">
+        <ToolbarPlugin />
+        <TextArea />
+      </Stack>
     </Stack>
   );
 };

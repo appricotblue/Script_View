@@ -25,7 +25,7 @@
       ],
       "@hooks": [
         "src/utils/hooks/index.js"
-      ],  
+      ],
       "@/*": [
         "src/*"
       ],

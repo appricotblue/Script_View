@@ -41,11 +41,14 @@ const TextArea = () => {
         position="relative"
         className={Style['editor-inner']}
       >
+        {/* Content Editable */}
         <RichTextPlugin
           contentEditable={CustomContentEditable}
           placeholder={PlaceHolder}
           ErrorBoundary={LexicalErrorBoundary}
         />
+
+        {/* Margin Lines */}
         <Box
           className={`${Style['side']} ${Style['side-left']}`}
           sx={{ top: marginLineConf.leftTop, height: marginLineConf.hrSideHeight }}
