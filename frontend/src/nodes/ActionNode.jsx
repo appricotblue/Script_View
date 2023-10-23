@@ -3,36 +3,36 @@ import { $applyNodeReplacement } from 'lexical';
 
 import DefaultParagraphNode from './DefaultParagraphNode';
 
-export const $createSceneNode = () => $applyNodeReplacement(new SceneNode());
+export const $createActionNode = () => $applyNodeReplacement(new ActionNode());
 
-export class SceneNode extends DefaultParagraphNode {
+export class ActionNode extends DefaultParagraphNode {
   constructor() {
     super();
   }
 
   createDOM(_config, _editor) {
-    const h4 = document.createElement('h4');
-    h4.className = _config.theme.scene;
-    return h4;
+    const p = document.createElement('p');
+    p.className = _config.theme.action;
+    return p;
   }
   updateDOM() {
     return false;
   }
 
   static clone(node) {
-    return new SceneNode(node.__key);
+    return new ActionNode(node.__key);
   }
   static getType() {
-    return 'scene';
+    return 'action';
   }
 
   static importJSON(_) {
-    return new SceneNode();
+    return new ActionNode();
   }
 
   exportJSON() {
     return {
-      type: 'scene',
+      type: 'action',
       version: 1,
       children: [],
       format: '',
@@ -42,4 +42,4 @@ export class SceneNode extends DefaultParagraphNode {
   }
 }
 
-export default SceneNode;
+export default ActionNode;

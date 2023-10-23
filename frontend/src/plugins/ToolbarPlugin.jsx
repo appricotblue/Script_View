@@ -71,24 +71,21 @@ const CustomTextActions = () => {
   };
   return (
     <Box sx={{ marginTop: '10px' }}>
-      {['Bold', 'Italic', 'Underline', 'Highlight'].map((value) => {
+      {[
+        ['B', 'bold'],
+        ['I', 'italic'],
+        ['U', 'underline'],
+      ].map((value) => {
         return (
-          <IconButton
-            key={value}
-            onClick={() => handleClick(value.toLowerCase())}
-            sx={{ color: 'white' }}
-          >
-            {value === 'Bold' ? (
-              <Typography fontSize="1rem" fontWeight={isBold ? 'bold' : '200'}>
-                B
-              </Typography>
-            ) : value === 'Italic' ? (
-              <Typography fontSize="1rem" fontStyle={isItalic ? 'italic' : 'normal'}>
-                I
-              </Typography>
-            ) : value === 'Underline' ? (
-              <TextUnderline size="1rem" weight={isUnderline ? 'bold' : 'thin'} />
-            ) : null}
+          <IconButton key={value} onClick={() => handleClick(value[1])} sx={{ color: 'white' }}>
+            <Typography
+              fontSize="1rem"
+              fontWeight={isBold && value[0] === 'B' ? 'bold' : '200'}
+              fontStyle={isItalic && value[0] === 'I' ? 'italic' : 'normal'}
+              sx={{ textDecoration: isUnderline && value[0] === 'U' ? 'underline' : null }}
+            >
+              {value[0]}
+            </Typography>
           </IconButton>
         );
       })}
@@ -105,12 +102,21 @@ const ToolbarPlugin = () => {
       bgcolor={palette.secondary.main}
       sx={{ position: 'sticky', zIndex: 1 }}
       top="-1.2rem"
-      borderRadius="0.25rem"
     >
-      <Box height="50%" width="100%" bgcolor={palette.primary.main}>
+      <Box
+        height="50%"
+        width="100%"
+        bgcolor={palette.primary.main}
+        sx={{ borderTopRightRadius: '0.25rem', borderTopLeftRadius: '0.25rem' }}
+      >
         <CustomTextActions />
       </Box>
-      <Box height="50%" width="100%" bgcolor="rgba(36, 36, 36, 0.80)"></Box>
+      <Box
+        height="50%"
+        width="100%"
+        bgcolor="rgba(36, 36, 36, 0.80)"
+        sx={{ borderBottomRightRadius: '0.25rem', borderBottomLeftRadius: '0.25rem' }}
+      ></Box>
     </Stack>
   );
 };

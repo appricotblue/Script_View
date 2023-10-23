@@ -1,21 +1,21 @@
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { Stack } from '@mui/material';
-import { HeadingNode } from '@lexical/rich-text';
-import { ListNode, ListItemNode } from '@lexical/list';
 import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 
 import { ScriptSidebar, TextEditor } from '@script';
 import SceneNode from '@/nodes/SceneNode';
+import SubHeaderNode from '@/nodes/SubHeaderNode';
+import SluglineNode from '@/nodes/SluglineNode';
+import ActionNode from '@/nodes/ActionNode';
 
 const EditDocument = () => {
   const lexicalConfig = {
     namespace: 'Script View Text Editor',
-    nodes: [HeadingNode, ListItemNode, ListNode, SceneNode],
+    nodes: [SceneNode, SubHeaderNode, SluglineNode, ActionNode],
     theme: {},
 
-    onError: (e) => console.log('Error: ', e),
+    onError: (e) => console.error(e),
   };
   return (
     <LexicalComposer initialConfig={lexicalConfig}>
@@ -26,7 +26,6 @@ const EditDocument = () => {
         <TextEditor />
         <AutoFocusPlugin />
         <HistoryPlugin />
-        <ListPlugin />
       </Stack>
     </LexicalComposer>
   );
