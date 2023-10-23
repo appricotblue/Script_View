@@ -127,7 +127,6 @@ const SideBarPlugin = () => {
             KeyN: 'scene',
           }[event.code];
           if (payload) {
-            console.log(payload);
             event.preventDefault();
             editor.dispatchCommand(INSERT_CONTENT_COMMAND, payload);
             return true;

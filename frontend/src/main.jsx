@@ -18,6 +18,14 @@ import appRouter from './routes';
  * @common - import from src/components/common
  * @script - import from src/components/script
  */
+// eslint-disable-next-line no-undef
+if (process.env.NODE_ENV === 'production') {
+  console.log('you are on production');
+  console.log = function () {};
+  console.debug = function () {};
+  console.warn = function () {};
+  console.error = function () {};
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
