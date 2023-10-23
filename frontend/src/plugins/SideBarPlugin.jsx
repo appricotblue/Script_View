@@ -190,7 +190,7 @@ const SideBarPlugin = () => {
             }}
           >
             <Typography component="span" fontSize="0.75rem" fontWeight="200">
-              Scene Number ({combo[node.join('').toLocaleLowerCase()]})
+              ({combo[node.join('').toLocaleLowerCase()]})
             </Typography>
             <Typography
               component="span"

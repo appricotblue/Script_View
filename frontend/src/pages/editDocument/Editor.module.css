@@ -1,0 +1,31 @@
+.scene,
+.slugline {
+  color: #000;
+  font-family: Roboto;
+  font-weight: 600;
+  line-height: 1.375rem;
+}
+.scene {
+  font-size: 1.125rem;
+}
+.slugline {
+  font-size: 1rem;
+  font-style: italic;
+}
+.subheader {
+  font-family: FML-IndulekhaHeavy;
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.375rem; /* 110% */
+}
+
+.text-bold {
+    font-weight: bold;
+}
+.text-italic{
+    font-style: italic;
+}
+.text-underline{
+    text-decoration: underline;
+}
