@@ -16,14 +16,12 @@ const useDebounce = (callback, delay = 300, immediate = false) => {
     }
   }, []);
 
-  const debouncedCallback = (...args) => {
+  return (...args) => {
     clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
       callback.apply(null, args);
     }, delay);
   };
-
-  return debouncedCallback;
 };
 
 export default useDebounce;
