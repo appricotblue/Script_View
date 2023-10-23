@@ -79,7 +79,7 @@ const useTransliteration = () => {
       );
 
       // Join the transliterated parts back together
-      return transliteratedParts.join('');
+      return transliteratedParts.join('').split(',');
     } catch (error) {
       console.error('Network Error', error);
       return sourceText;
