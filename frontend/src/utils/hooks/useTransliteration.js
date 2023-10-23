@@ -4,6 +4,7 @@
  * @returns {Function} The async `transliterate` function to be used in components.
  *
  * @param {String} sourceText  The source text to be transliterated.
+ * @param {Number} maxResult=5  The maximum number of transliteration results to retrieve.
  * @param {String} inputLanguageCode  The language code, e.g., 'ml-t-i0-und' for Malayalam.
  *   Expected language codes:
  *   - Amharic: am-t-i0-und
@@ -31,8 +32,6 @@
  *   - Thai: th-t-i0-und
  *   - Tigrinya: ti-t-i0-und
  *   - Urdu: ur-t-i0-und
- * @param {Number} maxResult=5  The maximum number of transliteration results to retrieve.
-
  * @throws {Error} Throws an error if there is a network error.
  *
  * @returns {Promise<Array>} A promise that resolves to an array of transliterated results.
@@ -40,7 +39,7 @@
 
 const useTransliteration = () => {
   //  Define the transliterate function
-  const transliterate = async (sourceText, inputLanguageCode = 'ml-t-i0-und', maxResult = 5) => {
+  const transliterate = async (sourceText, maxResult = 5, inputLanguageCode = 'ml-t-i0-und') => {
     try {
       // Use a regular expression to split the source text into parts
       const parts = sourceText.split(/([0-9]+)/);
