@@ -22,7 +22,7 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: 'document',
+        path: '/document/:id',
         element: (
           <>
             <ScriptHeader />
