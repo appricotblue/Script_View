@@ -40,6 +40,7 @@ const GradientBtn = styled(Button)(({ theme: { palette }, size }) => ({
     : ''),
   position: 'relative',
   overflow: 'hidden',
+  color: '#000',
 }));
 
 export default GradientBtn;

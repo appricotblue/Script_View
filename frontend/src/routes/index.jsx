@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import { Header } from '@common';
+import { Header, WithHeaderMargin } from '@common';
 import { EditDocument, Home, Login, Signup } from '@pages';
 import { ScriptHeader } from '@script';
 import App from '@/App';
@@ -15,7 +15,9 @@ const appRouter = createBrowserRouter([
         element: (
           <>
             <Header />
-            <Home />
+            <WithHeaderMargin>
+              <Home />
+            </WithHeaderMargin>
           </>
         ),
       },
@@ -24,7 +26,9 @@ const appRouter = createBrowserRouter([
         element: (
           <>
             <ScriptHeader />
-            <EditDocument />
+            <WithHeaderMargin>
+              <EditDocument />
+            </WithHeaderMargin>
           </>
         ),
       },
