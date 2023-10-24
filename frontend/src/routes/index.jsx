@@ -3,7 +3,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Header } from '@common';
 import { EditDocument, Home, Login, Signup } from '@pages';
 import { ScriptHeader } from '@script';
-
 import App from '@/App';
 
 const appRouter = createBrowserRouter([
@@ -13,7 +12,7 @@ const appRouter = createBrowserRouter([
     children: [
       {
         path: '/',
-
+        index: true,
         element: (
           <>
             <Header />
