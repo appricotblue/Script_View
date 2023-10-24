@@ -109,11 +109,12 @@ const SideBarPlugin = () => {
       COMMAND_PRIORITY_NORMAL,
     );
   }, [editor]);
-  useEffect(() => {
-    return editor.registerUpdateListener(({ editorState }) => {
-      console.log(editorState.toJSON());
-    });
-  }, [editor]);
+
+  // useEffect(() => {
+  //   return editor.registerUpdateListener(({ editorState }) => {
+  //     console.log(editorState.toJSON());
+  //   });
+  // }, [editor]);
 
   useEffect(() => {
     return editor.registerCommand(

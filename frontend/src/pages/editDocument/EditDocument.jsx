@@ -8,13 +8,15 @@ import SceneNode from '@/nodes/SceneNode';
 import SubHeaderNode from '@/nodes/SubHeaderNode';
 import SluglineNode from '@/nodes/SluglineNode';
 import ActionNode from '@/nodes/ActionNode';
+import NewMentionsPlugin from '@/plugins/TransliterationPlugin';
+import { MentionNode } from '@/nodes/MentionNode';
 
 import Style from './Editor.module.css';
 
 const EditDocument = () => {
   const lexicalConfig = {
     namespace: 'Script View Text Editor',
-    nodes: [SceneNode, SubHeaderNode, SluglineNode, ActionNode],
+    nodes: [SceneNode, SubHeaderNode, SluglineNode, ActionNode, MentionNode],
     theme: {
       text: {
         bold: Style['text-bold'],
@@ -39,6 +41,7 @@ const EditDocument = () => {
         <ScriptSidebar />
         {/* Toolbar Plugin is inside the text editor */}
         <TextEditor />
+        <NewMentionsPlugin />
         <AutoFocusPlugin />
         <HistoryPlugin />
       </Stack>
