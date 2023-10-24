@@ -7,8 +7,6 @@ import { $createTextNode, $getSelection } from 'lexical';
 
 import { useDebounce, useTransliteration } from '@hooks';
 
-const LENGTH_LIMIT = 75;
-
 // regex to check if the user is typing only letters
 const lettersTriggerRegex = /^[a-zA-Z]+$/;
 
