@@ -9,8 +9,6 @@ const appRouter = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    index: true,
-
     children: [
       {
         path: '/',
@@ -22,7 +20,7 @@ const appRouter = createBrowserRouter([
         ),
       },
       {
-        path: '/document/:id',
+        path: 'document/:id',
         element: (
           <>
             <ScriptHeader />
