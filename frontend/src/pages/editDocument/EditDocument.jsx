@@ -10,6 +10,7 @@ import SluglineNode from '@/nodes/SluglineNode';
 import ActionNode from '@/nodes/ActionNode';
 import NewMentionsPlugin from '@/plugins/TransliterationPlugin';
 import { MentionNode } from '@/nodes/MentionNode';
+import PrintPlugin from '@/plugins/PrintPlugin';
 
 import Style from './Editor.module.css';
 
@@ -36,6 +37,7 @@ const EditDocument = () => {
   };
   return (
     <LexicalComposer initialConfig={lexicalConfig}>
+      <PrintPlugin />
       <Stack display="flex" direction="row" width="100%" maxHeight="100vh">
         {/* Sidebar plugin inside ScriptSidebar */}
         <ScriptSidebar />

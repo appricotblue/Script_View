@@ -1,8 +1,10 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 const Home = () => {
-  return <Navigate to="/document/123" />;
-  // return <div style={{ height: '100vh', width: '100vw' }}>Home Page</div>;
+  const { state } = useLocation();
+  let isLoggedIn = state?.isLoggedIn;
+  if (!state?.isLoggedIn) isLoggedIn = false;
+  return isLoggedIn ? <Navigate to="/document/123" /> : <Navigate to="/login" />;
 };
 
 export default Home;

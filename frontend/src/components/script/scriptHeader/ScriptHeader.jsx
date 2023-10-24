@@ -1,6 +1,5 @@
 import {
   AppBar,
-  Box,
   Drawer,
   IconButton,
   Stack,
@@ -9,8 +8,17 @@ import {
   useTheme,
   Button,
 } from '@mui/material';
-import { CaretLeft, Keyboard, List as ListIcon } from '@phosphor-icons/react';
+import {
+  CaretLeft,
+  Keyboard,
+  List as ListIcon,
+  CaretDown,
+  CloudCheck,
+  Pencil,
+} from '@phosphor-icons/react';
 import { useState } from 'react';
+
+import { GradientBtn } from '@common';
 
 const ScriptHeader = () => {
   const { palette } = useTheme();
@@ -39,6 +47,7 @@ const ScriptHeader = () => {
               fontWeight: 600,
               padding: '0 0.5rem 0 0',
               lineHeight: '1',
+              flexShrink: 0,
               '& .MuiButton-startIcon': {
                 margin: '0.12rem',
               },
@@ -47,15 +56,57 @@ const ScriptHeader = () => {
           >
             Back to Home
           </Button>
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <Stack direction="row">
-              <Button>Page Preferences</Button>
-              <Button sx={{}}>
-                അ <Keyboard size={14} weight="thin" />
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            width="100%"
+            sx={{ display: { xs: 'none', md: 'flex' } }}
+          >
+            <Stack direction="row" gap="0.75rem" marginLeft="5rem">
+              <Button sx={{ backgroundColor: '#F2F2F2' }}>Page Preferences</Button>
+              <Button
+                sx={{
+                  fontSize: 14,
+                  backgroundColor: '#F2F2F2',
+                  display: 'flex',
+                  alignItems: 'center',
+                  '& .MuiButton-endIcon': { marginLeft: '6px' },
+                }}
+                endIcon={<CaretDown size={12} />}
+              >
+                <span style={{ marginTop: '-0.125rem' }}>അ</span>{' '}
+                <Keyboard size={14} weight="thin" />
               </Button>
-              <Button>Page Preferences</Button>
+              <Button sx={{ backgroundColor: '#F2F2F2' }}>Insert</Button>
             </Stack>
-          </Box>
+            <Button
+              startIcon={<CloudCheck siz={12} />}
+              endIcon={<Pencil size={12} weight="thin" />}
+              sx={{
+                marginLeft: '-5rem',
+                '& .MuiButton-endIcon': { marginLeft: '3px' },
+                '& .MuiButton-startIcon': { marginRight: '5px' },
+              }}
+            >
+              Jallikkettu Rough Script
+            </Button>
+            <Stack direction="row" gap="0.94rem">
+              <GradientBtn size="large" sx={{ fontWeight: '600' }}>
+                Save Template
+              </GradientBtn>
+              <GradientBtn
+                size="large"
+                sx={{
+                  fontWeight: '600',
+                  background: '#000',
+                  color: '#fff',
+                  ':hover': { background: '#000' },
+                }}
+              >
+                Share
+              </GradientBtn>
+            </Stack>
+          </Stack>
 
           {isSmallScreen && (
             <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerOpen}>

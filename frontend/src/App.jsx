@@ -8,7 +8,7 @@ function App() {
     <>
       {/* <PreLoader /> */}
       {/* set opacity of main to 0 when using preloader */}
-      <Box id="main" marginTop="4.5rem">
+      <Box id="main">
         <Outlet />
       </Box>
     </>
