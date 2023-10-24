@@ -56,7 +56,7 @@ const ScriptHeader = () => {
               <Button>Page Preferences</Button>
             </Stack>
           </Box>
-          <input type="search" placeholder="Search..." />
+
           {isSmallScreen && (
             <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerOpen}>
               <ListIcon size={32} weight="thin" />
