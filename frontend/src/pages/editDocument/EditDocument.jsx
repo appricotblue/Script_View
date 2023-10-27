@@ -37,10 +37,10 @@ const EditDocument = () => {
   };
   return (
     <LexicalComposer initialConfig={lexicalConfig}>
-      <PrintPlugin />
       <Stack display="flex" direction="row" width="100%" maxHeight="100vh">
         {/* Sidebar plugin inside ScriptSidebar */}
         <ScriptSidebar />
+        <PrintPlugin />
         {/* Toolbar Plugin is inside the text editor */}
         <TextEditor />
         <NewMentionsPlugin />
