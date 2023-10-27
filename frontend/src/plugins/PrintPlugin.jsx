@@ -1,18 +1,16 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $generateHtmlFromNodes } from '@lexical/html';
-import { useEffect, useRef } from 'react';
-import html2canvas from 'html2canvas';
-import jsPdf from 'jspdf';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
+import { Button } from '@mui/material';
 
+import css from '@/pages/editDocument/Editor.css';
 export const PRINT_COMMAND = createCommand('print-command');
 
 const PrintPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const { id } = useParams();
-
-  const contRef = useRef(null);
 
   useEffect(() => {
     return editor.registerCommand(
@@ -21,42 +19,29 @@ const PrintPlugin = () => {
         editor.update(() => {
           // convert editor state into html
           const htmlString = $generateHtmlFromNodes(editor, null);
+          fetch('http://localhost:8080/api/scripts/export', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ css, html: htmlString, format: 'pdf' }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                return response.blob();
+              } else {
+                throw new Error('Request Failed');
+              }
+            })
+            .then((pdfBlob) => {
+              const pdfUrl = URL.createObjectURL(pdfBlob);
+              const downloadLink = document.createElement('a');
+              downloadLink.href = pdfUrl;
+              downloadLink.download = 'untitled document.pdf';
 
-          // accesses container that should carry the generated html and assigns the generated html
-          const container = contRef.current;
-          container.style.visibility = 'visible';
-          container.innerHTML = htmlString;
+              downloadLink.click();
 
-          // generate canvas
-          html2canvas(container, { scale: 2 }).then((canvas) => {
-            // create an image to save into pdf
-            console.log(canvas);
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPdf({
-              format: 'a4',
-              unit: 'mm',
-              orientation: 'portrait',
-              compress: true,
-            });
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgwidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = Math.min(pdfWidth / imgwidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgwidth * ratio) / 2;
-            const imgY = 30;
-            pdf.addImage({
-              format: 'JPEG',
-              imageData: imgData,
-              x: imgX,
-              y: imgY,
-              width: imgwidth * ratio,
-              height: imgHeight * ratio,
-            });
-            pdf.save(`document-${id}.pdf`);
-
-            container.style.visibility = 'hidden';
-          });
+              URL.revokeObjectURL(pdfUrl);
+            })
+            .catch((err) => console.error('ERROR: ', err));
         });
       },
       COMMAND_PRIORITY_NORMAL,
@@ -64,7 +49,7 @@ const PrintPlugin = () => {
   }, [editor, id]);
   return (
     <>
-      <div
+      {/* <div
         ref={contRef}
         style={{
           visibility: 'hidden',
@@ -73,7 +58,8 @@ const PrintPlugin = () => {
           width: '524px',
           height: '762px',
         }}
-      ></div>
+      ></div> */}
+      <Button onClick={() => editor.dispatchCommand(PRINT_COMMAND)}>Print</Button>
     </>
   );
 };

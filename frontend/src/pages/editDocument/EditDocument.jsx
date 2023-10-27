@@ -11,8 +11,7 @@ import ActionNode from '@/nodes/ActionNode';
 import NewMentionsPlugin from '@/plugins/TransliterationPlugin';
 import { MentionNode } from '@/nodes/MentionNode';
 import PrintPlugin from '@/plugins/PrintPlugin';
-
-import Style from './Editor.module.css';
+import './Editor.css';
 
 const EditDocument = () => {
   const lexicalConfig = {
@@ -20,17 +19,17 @@ const EditDocument = () => {
     nodes: [SceneNode, SubHeaderNode, SluglineNode, ActionNode, MentionNode],
     theme: {
       text: {
-        bold: Style['text-bold'],
-        italic: Style['text-italic'],
-        underline: Style['text-underline'],
+        bold: 'text-bold',
+        italic: 'text-italic',
+        underline: 'text-underline',
       },
-      subheader: Style['subheader'],
-      scene: Style['scene'],
-      slugline: Style['slugline'],
-      action: Style['action'],
-      dialogue: Style['dialogue'],
-      parenthetical: Style['parenthetical'],
-      transition: Style['transition'],
+      subheader: 'subheader',
+      scene: 'scene',
+      slugline: 'slugline',
+      action: 'action',
+      dialogue: 'dialogue',
+      parenthetical: 'parenthetical',
+      transition: 'transition',
     },
 
     onError: (e) => console.error(e),
