@@ -3,9 +3,8 @@ import { $generateHtmlFromNodes } from '@lexical/html';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
-import { Button } from '@mui/material';
 
-import css from '@/pages/editDocument/Editor.css';
+import css from '@/pages/editDocument/Editor.css?inline';
 export const PRINT_COMMAND = createCommand('print-command');
 
 const PrintPlugin = () => {
@@ -47,21 +46,7 @@ const PrintPlugin = () => {
       COMMAND_PRIORITY_NORMAL,
     );
   }, [editor, id]);
-  return (
-    <>
-      {/* <div
-        ref={contRef}
-        style={{
-          visibility: 'hidden',
-          position: 'absolute',
-          left: '-9999px',
-          width: '524px',
-          height: '762px',
-        }}
-      ></div> */}
-      <Button onClick={() => editor.dispatchCommand(PRINT_COMMAND)}>Print</Button>
-    </>
-  );
+  return null;
 };
 
 export default PrintPlugin;

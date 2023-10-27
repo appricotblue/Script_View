@@ -17,11 +17,14 @@ import {
   Pencil,
 } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 import { GradientBtn } from '@common';
+import { PRINT_COMMAND } from '@/plugins/PrintPlugin';
 
 const ScriptHeader = () => {
   const { palette } = useTheme();
+  const [editor] = useLexicalComposerContext();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
@@ -102,6 +105,7 @@ const ScriptHeader = () => {
                   color: '#fff',
                   ':hover': { background: '#000' },
                 }}
+                onClick={() => editor.dispatchCommand(PRINT_COMMAND)}
               >
                 Share
               </GradientBtn>

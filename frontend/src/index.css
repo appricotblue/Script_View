@@ -18,7 +18,7 @@ html {
 }
 
 /* auto complete dropdown styling */
-.typeahead-anchor{
+.typeahead-anchor {
   position: relative;
 }
 .mentions-menu {
@@ -209,4 +209,3 @@ html {
   background-repeat: no-repeat;
   background-position: center;
 }
-

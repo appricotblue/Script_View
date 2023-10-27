@@ -4,6 +4,7 @@ import { Header, WithHeaderMargin } from '@common';
 import { EditDocument, Home, Login, Signup } from '@pages';
 import { ScriptHeader } from '@script';
 import App from '@/App';
+import LexicalComposerProvider from '@/context/LexicalComposerInitial';
 
 const appRouter = createBrowserRouter([
   {
@@ -24,12 +25,12 @@ const appRouter = createBrowserRouter([
       {
         path: '/document/:id',
         element: (
-          <>
+          <LexicalComposerProvider>
             <ScriptHeader />
             <WithHeaderMargin>
               <EditDocument />
             </WithHeaderMargin>
-          </>
+          </LexicalComposerProvider>
         ),
       },
       {

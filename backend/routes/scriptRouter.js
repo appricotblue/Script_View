@@ -1,9 +1,10 @@
 const router = require("express").Router();
 const puppeteer = require("puppeteer");
+const path = require("path");
 router.post("/export", async (req, res) => {
   let { format, css, html } = req.body;
   console.log({ format, css, html });
-  
+
   const formatValidator = {
     pdf: format === "pdf",
     docx: format === "docx",
@@ -25,10 +26,8 @@ router.post("/export", async (req, res) => {
       const page = await browser.newPage();
 
       await page.setContent(`<style>${css}</style>${html}`);
-
-      const pdfBuffer = await page.pdf({ format: "A4" });
+      const pdfBuffer = await page.pdf({ format: "A4",margin:{top:'10px',bottom:'10px',left:'10px',right:'10px'} });
       await browser.close();
-
       res.setHeader("Content-type", "application/pdf");
       res.send(pdfBuffer);
     } catch (err) {
