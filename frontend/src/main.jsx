@@ -8,8 +8,11 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import './index.css';
 
+import { Provider } from 'react-redux';
+
 import theme from './theme';
 import appRouter from './routes';
+import store from './store';
 
 /**
  * @ - import src
@@ -30,10 +33,12 @@ if (process.env.NODE_ENV === 'production') {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     {/* provide theming */}
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {/* router-dom configuration */}
-      <RouterProvider router={appRouter} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {/* router-dom configuration */}
+        <RouterProvider router={appRouter} />
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>,
 );
