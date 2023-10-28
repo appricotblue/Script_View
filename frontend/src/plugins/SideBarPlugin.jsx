@@ -15,7 +15,9 @@ import SceneNode, { $createSceneNode } from '@/nodes/SceneNode';
 import SubHeaderNode, { $createSubHeaderNode } from '@/nodes/SubHeaderNode';
 import SluglineNode, { $createSluglineNode } from '@/nodes/SluglineNode';
 import ActionNode, { $createActionNode } from '@/nodes/ActionNode';
-import DialogueContainerNode, { $createDialogueContainerNode } from '@/nodes/DialogueContainerNode';
+import DialogueContainerNode from '@/nodes/DialogueContainerNode';
+import TransitionNode, { $createTransitionNode } from '@/nodes/TransitionNode';
+import DialogueNode, { $createDialogueNode } from '@/nodes/DialogueNode';
 
 export const INSERT_CONTENT_COMMAND = createCommand('insert-content');
 
@@ -34,65 +36,37 @@ const SideBarPlugin = () => {
         }
         // object literal lookup
         const insertContent = {
-          scene: () => {
-            const nodes = selection.getNodes();
-            if (
-              nodes.some((node) => node.__type === SceneNode.getType()) ||
-              (nodes.length === 1 && nodes[0].getParent().getType() === SceneNode.getType())
-            ) {
-              $setBlocksType(selection, $createParagraphNode);
-            } else {
-              $setBlocksType(selection, $createSceneNode);
-            }
-          },
-          subheader: () => {
-            const nodes = selection.getNodes();
-            if (
-              nodes.some((node) => node.__type === SubHeaderNode.getType()) ||
-              (nodes.length === 1 && nodes[0].getParent().getType() === SubHeaderNode.getType())
-            ) {
-              $setBlocksType(selection, $createParagraphNode);
-            } else {
-              $setBlocksType(selection, $createSubHeaderNode);
-            }
-          },
-          slugline: () => {
-            const nodes = selection.getNodes();
-            if (
-              nodes.some((node) => node.__type === SluglineNode.getType()) ||
-              (nodes.length === 1 && nodes[0].getParent().getType() === SluglineNode.getType())
-            ) {
-              $setBlocksType(selection, $createParagraphNode);
-            } else {
-              $setBlocksType(selection, $createSluglineNode);
-            }
-          },
-          action: () => {
-            const nodes = selection.getNodes();
-            if (
-              nodes.some((node) => node.__type === ActionNode.getType()) ||
-              (nodes.length === 1 && nodes[0].getParent().getType() === ActionNode.getType())
-            ) {
-              $setBlocksType(selection, $createParagraphNode);
-            } else {
-              $setBlocksType(selection, $createActionNode);
-            }
-          },
+          scene: () => handleBlockInsert(SceneNode, $createSceneNode),
+          subheader: () => handleBlockInsert(SubHeaderNode, $createSubHeaderNode),
+          slugline: () => handleBlockInsert(SluglineNode, $createSluglineNode),
+          action: () => handleBlockInsert(ActionNode, $createActionNode),
+          // needs completion
           dialogue: () => {
             const nodes = selection.getNodes();
-            if (
-              nodes.some((node) => node.__type === DialogueContainerNode.getType()) ||
-              (nodes.length === 1 &&
-                nodes[0].getParent().getType() === DialogueContainerNode.getType())
-            ) {
-              $setBlocksType(selection, $createParagraphNode);
+            if (nodes.some((node) => node.__type === DialogueContainerNode.getType())) {
+              if (nodes.some((node) => node.__type === DialogueNode.getType())) {
+                return;
+              }
             } else {
-              $setBlocksType(selection, $createDialogueContainerNode);
+              $setBlocksType(selection, $createDialogueNode);
             }
           },
           parenthetical: () => {},
-          transition: () => {},
+          transition: () => handleBlockInsert(TransitionNode, $createTransitionNode),
         };
+
+        // block insertion function
+        function handleBlockInsert(Node, createNode) {
+          const nodes = selection.getNodes();
+          if (
+            nodes.some((node) => node.__type === Node.getType()) ||
+            (nodes.length === 1 && nodes[0].getParent().getType() === Node.getType())
+          ) {
+            $setBlocksType(selection, $createParagraphNode);
+          } else {
+            $setBlocksType(selection, createNode);
+          }
+        }
 
         // return if the payload is invalid
         if (insertContent[payload] === undefined) {
@@ -102,19 +76,15 @@ const SideBarPlugin = () => {
 
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
+          console.log();
           insertContent[payload]();
         }
+
         return true;
       },
       COMMAND_PRIORITY_NORMAL,
     );
   }, [editor]);
-
-  // useEffect(() => {
-  //   return editor.registerUpdateListener(({ editorState }) => {
-  //     console.log(editorState.toJSON());
-  //   });
-  // }, [editor]);
 
   useEffect(() => {
     return editor.registerCommand(

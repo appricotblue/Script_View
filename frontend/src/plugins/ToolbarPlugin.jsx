@@ -232,7 +232,7 @@ const ToolbarPlugin = () => {
             </Typography>
             <input
               type="text"
-              value="1"
+              defaultValue="1"
               style={{
                 width: '2.25rem',
                 textAlign: 'center',

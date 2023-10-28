@@ -1,10 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { $applyNodeReplacement } from 'lexical';
-
 import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createDialogueContainerNode = () => new DialogueContainerNode();
-
 export class DialogueContainerNode extends DefaultParagraphNode {
   constructor() {
     super();
@@ -28,6 +25,10 @@ export class DialogueContainerNode extends DefaultParagraphNode {
 
   static importJSON(_) {
     return new DialogueContainerNode();
+  }
+
+  getWritable() {
+    return new DialogueContainerNode(this.__key);
   }
 
   exportJSON() {

@@ -6,11 +6,23 @@ import SubHeaderNode from '@/nodes/SubHeaderNode';
 import SluglineNode from '@/nodes/SluglineNode';
 import ActionNode from '@/nodes/ActionNode';
 import { MentionNode } from '@/nodes/MentionNode';
+import TransitionNode from '@/nodes/TransitionNode';
+import DialogueContainerNode from '@/nodes/DialogueContainerNode';
+import DialogueNode from '@/nodes/DialogueNode';
 
 const LexicalComposerProvider = ({ children }) => {
   const lexicalConfig = {
     namespace: 'Script View Text Editor',
-    nodes: [SceneNode, SubHeaderNode, SluglineNode, ActionNode, MentionNode],
+    nodes: [
+      SceneNode,
+      SubHeaderNode,
+      SluglineNode,
+      ActionNode,
+      MentionNode,
+      TransitionNode,
+      DialogueContainerNode,
+      DialogueNode,
+    ],
     theme: {
       text: {
         bold: 'text-bold',
@@ -24,6 +36,7 @@ const LexicalComposerProvider = ({ children }) => {
       dialogue: 'dialogue',
       parenthetical: 'parenthetical',
       transition: 'transition',
+      dialogueContainer: 'dialogue-container',
     },
     onError: (e) => console.error(e),
   };
