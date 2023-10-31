@@ -15,8 +15,6 @@ router.get("/get-initial", async (req, res) => {
 
 router.post("/export", async (req, res) => {
   let { format, css, html } = req.body;
-  console.log({ format, css, html });
-
   const formatValidator = {
     pdf: format === "pdf",
     docx: format === "docx",
@@ -37,16 +35,29 @@ router.post("/export", async (req, res) => {
       const browser = await puppeteer.launch({ headless: "new" });
       const page = await browser.newPage();
 
-      await page.setContent(`<style>${css}</style>${html}`);
+      await page.setContent(
+        `<div style="width:40rem;word-wrap:break-word;">${html}</div>`
+      );
+      await page.addStyleTag({
+        content: `body{display:flex;justify-content:center;}${css}`,
+      });
+      console.log(await page.content());
+      page.setViewport({
+        height: 1080,
+        width: 1920,
+      });
       const pdfBuffer = await page.pdf({
         format: "A4",
+        printBackground: true,
         margin: { top: "10px", bottom: "10px", left: "10px", right: "10px" },
+        scale: 1,
       });
       await browser.close();
       res.setHeader("Content-type", "application/pdf");
       res.send(pdfBuffer);
     } catch (err) {
       console.log("Error has occured: ", err);
+      res.status(500).json({ message: err.message || "internal error" });
     }
   }
 });

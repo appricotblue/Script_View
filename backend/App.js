@@ -1,7 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
 const { createServer } = require("node:http");
-const { Server } = require("socket.io");
 const mongoose = require("mongoose");
 const db = mongoose.connection;
 require("dotenv").config();
@@ -23,30 +22,6 @@ db.once("open", () => {
 
 db.on("error", console.error.bind(console, "Connection ERROR: "));
 
-const io = new Server(server);
-
-io.on("connection", socket => {
-  console.log("connected");
-  socket.on("save-state", async data => {
-    console.log(data);
-    try {
-      const user = await ScriptModel.findOne({ "author.name": "Ajay" });
-      if (user) {
-        console.log(user);
-        await user.updateOne({ state: data.state });
-      } else {
-        await ScriptModel.create({
-          author: { name: "Ajay" },
-          state: data.state,
-        });
-      }
-      socket.broadcast.emit("receive-state", data);
-    } catch (err) {
-      console.log(err.message);
-    }
-  });
-});
-
 app.use(express.json());
 app.use(morgan("combined"));
 
@@ -56,3 +31,5 @@ app.use("/fonts/", fontsRouter);
 const PORT = 8080;
 
 server.listen(PORT, () => console.log(`server listening on port ${PORT}`));
+
+module.exports = server;
