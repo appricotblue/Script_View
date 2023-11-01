@@ -11,7 +11,6 @@ sub,
 sup {
   margin: 0;
 }
-
 .scene,
 .slugline,
 .subheader,
@@ -26,6 +25,7 @@ sup {
 }
 .scene {
   font-size: 1.125rem;
+  width: 50%;
 }
 .subheader {
   font-family: 'FML-IndulekhaHeavy';
@@ -45,9 +45,14 @@ sup {
   width: 100%;
   text-align: center;
 }
-.dialogue-container{
-  width:100%;
-  background-color: cyan;
+.dialogue-container {
+  display: flex;
+}
+.dialogue {
+  width: 70%;
+}
+.parenthetical {
+  width: 30%;
 }
 .text-bold {
   font-weight: bold;
@@ -57,9 +62,4 @@ sup {
 }
 .text-underline {
   text-decoration: underline;
-}
-
-.mention:focus {
-  box-shadow: rgb(180 213 255) 0px 0px 0px 2px;
-  outline: none;
 }

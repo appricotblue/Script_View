@@ -4,6 +4,8 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { useMemo, useState } from 'react';
 import { Box, Paper } from '@mui/material';
 
+import useOnlineStatus from '@/utils/hooks/useOnlineStatus';
+
 import Style from './TextArea.module.css';
 
 const TextArea = () => {

@@ -1,27 +1,30 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $generateHtmlFromNodes } from '@lexical/html';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
+import MinifyCss from 'minify-css-string';
 
-import css from '@/pages/editDocument/Editor.css?inline';
+import css from '@/pages/editDocument/Editor.css';
 export const PRINT_COMMAND = createCommand('print-command');
 
 const PrintPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const { id } = useParams();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return editor.registerCommand(
       PRINT_COMMAND,
       () => {
         editor.update(() => {
           // convert editor state into html
           const htmlString = $generateHtmlFromNodes(editor, null);
+          const minifiedCss = MinifyCss(css);
+          console.log(htmlString);
           fetch('http://localhost:8080/api/scripts/export', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ css, html: htmlString, format: 'pdf' }),
+            body: JSON.stringify({ css: minifiedCss, html: htmlString, format: 'pdf' }),
           })
             .then((response) => {
               if (response.ok) {

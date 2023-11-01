@@ -1,11 +1,16 @@
-const mongoose = require("mongoose");
+const { Schema, model } = require("mongoose");
 
-const scriptSchema = new mongoose.Schema(
+const scriptSchema = new Schema(
   {
-    author: { name: { type: String, required: "Author name is required" } },
-    state: { type: String, required: "state is required to update" },
+    title: { type: String, requried: "Requires Title" },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: "Requires Author",
+    },
+    editorState: { type: String },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("script", scriptSchema);
+module.exports = model("script", scriptSchema);

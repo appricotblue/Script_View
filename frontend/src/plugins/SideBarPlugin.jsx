@@ -1,23 +1,26 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   $createParagraphNode,
+  $getNodeByKey,
   $getSelection,
+  $insertNodes,
   $isRangeSelection,
   COMMAND_PRIORITY_NORMAL,
   KEY_DOWN_COMMAND,
   createCommand,
 } from 'lexical';
 import { $setBlocksType } from '@lexical/selection';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 
 import SceneNode, { $createSceneNode } from '@/nodes/SceneNode';
 import SubHeaderNode, { $createSubHeaderNode } from '@/nodes/SubHeaderNode';
 import SluglineNode, { $createSluglineNode } from '@/nodes/SluglineNode';
 import ActionNode, { $createActionNode } from '@/nodes/ActionNode';
-import DialogueContainerNode from '@/nodes/DialogueContainerNode';
+import DialogueContainerNode, { $createDialogueContainerNode } from '@/nodes/DialogueContainerNode';
 import TransitionNode, { $createTransitionNode } from '@/nodes/TransitionNode';
 import DialogueNode, { $createDialogueNode } from '@/nodes/DialogueNode';
+import { $createParentheticalNode } from '@/nodes/ParentheticalNode';
 
 export const INSERT_CONTENT_COMMAND = createCommand('insert-content');
 
@@ -25,7 +28,7 @@ const SideBarPlugin = () => {
   const { palette } = useTheme();
   const [editor] = useLexicalComposerContext();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return editor.registerCommand(
       INSERT_CONTENT_COMMAND,
       (payload) => {
@@ -43,12 +46,19 @@ const SideBarPlugin = () => {
           // needs completion
           dialogue: () => {
             const nodes = selection.getNodes();
-            if (nodes.some((node) => node.__type === DialogueContainerNode.getType())) {
+            // console.log(nodes);
+            if (
+              nodes.some(
+                (node) => $getNodeByKey(node.__parent).__type === DialogueContainerNode.getType(),
+              )
+            ) {
               if (nodes.some((node) => node.__type === DialogueNode.getType())) {
                 return;
               }
             } else {
-              $setBlocksType(selection, $createDialogueNode);
+              const cont = $createDialogueContainerNode();
+              cont.append($createParentheticalNode(), $createDialogueNode());
+              $insertNodes([cont]);
             }
           },
           parenthetical: () => {},
@@ -86,7 +96,7 @@ const SideBarPlugin = () => {
     );
   }, [editor]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return editor.registerCommand(
       KEY_DOWN_COMMAND,
       (event) => {

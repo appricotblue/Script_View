@@ -11,9 +11,9 @@ export class DialogueNode extends DefaultParagraphNode {
   }
 
   createDOM(_config, _editor) {
-    const p = document.createElement('p');
-    p.className = _config.theme.dialogue;
-    return p;
+    const div = document.createElement('div');
+    div.className = _config.theme.dialogue;
+    return div;
   }
   updateDOM() {
     return false;

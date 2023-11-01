@@ -8,20 +8,24 @@ import PrintPlugin from '@/plugins/PrintPlugin';
 import AutoSavePlugin from '@/plugins/AutoSavePlugin';
 import './Editor.css';
 import FetchInitialStatePlugin from '@/plugins/FetchInitialStatePlugin';
+import useOnlineStatus from '@/utils/hooks/useOnlineStatus';
 
 const EditDocument = () => {
-  return (
-    <Stack display="flex" direction="row" width="100%" maxHeight="100vh">
-      <ScriptSidebar />
-      <TextEditor />
-      <AutoSavePlugin />
-      <FetchInitialStatePlugin />
-      <NewMentionsPlugin />
-      <PrintPlugin />
-      <AutoFocusPlugin />
-      <HistoryPlugin />
-    </Stack>
-  );
+  const isOnline = useOnlineStatus();
+  if (isOnline)
+    return (
+      <Stack display="flex" direction="row" width="100%" maxHeight="100vh">
+        <ScriptSidebar />
+        <TextEditor />
+        {/* <AutoSavePlugin /> */}
+        <FetchInitialStatePlugin />
+        <NewMentionsPlugin />
+        <PrintPlugin />
+        <AutoFocusPlugin />
+        <HistoryPlugin />
+      </Stack>
+    );
+  return <div>You are offline</div>;
 };
 
 export default EditDocument;

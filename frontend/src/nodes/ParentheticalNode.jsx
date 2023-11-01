@@ -10,9 +10,9 @@ export class ParentheticalNode extends DefaultParagraphNode {
   }
 
   createDOM(_config, _editor) {
-    const p = document.createElement('p');
-    p.className = _config.theme.scene;
-    return p;
+    const div = document.createElement('div');
+    div.className = _config.theme.parenthetical;
+    return div;
   }
   updateDOM() {
     return false;

@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { LexicalTypeaheadMenuPlugin, MenuOption } from '@lexical/react/LexicalTypeaheadMenuPlugin';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import { $createTextNode, $getSelection } from 'lexical';
-
 import { useDebounce, useTransliteration } from '@hooks';
 
 // regex to check if the user is typing only letters
@@ -12,6 +11,8 @@ const lettersTriggerRegex = /^[a-zA-Z]+$/;
 
 // At most, 5 suggestions are shown in the popup.
 const SUGGESTION_LIST_LENGTH_LIMIT = 5;
+// Length of the input string sent to transliterate.
+const INPUT_LENGTH = 20;
 
 function useCachedTransliterationService(inputString) {
   const [results, setResults] = useState([]);
@@ -20,14 +21,14 @@ function useCachedTransliterationService(inputString) {
   // debounce callback
   const debounceCb = (string) => {
     transliterate(string).then((result) => {
-      setResults(result);
+      setResults(result ?? []);
     });
   };
 
   const transliterateDebounced = useDebounce(debounceCb, 50);
 
-  useEffect(() => {
-    if (inputString == null) {
+  useLayoutEffect(() => {
+    if (inputString == null || inputString.length > INPUT_LENGTH) {
       setResults([]);
       return;
     }
@@ -75,7 +76,7 @@ export default function TransliterationPlugin() {
   const [results, setResults] = useState([]);
   const transliterated = useCachedTransliterationService(queryString);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setResults(transliterated);
   }, [transliterated]);
 

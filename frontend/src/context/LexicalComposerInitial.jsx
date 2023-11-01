@@ -9,6 +9,7 @@ import { MentionNode } from '@/nodes/MentionNode';
 import TransitionNode from '@/nodes/TransitionNode';
 import DialogueContainerNode from '@/nodes/DialogueContainerNode';
 import DialogueNode from '@/nodes/DialogueNode';
+import ParentheticalNode from '@/nodes/ParentheticalNode';
 
 const LexicalComposerProvider = ({ children }) => {
   const lexicalConfig = {
@@ -22,6 +23,7 @@ const LexicalComposerProvider = ({ children }) => {
       TransitionNode,
       DialogueContainerNode,
       DialogueNode,
+      ParentheticalNode,
     ],
     theme: {
       text: {
