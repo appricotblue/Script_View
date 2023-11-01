@@ -1,7 +1,7 @@
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
+import { useDebounce } from '@hooks';
 
 import useSocketRegistration from '@/utils/hooks/useSocketRegistration';
-import { useDebounce } from '@hooks';
 const AutoSavePlugin = () => {
   const [socket] = useSocketRegistration();
 

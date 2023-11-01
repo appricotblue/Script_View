@@ -17,7 +17,7 @@ const EditDocument = () => {
       <Stack display="flex" direction="row" width="100%" maxHeight="100vh">
         <ScriptSidebar />
         <TextEditor />
-        {/* <AutoSavePlugin /> */}
+        <AutoSavePlugin />
         <FetchInitialStatePlugin />
         <NewMentionsPlugin />
         <PrintPlugin />

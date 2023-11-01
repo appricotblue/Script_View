@@ -4,9 +4,10 @@ const scriptSchema = new Schema(
   {
     title: { type: String, requried: "Requires Title" },
     author: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-      required: "Requires Author",
+      // type: Schema.Types.ObjectId,
+      // ref: "User",
+      // required: "Requires Author",
+      type: String,
     },
     editorState: { type: String },
   },

@@ -5,8 +5,8 @@ const ScriptModel = require("../model/scriptModel");
 
 router.get("/get-initial", async (req, res) => {
   try {
-    const data = await ScriptModel.findOne({ "author.name": "Ajay" });
-    if (data) return res.json({ author: data.author, data: data.state });
+    const data = await ScriptModel.findOne({ "author": "user" });
+    if (data) return res.json({ author: data.author, data: data.editorState });
     return res.status(404).json({ message: "Data not found" });
   } catch (err) {
     return res.status(500).json({ message: err.message });
