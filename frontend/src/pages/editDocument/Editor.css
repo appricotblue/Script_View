@@ -49,10 +49,10 @@ sup {
   display: flex;
 }
 .dialogue {
-  width: 70%;
+  width: 50%;
 }
 .parenthetical {
-  width: 30%;
+  width: 50%;
   display: flex;
   justify-content: flex-end;
 }
@@ -69,6 +69,6 @@ sup {
   text-decoration: underline;
 }
 .action {
-  width: 60%;
+  width: 50%;
   word-break: break-all;
 }
