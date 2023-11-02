@@ -29,7 +29,7 @@ const TextArea = () => {
     <Paper
       sx={{
         width: '40rem',
-        height: '55.5rem',
+        minHeight: '55.5rem',
         boxShadow: '2.99253px 2.99253px 13.46637px 0px rgba(0, 0, 0, 0.10)',
         display: 'flex',
         flexDirection: 'column',

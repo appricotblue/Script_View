@@ -53,6 +53,11 @@ sup {
 }
 .parenthetical {
   width: 30%;
+  display: flex;
+  justify-content: flex-end;
+}
+.parenthetical::after {
+  content: ':';
 }
 .text-bold {
   font-weight: bold;
@@ -62,4 +67,8 @@ sup {
 }
 .text-underline {
   text-decoration: underline;
+}
+.action {
+  width: 60%;
+  word-break: break-all;
 }
