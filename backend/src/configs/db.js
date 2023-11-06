@@ -8,9 +8,9 @@ const { default: mongoose } = require("mongoose");
 module.exports = function () {
   const db = mongoose.connection;
 
-  const { ENVIRONMENT, DB_URI } = process.env;
+  const { NODE_ENV, DB_URI } = process.env;
   const URI =
-    ENVIRONMENT === "PRODUCTION"
+    NODE_ENV === "production"
       ? DB_URI
       : "mongodb+srv://ajayprakash:mrAJAY1@cluster0.fo34uzm.mongodb.net/scriptViewDev?retryWrites=true&w=majority";
 
