@@ -1,60 +1,49 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const { createServer } = require("node:http");
-const { Server } = require("socket.io");
-const mongoose = require("mongoose");
-const db = mongoose.connection;
-require("dotenv").config();
 
-const scriptRouter = require("./routes/scriptRouter");
-const fontsRouter = require("./routes/fontsRouter");
-const ScriptModel = require("./model/scriptModel");
+const path = require("node:path");
+const scriptRouter = require("./src/routes/scriptRouter");
+const fontsRouter = require("./src/routes/fontsRouter");
+const socket = require("./src/socket");
+const establishDB = require("./src/configs/db");
+const corsConfig = require("./src/configs/cors");
 
+const { PORT, NODE_ENV } = process.env;
+
+const isProduction = NODE_ENV === "production";
+
+if (isProduction) console.log("server running on production");
+// create app and http server
 const app = express();
 const server = createServer(app);
 
-mongoose.connect(
-  "mongodb+srv://ajayprakash:mrAJAY1@cluster0.fo34uzm.mongodb.net/scriptview?retryWrites=true&w=majority"
-);
-
-db.once("open", () => {
-  console.log("mongodb connected");
-});
-
-db.on("error", console.error.bind(console, "Connection ERROR: "));
-
 app.use(express.json());
-app.use(morgan("combined"));
 
-const io = new Server(server);
+if (!isProduction) app.use(morgan("combined"));
 
-io.on("connection", socket => {
-  console.log("connected");
-  socket.on("save-state", async data => {
-    console.log(data);
-    try {
-      const user = await ScriptModel.findOne({ "author": "user" });
-      if (user) {
-        await user.updateOne({ editorState: data.state });
-      } else {
-        await ScriptModel.create({
-          // author: ObjectId(user),
-          author: "user",
-          editorState: data.state,
-        });
-      }
-      socket.broadcast.emit("receive-state", data);
-    } catch (err) {
-      console.log(err.message);
-    }
-  });
-});
+// set up cors
+if (isProduction) cors(corsConfig);
+else cors();
 
+// establish db and socket
+socket(server);
+establishDB();
+
+// routing
 app.use("/api/scripts/", scriptRouter);
 app.use("/fonts/", fontsRouter);
 
-const PORT = 8080;
+// point the static files to production build of frontend
+if (isProduction) {
+  app.use(express.static(path.join(__dirname, "../frontend", "dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
+}
 
-server.listen(PORT, () => console.log(`server listening on port ${PORT}`));
+const port = PORT || 8080;
 
-module.exports = server;
+server.listen(port, () => console.log(`server listening on port ${port}`));

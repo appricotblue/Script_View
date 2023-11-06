@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 const { Schema, model } = require("mongoose");
 const { hash, genSalt } = require("bcrypt");
 const {
@@ -33,7 +34,7 @@ const userSchema = new Schema(
       required: "Requires Password",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // hash the password before saving

@@ -11,7 +11,8 @@ const scriptSchema = new Schema(
     },
     editorState: { type: String },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-module.exports = model("script", scriptSchema);
+const ScriptModel = model("script", scriptSchema);
+module.exports = ScriptModel;
