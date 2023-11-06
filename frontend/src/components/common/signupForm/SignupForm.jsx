@@ -1,10 +1,14 @@
 import { Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { AuthInput, GradientBtn } from '@common';
+import { setLogin } from '@/store/slices/userSlice';
 
 const SignupForm = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   return (
     <Stack component="form" gap="0.94rem" width="100%">
       <Typography variant="h2">Create Account</Typography>
@@ -17,7 +21,10 @@ const SignupForm = () => {
         size="extra-large"
         disableRipple
         sx={{ mt: { xs: '1.5rem', lg: '3.5rem' } }}
-        onClick={() => navigate('/', { state: { isLoggedIn: true } })}
+        onClick={() => {
+          dispatch(setLogin(true));
+          navigate('/');
+        }}
       >
         Sign Up
       </GradientBtn>

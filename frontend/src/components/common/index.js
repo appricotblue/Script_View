@@ -7,3 +7,5 @@ export { default as LoginForm } from './loginForm/LoginForm';
 export { default as SignupForm } from './signupForm/SignupForm';
 export { default as PreLoader } from './preLoader/PreLoader';
 export { default as WithHeaderMargin } from './withHeaderMargin/WithHeaderMargin';
+export { default as TemplateCard } from './templateCard/TemplateCard';
+export { default as DocCard } from './docCard/DocCard';

@@ -1,15 +1,17 @@
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { useDebounce } from '@hooks';
+import { useParams } from 'react-router-dom';
 
 import useSocketRegistration from '@/utils/hooks/useSocketRegistration';
 const AutoSavePlugin = () => {
   const [socket] = useSocketRegistration();
+  const { id } = useParams();
 
   const debounceCb = (editorState) => {
     if (socket === null) {
       return console.error('No socket registered');
     }
-    socket.emit('save-state', { state: editorState });
+    socket.emit('save-state', { state: editorState, id });
   };
   const saveDebounce = useDebounce(debounceCb, 500);
   const onChange = (editorState) => {

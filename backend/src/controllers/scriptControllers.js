@@ -1,5 +1,9 @@
 const { default: puppeteer } = require("puppeteer");
-const { findAutherById } = require("../helpers/scriptHelpers");
+const {
+  findScriptById,
+  createScriptFromId,
+  getRecentDocList,
+} = require("../helpers/scriptHelpers");
 const { validateHTML } = require("../utils/validationUtils");
 
 /**
@@ -12,12 +16,31 @@ const { validateHTML } = require("../utils/validationUtils");
 module.exports = {
   getInitial: async (req, res) => {
     try {
-      const data = await findAutherById("user");
+      const data = await findScriptById(req.params.id);
       if (data) {
         return res.json({ author: data.author, data: data.editorState });
       }
       return res.status(404).json({ message: "Data not found" });
     } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
+  createScript: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const docData = await createScriptFromId(id);
+      res.json({ author: docData.author, id: docData._id });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ message: err.message });
+    }
+  },
+  listRecent: async (req, res) => {
+    try {
+      const list = await getRecentDocList();
+      res.json({ data: list });
+    } catch (err) {
+      console.log(err);
       return res.status(500).json({ message: err.message });
     }
   },

@@ -16,6 +16,7 @@
         "prefer-regex-literals": 0,
         "consistent-return":0,
         "import/no-extraneous-dependencies":0,
-        "func-names":0
+        "func-names":0,
+        "no-underscore-dangle":0
     }
 }
