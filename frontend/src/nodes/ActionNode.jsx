@@ -13,7 +13,7 @@ export class ActionNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const p = document.createElement('p');
     p.className = _config.theme.action;
-    p.setAttribute('data-placeholder', 'type action...');
+    p.setAttribute('data-placeholder', 'Action...');
 
     return p;
   }
