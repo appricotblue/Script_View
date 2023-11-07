@@ -44,7 +44,16 @@ sup {
   font-style: normal;
   font-weight: 400;
   width: 100%;
+  display: flex;
+  justify-content: center;
   text-align: center;
+}
+
+.transition::before{
+  content: "- ";
+}
+.transition::after{
+  content: " -";
 }
 .dialogue-container {
   display: flex;
@@ -108,7 +117,7 @@ sup {
   color:grey;
   opacity: 0.5;
 }
-.transition:has(br):not(:has(span)):not(:focus)::before {
+.transition:empty:not(:focus)::before {
   position: absolute;
   content: attr(data-placeholder);
   color:grey;

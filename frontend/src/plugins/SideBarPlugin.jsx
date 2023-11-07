@@ -86,7 +86,6 @@ const SideBarPlugin = () => {
 
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
-          console.log();
           insertContent[payload]();
         }
 

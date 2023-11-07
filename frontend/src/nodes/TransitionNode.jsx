@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { $applyNodeReplacement } from 'lexical';
+import { $applyNodeReplacement, $createParagraphNode, $createTextNode } from 'lexical';
 
 import DefaultParagraphNode from './DefaultParagraphNode';
 
@@ -9,12 +9,11 @@ export class TransitionNode extends DefaultParagraphNode {
   constructor() {
     super();
   }
-
   createDOM(_config, _editor) {
     const p = document.createElement('p');
     p.className = _config.theme.transition;
     p.setAttribute('data-placeholder', 'Transition...');
-    p.innerHTML = '- cut to -';
+    p.append(document.createTextNode('cut to'));
     return p;
   }
   updateDOM() {
