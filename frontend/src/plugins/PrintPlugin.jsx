@@ -25,7 +25,7 @@ const PrintPlugin = () => {
           fetch(`${VITE_BASE_URL}/api/scripts/export`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ css: minifiedCss, html: htmlString, format: 'pdf' }),
+            body: JSON.stringify({ css: minifiedCss, html: htmlString, docFormat: 'pdf' }),
           })
             .then((response) => {
               if (response.ok) {

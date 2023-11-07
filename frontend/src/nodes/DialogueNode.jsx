@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 
+import { $createParagraphNode, $setSelection } from 'lexical';
+
 import DefaultParagraphNode from './DefaultParagraphNode';
-import { $createDialogueContainerNode } from './DialogueContainerNode';
 
 export const $createDialogueNode = () => new DialogueNode();
 
@@ -13,8 +14,10 @@ export class DialogueNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const div = document.createElement('div');
     div.className = _config.theme.dialogue;
+    div.setAttribute('data-placeholder', 'dialogue...');
     return div;
   }
+
   updateDOM() {
     return false;
   }
@@ -29,11 +32,20 @@ export class DialogueNode extends DefaultParagraphNode {
   static importJSON(_) {
     return new DialogueNode();
   }
-  isParentRequired() {
-    return true;
-  }
-  createParentElementNode() {
-    return $createDialogueContainerNode;
+
+  insertNewAfter() {
+    const parent = this.getParent();
+    if (!parent) {
+      // The DialogueContainerNode does not have a parent node, so we cannot insert a new node after it.
+      return;
+    }
+    // Insert a new node after the DialogueContainerNode.
+    const newNode = $createParagraphNode();
+    const newlyInserted = parent.insertNewAfter(newNode);
+
+    // Set the selection to the new node.
+    $setSelection(newNode);
+    return newlyInserted;
   }
 
   exportJSON() {

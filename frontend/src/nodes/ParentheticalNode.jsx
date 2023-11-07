@@ -1,7 +1,8 @@
 /* eslint-disable no-unused-vars */
 
-import DefaultParagraphNode from './DefaultParagraphNode';
+import { $createTextNode, ElementNode } from 'lexical';
 
+import DefaultParagraphNode from './DefaultParagraphNode';
 export const $createParentheticalNode = () => new ParentheticalNode();
 
 export class ParentheticalNode extends DefaultParagraphNode {
@@ -12,8 +13,11 @@ export class ParentheticalNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const div = document.createElement('div');
     div.className = _config.theme.parenthetical;
+    div.setAttribute('data-placeholder', 'parenthetical...');
+
     return div;
   }
+
   updateDOM() {
     return false;
   }
@@ -27,6 +31,9 @@ export class ParentheticalNode extends DefaultParagraphNode {
 
   static importJSON(_) {
     return new ParentheticalNode();
+  }
+  collapseAtStart() {
+    return this.remove();
   }
 
   exportJSON() {

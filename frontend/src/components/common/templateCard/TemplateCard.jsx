@@ -13,6 +13,7 @@ const TemplateCard = () => {
 
   const handleClick = (e) => {
     if (isLoading) return e.stopPropagation();
+    setLoading(true);
     const id = v4();
     fetch(`${VITE_BASE_URL}/api/scripts/create/${id}`)
       .then(async (response) => {

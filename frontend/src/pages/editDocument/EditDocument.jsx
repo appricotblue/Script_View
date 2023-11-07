@@ -3,7 +3,7 @@ import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 
 import { ScriptSidebar, TextEditor } from '@script';
-import NewMentionsPlugin from '@/plugins/TransliterationPlugin';
+import TransliterationPlugin from '@/plugins/TransliterationPlugin';
 import PrintPlugin from '@/plugins/PrintPlugin';
 import AutoSavePlugin from '@/plugins/AutoSavePlugin';
 import './Editor.css';
@@ -19,7 +19,7 @@ const EditDocument = () => {
         <TextEditor />
         <AutoSavePlugin />
         <FetchInitialStatePlugin />
-        <NewMentionsPlugin />
+        <TransliterationPlugin />
         <PrintPlugin />
         <AutoFocusPlugin />
         <HistoryPlugin />

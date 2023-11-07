@@ -25,8 +25,8 @@ app.use(express.json());
 if (!isProduction) app.use(morgan("combined"));
 
 // set up cors
-if (isProduction) cors(corsConfig);
-else cors();
+if (isProduction) app.use(cors(corsConfig));
+else app.use(cors());
 
 // establish db and socket
 socket(server);

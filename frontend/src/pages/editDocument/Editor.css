@@ -14,8 +14,9 @@ sup {
 .scene,
 .slugline,
 .subheader,
-.transition {
+.transition,.dialogue, .parenthetical {
   line-height: 1.375rem; /* 110% */
+  margin-top: 5px;
 }
 .scene,
 .slugline {
@@ -51,13 +52,15 @@ sup {
 .dialogue {
   width: 50%;
 }
+
 .parenthetical {
   width: 50%;
   display: flex;
   justify-content: flex-end;
+  position: relative;
 }
 .parenthetical::after {
-  content: ':';
+  content: ' : ';
 }
 .text-bold {
   font-weight: bold;
@@ -71,4 +74,49 @@ sup {
 .action {
   width: 50%;
   word-break: break-all;
+}
+
+/* placeholder*/
+.dialogue:has(br):not(:has(span)):not(:focus)::before {
+  position: absolute;
+  content: attr(data-placeholder);
+  color:grey;
+  opacity: 0.5;
+}
+.parenthetical:has(br):not(:has(span)):not(:focus)::before {
+  position: absolute;
+  left: 0;
+  content: attr(data-placeholder);
+  color:grey;
+  opacity: 0.5;
+}
+.slugline:has(br):not(:has(span)):not(:focus)::before {
+  position: absolute;
+  content: attr(data-placeholder);
+  color:grey;
+  opacity: 0.5;
+}
+.scene:has(br):not(:has(span)):not(:focus)::before {
+  position: absolute;
+  content: attr(data-placeholder);
+  color:grey;
+  opacity: 0.5;
+}
+.subheader:has(br):not(:has(span)):not(:focus)::before {
+  position: absolute;
+  content: attr(data-placeholder);
+  color:grey;
+  opacity: 0.5;
+}
+.transition:has(br):not(:has(span)):not(:focus)::before {
+  position: absolute;
+  content: attr(data-placeholder);
+  color:grey;
+  opacity: 0.5;
+}
+.action:has(br):not(:has(span)):not(:focus)::before {
+  position: absolute;
+  content: attr(data-placeholder);
+  color:grey;
+  opacity: 0.5;
 }

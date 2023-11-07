@@ -50,7 +50,6 @@ module.exports = {
       pdf: docFormat === "pdf",
       docx: docFormat === "docx",
     };
-
     if (!docFormat || !docFormatValidator[docFormat]) {
       return res.status(400).json({ message: "invalid docFormat type" });
     }
@@ -83,10 +82,10 @@ module.exports = {
           format: format || "A4",
           printBackground: true,
           margin: {
-            top: margin.top || "0px",
-            bottom: margin.bottom || "0px",
-            left: margin.left || "0px",
-            right: margin.right || "0px",
+            top: margin?.top || "0px",
+            bottom: margin?.bottom || "0px",
+            left: margin?.left || "0px",
+            right: margin?.right || "0px",
           },
           scale: 1,
           height: height || undefined,

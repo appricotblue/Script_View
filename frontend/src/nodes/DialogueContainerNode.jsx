@@ -18,10 +18,12 @@ export class DialogueContainerNode extends DefaultParagraphNode {
     const childrenSize = this.getChildrenSize();
     if (childrenSize === 0 || !this.getParent()) return this.remove(true);
     if (childrenSize === 1) {
-      const childType = this.getLastChild().__type;
+      const childType = this.getLastChild()?.__type;
       const dialogueOrParenthetical =
         childType === ParentheticalNode.getType() || childType === DialogueNode.getType();
-      if (!dialogueOrParenthetical) return this.remove(true);
+      if (!dialogueOrParenthetical) {
+        return this.remove(true);
+      }
     }
     return false;
   }

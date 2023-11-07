@@ -13,6 +13,8 @@ export class SubHeaderNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const h5 = document.createElement('h5');
     h5.className = _config.theme.subheader;
+    h5.setAttribute('data-placeholder', 'type subheader...');
+
     return h5;
   }
   updateDOM() {

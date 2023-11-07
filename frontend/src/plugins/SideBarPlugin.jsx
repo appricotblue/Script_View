@@ -49,7 +49,7 @@ const SideBarPlugin = () => {
             // console.log(nodes);
             if (
               nodes.some(
-                (node) => $getNodeByKey(node.__parent).__type === DialogueContainerNode.getType(),
+                (node) => $getNodeByKey(node.__parent)?.__type === DialogueContainerNode.getType(),
               )
             ) {
               if (nodes.some((node) => node.__type === DialogueNode.getType())) {
@@ -106,6 +106,8 @@ const SideBarPlugin = () => {
             KeyS: 'slugline',
             KeyH: 'subheader',
             KeyN: 'scene',
+            KeyT: 'transition',
+            KeyD: 'dialogue',
           }[event.code];
           if (payload) {
             event.preventDefault();
