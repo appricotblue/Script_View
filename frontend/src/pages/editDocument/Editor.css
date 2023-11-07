@@ -14,7 +14,7 @@ sup {
 .scene,
 .slugline,
 .subheader,
-.transition,.dialogue, .parenthetical {
+.transition,.dialogue, .parenthetical,.action {
   line-height: 1.375rem; /* 110% */
   margin-top: 5px;
 }
