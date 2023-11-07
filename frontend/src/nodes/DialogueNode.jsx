@@ -14,7 +14,7 @@ export class DialogueNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const div = document.createElement('div');
     div.className = _config.theme.dialogue;
-    div.setAttribute('data-placeholder', 'dialogue...');
+    div.setAttribute('data-placeholder', 'Dialogue...');
     return div;
   }
 
