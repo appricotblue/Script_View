@@ -13,7 +13,7 @@ export class SluglineNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const h6 = document.createElement('h6');
     h6.className = _config.theme.slugline;
-    h6.setAttribute('data-placeholder', 'type slugline...');
+    h6.setAttribute('data-placeholder', 'Slugline...');
 
     return h6;
   }

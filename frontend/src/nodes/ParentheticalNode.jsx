@@ -13,7 +13,7 @@ export class ParentheticalNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const div = document.createElement('div');
     div.className = _config.theme.parenthetical;
-    div.setAttribute('data-placeholder', 'parenthetical...');
+    div.setAttribute('data-placeholder', 'Parenthetical...');
 
     return div;
   }

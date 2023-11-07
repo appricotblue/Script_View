@@ -13,7 +13,7 @@ export class SceneNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const h4 = document.createElement('h4');
     h4.className = _config.theme.scene;
-    h4.setAttribute('data-placeholder', 'type scene...');
+    h4.setAttribute('data-placeholder', 'Scene...');
 
     return h4;
   }

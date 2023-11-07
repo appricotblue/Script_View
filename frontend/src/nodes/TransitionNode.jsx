@@ -13,7 +13,7 @@ export class TransitionNode extends DefaultParagraphNode {
   createDOM(_config, _editor) {
     const p = document.createElement('p');
     p.className = _config.theme.transition;
-    p.setAttribute('data-placeholder', 'type transition...');
+    p.setAttribute('data-placeholder', 'Transition...');
     p.innerHTML = '- cut to -';
     return p;
   }
