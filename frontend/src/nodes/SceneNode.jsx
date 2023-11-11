@@ -1,18 +1,18 @@
-/* eslint-disable no-unused-vars */
 import { $applyNodeReplacement } from 'lexical';
 
-import DefaultParagraphNode from './DefaultParagraphNode';
+import DefaultActionNode from './DefaultActionNode';
 
 export const $createSceneNode = () => $applyNodeReplacement(new SceneNode());
+export const $isSceneNode = (node) => node instanceof SceneNode;
 
-export class SceneNode extends DefaultParagraphNode {
+export class SceneNode extends DefaultActionNode {
   constructor() {
     super();
   }
 
-  createDOM(_config, _editor) {
+  createDOM(config) {
     const h4 = document.createElement('h4');
-    h4.className = _config.theme.scene;
+    h4.className = config.theme.scene;
     h4.setAttribute('data-placeholder', 'Scene...');
 
     return h4;
@@ -28,7 +28,7 @@ export class SceneNode extends DefaultParagraphNode {
     return 'scene';
   }
 
-  static importJSON(_) {
+  static importJSON() {
     return new SceneNode();
   }
 

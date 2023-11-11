@@ -1,7 +1,6 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   $createParagraphNode,
-  $getNodeByKey,
   $getSelection,
   $insertNodes,
   $isRangeSelection,
@@ -12,15 +11,25 @@ import {
 import { $setBlocksType } from '@lexical/selection';
 import { useLayoutEffect } from 'react';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
+import { $findMatchingParent } from '@lexical/utils';
 
 import SceneNode, { $createSceneNode } from '@/nodes/SceneNode';
 import SubHeaderNode, { $createSubHeaderNode } from '@/nodes/SubHeaderNode';
 import SluglineNode, { $createSluglineNode } from '@/nodes/SluglineNode';
-import ActionNode, { $createActionNode } from '@/nodes/ActionNode';
-import DialogueContainerNode, { $createDialogueContainerNode } from '@/nodes/DialogueContainerNode';
+import ActionNode, {
+  $createActionNode,
+  $isActionNode,
+} from '@/nodes/ActionNode';
+import {
+  $createDialogueContainerNode,
+  $isDialogueContainerNode,
+} from '@/nodes/DialogueContainerNode';
 import TransitionNode, { $createTransitionNode } from '@/nodes/TransitionNode';
-import DialogueNode, { $createDialogueNode } from '@/nodes/DialogueNode';
-import { $createParentheticalNode } from '@/nodes/ParentheticalNode';
+import { $createDialogueNode, $isDialogueNode } from '@/nodes/DialogueNode';
+import {
+  $createParentheticalNode,
+  $isParentheticalNode,
+} from '@/nodes/ParentheticalNode';
 
 export const INSERT_CONTENT_COMMAND = createCommand('insert-content');
 
@@ -28,75 +37,150 @@ const SideBarPlugin = () => {
   const { palette } = useTheme();
   const [editor] = useLexicalComposerContext();
 
-  useLayoutEffect(() => {
-    return editor.registerCommand(
-      INSERT_CONTENT_COMMAND,
-      (payload) => {
-        // return if payload is undefined or null
-        if (payload === undefined || payload === null) {
-          console.error(`payload for INSERT_CONTENT_COMMAND is ${typeof payload}`);
-          return true;
-        }
-        // object literal lookup
-        const insertContent = {
-          scene: () => handleBlockInsert(SceneNode, $createSceneNode),
-          subheader: () => handleBlockInsert(SubHeaderNode, $createSubHeaderNode),
-          slugline: () => handleBlockInsert(SluglineNode, $createSluglineNode),
-          action: () => handleBlockInsert(ActionNode, $createActionNode),
-          // needs completion
-          dialogue: () => {
-            const nodes = selection.getNodes();
-            // console.log(nodes);
-            if (
-              nodes.some(
-                (node) => $getNodeByKey(node.__parent)?.__type === DialogueContainerNode.getType(),
-              )
-            ) {
-              if (nodes.some((node) => node.__type === DialogueNode.getType())) {
-                return;
-              }
-            } else {
-              const cont = $createDialogueContainerNode();
-              cont.append($createParentheticalNode(), $createDialogueNode());
-              $insertNodes([cont]);
-            }
-          },
-          parenthetical: () => {},
-          transition: () => handleBlockInsert(TransitionNode, $createTransitionNode),
-        };
+  const insertContentAction = (payload) => {
+    // return if payload is undefined or null
+    if (payload === undefined || payload === null) {
+      console.error(`payload for INSERT_CONTENT_COMMAND is ${typeof payload}`);
+      return true;
+    }
 
-        // block insertion function
-        function handleBlockInsert(Node, createNode) {
-          const nodes = selection.getNodes();
-          if (
-            nodes.some((node) => node.__type === Node.getType()) ||
-            (nodes.length === 1 && nodes[0].getParent().getType() === Node.getType())
-          ) {
-            $setBlocksType(selection, $createParagraphNode);
-          } else {
-            $setBlocksType(selection, createNode);
+    const insertContent = {
+      scene: () => handleNodeInsert(SceneNode, $createSceneNode),
+      subheader: () => handleNodeInsert(SubHeaderNode, $createSubHeaderNode),
+      slugline: () => handleNodeInsert(SluglineNode, $createSluglineNode),
+      action: () => handleNodeInsert(ActionNode, $createActionNode),
+      transition: () => handleNodeInsert(TransitionNode, $createTransitionNode),
+
+      dialogue: () => {
+        const nodes = selection.getNodes();
+        console.log(nodes);
+        let DContainer;
+        let Parenthetical;
+        let Dialogue;
+
+        for (const node of nodes) {
+          let matchingParent = findDialogueContainerParent(node);
+          if (matchingParent) {
+            DContainer = matchingParent;
+            break;
           }
         }
 
-        // return if the payload is invalid
-        if (insertContent[payload] === undefined) {
-          console.error('invalid payload');
-          return true;
+        if (DContainer) {
+          console.log('Contains Dialogue Container parent');
+          const dialogue = DContainer.getChildren().find((node) =>
+            $isDialogueNode(node),
+          );
+          if (dialogue) {
+            const newContainer = $createDialogueContainerNode();
+            const newDia = $createDialogueNode();
+            const newPare = $createParentheticalNode();
+            DContainer.insertAfter(newContainer.append(newPare, newDia));
+            return newPare.select();
+          }
+          const pare = $findMatchingParent(
+            selection.anchor.getNode(),
+            (parent) => $isParentheticalNode(parent),
+          );
+          if (pare) {
+            const newDia = $createDialogueNode();
+            pare.insertAfter(newDia);
+            return newDia.select();
+          }
+        } else {
+          DContainer = $createDialogueContainerNode();
+          Parenthetical = $createParentheticalNode();
+          Dialogue = $createDialogueNode();
+          DContainer.append(Parenthetical, Dialogue);
+          $insertNodes([DContainer]);
+          return Parenthetical.select();
         }
-
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-          insertContent[payload]();
-        }
-
-        return true;
       },
-      COMMAND_PRIORITY_NORMAL,
-    );
-  }, [editor]);
+
+      parenthetical: () => {},
+    };
+
+    function handleNodeInsert(nodeToInsert, createNodeToInsert) {
+      const nodesInSelection = selection.getNodes();
+      const singleNode =
+        nodesInSelection.length === 1 ? nodesInSelection[0] : null;
+      const singleNodeParent = singleNode?.getParent();
+      const dialogueContainerParent = singleNode
+        ? findDialogueContainerParent(singleNode)
+        : null;
+
+      if (selection.isCollapsed() && !dialogueContainerParent) {
+        if (selection.anchor.getNode().__type === 'text') {
+          return $insertNodes([createNodeToInsert()]);
+        }
+
+        /** set paragraph blocktype if the current selection contains ActionNode */
+        if (
+          ($isActionNode(singleNodeParent) ||
+            nodesInSelection.some((node) => $isActionNode(node))) &&
+          isSameType(ActionNode, nodeToInsert)
+        ) {
+          return $setBlocksType(selection, $createParagraphNode);
+        }
+
+        /** set action blocktype if the current selection node is the same as the node to insert */
+        if (
+          nodesInSelection.some(
+            (node) =>
+              node.__type === nodeToInsert?.getType() ||
+              singleNodeParent.__type === nodeToInsert.getType(),
+          )
+        ) {
+          return $setBlocksType(selection, $createActionNode);
+        }
+        return $setBlocksType(selection, createNodeToInsert);
+      }
+
+      /** inserts new node after container if the container is DialogueContainerNode */
+      if (singleNode) {
+        if (dialogueContainerParent) {
+          const newNode = createNodeToInsert();
+          dialogueContainerParent.insertAfter(newNode);
+          return newNode.select();
+        }
+      }
+
+      return $setBlocksType(selection, createNodeToInsert);
+    }
+
+    /** returns parent node that matches the  type. returns null if none is found */
+    function findDialogueContainerParent(child) {
+      return $findMatchingParent(child, (parent) =>
+        $isDialogueContainerNode(parent),
+      );
+    }
+
+    function isSameType(node1, node2) {
+      return node1?.getType() === node2?.getType();
+    }
+
+    /** returns if the payload is invalid */
+    if (insertContent[payload] === undefined) {
+      console.error('invalid payload');
+      return true;
+    }
+
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      insertContent[payload]();
+    }
+
+    return true;
+  };
 
   useLayoutEffect(() => {
-    return editor.registerCommand(
+    const removeInsertContentListener = editor.registerCommand(
+      INSERT_CONTENT_COMMAND,
+      insertContentAction,
+      COMMAND_PRIORITY_NORMAL,
+    );
+
+    const removeKeyDownListener = editor.registerCommand(
       KEY_DOWN_COMMAND,
       (event) => {
         if ((event.ctrlKey || event.metaKey) && event.altKey) {
@@ -114,11 +198,14 @@ const SideBarPlugin = () => {
             return true;
           }
         }
-
         return false;
       },
       COMMAND_PRIORITY_NORMAL,
     );
+    return () => {
+      removeInsertContentListener();
+      removeKeyDownListener();
+    };
   }, [editor]);
 
   const handleClick = (payload) => {
@@ -130,8 +217,12 @@ const SideBarPlugin = () => {
         component="span"
         sx={{
           color: palette.primary.lowContrastText,
-          ':before': { borderTop: `thin dashed ${palette.primary.lowContrastText}` },
-          ':after': { borderTop: `thin dashed ${palette.primary.lowContrastText}` },
+          ':before': {
+            borderTop: `thin dashed ${palette.primary.lowContrastText}`,
+          },
+          ':after': {
+            borderTop: `thin dashed ${palette.primary.lowContrastText}`,
+          },
         }}
       >
         Components

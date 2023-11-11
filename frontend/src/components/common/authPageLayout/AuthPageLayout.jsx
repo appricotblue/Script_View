@@ -27,7 +27,12 @@ const AuthPageLayout = ({ children }) => {
         justifyContent="center"
       >
         <Box width="9.4rem" height="3.3rem" ml="-0.8rem" alignSelf="flex-start">
-          <Box width="100%" height="100%" component="img" src={full_logo_image} />
+          <Box
+            width="100%"
+            height="100%"
+            component="img"
+            src={full_logo_image}
+          />
         </Box>
         {children}
         <AuthLinks />

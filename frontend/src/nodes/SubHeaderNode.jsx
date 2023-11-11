@@ -1,18 +1,19 @@
-/* eslint-disable no-unused-vars */
-import { $applyNodeReplacement, $createParagraphNode } from 'lexical';
+import { $applyNodeReplacement } from 'lexical';
 
-import DefaultParagraphNode from './DefaultParagraphNode';
+import DefaultActionNode from './DefaultActionNode';
 
-export const $createSubHeaderNode = () => $applyNodeReplacement(new SubHeaderNode());
+export const $createSubHeaderNode = () =>
+  $applyNodeReplacement(new SubHeaderNode());
+export const $isSubHeaderNode = (node) => node instanceof SubHeaderNode;
 
-export class SubHeaderNode extends DefaultParagraphNode {
+export class SubHeaderNode extends DefaultActionNode {
   constructor() {
     super();
   }
 
-  createDOM(_config, _editor) {
+  createDOM(config) {
     const h5 = document.createElement('h5');
-    h5.className = _config.theme.subheader;
+    h5.className = config.theme.subheader;
     h5.setAttribute('data-placeholder', 'Subheader...');
 
     return h5;
@@ -28,7 +29,7 @@ export class SubHeaderNode extends DefaultParagraphNode {
     return 'subheader';
   }
 
-  static importJSON(_) {
+  static importJSON() {
     return new SubHeaderNode();
   }
   exportJSON() {

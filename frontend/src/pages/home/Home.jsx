@@ -1,8 +1,8 @@
 import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useGetDocList } from '@hooks';
 
+import { useGetDocList } from '@hooks';
 import { DocCard, TemplateCard } from '@common';
 
 const Home = () => {
@@ -29,8 +29,8 @@ const Home = () => {
             Choose Template
           </Typography>
           <Typography fontSize="1rem" fontWeight="300" mt="0.5rem">
-            Select blank page to create a script file from scratch or Choose any of our template and
-            customize as per your need
+            Select blank page to create a script file from scratch or Choose any
+            of our template and customize as per your need
           </Typography>
         </Box>
         <TemplateCard />
@@ -48,7 +48,11 @@ const Home = () => {
       >
         {docList.map((item) => {
           return (
-            <DocCard key={item._id} onClick={() => navigate(`/document/${item._id}`)} data={item} />
+            <DocCard
+              key={item._id}
+              onClick={() => navigate(`/document/${item._id}`)}
+              data={item}
+            />
           );
         })}
       </Grid>

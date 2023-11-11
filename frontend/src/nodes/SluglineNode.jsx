@@ -1,18 +1,20 @@
-/* eslint-disable no-unused-vars */
 import { $applyNodeReplacement } from 'lexical';
 
-import DefaultParagraphNode from './DefaultParagraphNode';
+import DefaultActionNode from './DefaultActionNode';
 
-export const $createSluglineNode = () => $applyNodeReplacement(new SluglineNode());
+export const $createSluglineNode = () =>
+  $applyNodeReplacement(new SluglineNode());
 
-export class SluglineNode extends DefaultParagraphNode {
+export const $isSluglineNode = (node) => node instanceof SluglineNode;
+
+export class SluglineNode extends DefaultActionNode {
   constructor() {
     super();
   }
 
-  createDOM(_config, _editor) {
+  createDOM(config) {
     const h6 = document.createElement('h6');
-    h6.className = _config.theme.slugline;
+    h6.className = config.theme.slugline;
     h6.setAttribute('data-placeholder', 'Slugline...');
 
     return h6;
@@ -27,7 +29,7 @@ export class SluglineNode extends DefaultParagraphNode {
     return 'slugline';
   }
 
-  static importJSON(_) {
+  static importJSON() {
     return new SluglineNode();
   }
 

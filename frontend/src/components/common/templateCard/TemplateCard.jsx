@@ -44,7 +44,12 @@ const TemplateCard = () => {
           <Plus />
         </Icon>
       </Paper>
-      <Typography variant="h6" fontSize="0.935rem" fontWeight={500} marginTop="0.38rem">
+      <Typography
+        variant="h6"
+        fontSize="0.935rem"
+        fontWeight={500}
+        marginTop="0.38rem"
+      >
         Blank Page
       </Typography>
     </Box>

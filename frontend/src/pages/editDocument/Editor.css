@@ -11,12 +11,16 @@ sub,
 sup {
   margin: 0;
 }
+
 .scene,
 .slugline,
 .subheader,
 .transition,.dialogue, .parenthetical,.action {
   line-height: 1.375rem; /* 110% */
-  margin-top: 5px;
+  margin-bottom: 0.5rem;
+}
+.paragraph{
+  word-break: break-all;
 }
 .scene,
 .slugline {
@@ -48,7 +52,6 @@ sup {
   justify-content: center;
   text-align: center;
 }
-
 .transition::before{
   content: "- ";
 }
@@ -61,7 +64,6 @@ sup {
 .dialogue {
   width: 50%;
 }
-
 .parenthetical {
   width: 50%;
   display: flex;
@@ -71,17 +73,9 @@ sup {
 .parenthetical::after {
   content: ' : ';
 }
-.text-bold {
-  font-weight: bold;
-}
-.text-italic {
-  font-style: italic;
-}
-.text-underline {
-  text-decoration: underline;
-}
 .action {
-  width: 50%;
+  max-width: 50%;
+  font-size: 1.125rem;
   word-break: break-all;
 }
 
@@ -128,4 +122,16 @@ sup {
   content: attr(data-placeholder);
   color:grey;
   opacity: 0.5;
+}
+
+
+/*formatting*/
+.text-bold {
+  font-weight: bold;
+}
+.text-italic {
+  font-style: italic;
+}
+.text-underline {
+  text-decoration: underline;
 }

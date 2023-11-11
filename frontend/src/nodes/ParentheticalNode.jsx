@@ -1,20 +1,18 @@
-/* eslint-disable no-unused-vars */
+import { ElementNode } from 'lexical';
 
-import { $createTextNode, ElementNode } from 'lexical';
-
-import DefaultParagraphNode from './DefaultParagraphNode';
+import { $createDialogueNode, $isDialogueNode } from './DialogueNode';
 export const $createParentheticalNode = () => new ParentheticalNode();
+export const $isParentheticalNode = (node) => node instanceof ParentheticalNode;
 
-export class ParentheticalNode extends DefaultParagraphNode {
+export class ParentheticalNode extends ElementNode {
   constructor() {
     super();
   }
 
-  createDOM(_config, _editor) {
+  createDOM(config) {
     const div = document.createElement('div');
-    div.className = _config.theme.parenthetical;
+    div.className = config.theme.parenthetical;
     div.setAttribute('data-placeholder', 'Parenthetical...');
-
     return div;
   }
 
@@ -28,10 +26,30 @@ export class ParentheticalNode extends DefaultParagraphNode {
   static getType() {
     return 'parenthetical';
   }
-
-  static importJSON(_) {
+  static importJSON() {
     return new ParentheticalNode();
   }
+
+  isParentRequired() {
+    return true;
+  }
+
+  /** inserts dialogueNode if doesn't exist. select next if does. */
+  insertNewAfter(_, restoreSelection) {
+    if (!$isDialogueNode(this.getNextSibling())) {
+      const dialogue = $createDialogueNode();
+      this.insertAfter(dialogue, restoreSelection);
+      return dialogue;
+    }
+
+    return this.selectNext();
+  }
+
+  remove(preserveEmptyParent) {
+    if (this.getNextSibling()) this.selectNext();
+    return super.remove(preserveEmptyParent);
+  }
+
   collapseAtStart() {
     return this.remove();
   }

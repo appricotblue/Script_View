@@ -105,7 +105,11 @@ const CustomTextActions = () => {
         ['pen', ''],
       ].map((value) => {
         return (
-          <IconButton key={value} onClick={() => handleClick(value[1])} sx={{ color: 'white' }}>
+          <IconButton
+            key={value}
+            onClick={() => handleClick(value[1])}
+            sx={{ color: 'white' }}
+          >
             {value[0] === 'pen' ? (
               <HighlighterCircle size="1rem" />
             ) : (
@@ -113,7 +117,10 @@ const CustomTextActions = () => {
                 fontSize="0.875rem"
                 fontWeight={isBold && value[0] === 'B' ? 'bold' : '200'}
                 fontStyle={isItalic && value[0] === 'I' ? 'italic' : 'normal'}
-                sx={{ textDecoration: isUnderline && value[0] === 'U' ? 'underline' : null }}
+                sx={{
+                  textDecoration:
+                    isUnderline && value[0] === 'U' ? 'underline' : null,
+                }}
               >
                 {value[0]}
               </Typography>
@@ -143,7 +150,10 @@ const ToolbarPlugin = () => {
         sx={{ borderTopRightRadius: '0.25rem', borderTopLeftRadius: '0.25rem' }}
         justifyContent={'space-around'}
         divider={
-          <Divider orientation="vertical" sx={{ borderLeft: `1px solid rgba(255,255,255,0.10)` }} />
+          <Divider
+            orientation="vertical"
+            sx={{ borderLeft: `1px solid rgba(255,255,255,0.10)` }}
+          />
         }
       >
         <Button
@@ -201,9 +211,15 @@ const ToolbarPlugin = () => {
         width="100%"
         bgcolor="rgba(36, 36, 36, 0.80)"
         alignItems="center"
-        sx={{ borderBottomRightRadius: '0.25rem', borderBottomLeftRadius: '0.25rem' }}
+        sx={{
+          borderBottomRightRadius: '0.25rem',
+          borderBottomLeftRadius: '0.25rem',
+        }}
         divider={
-          <Divider orientation="vertical" sx={{ borderLeft: `1px solid rgba(255,255,255,0.10)` }} />
+          <Divider
+            orientation="vertical"
+            sx={{ borderLeft: `1px solid rgba(255,255,255,0.10)` }}
+          />
         }
       >
         <Stack direction="row" gap="1.9rem">
@@ -212,12 +228,20 @@ const ToolbarPlugin = () => {
           </IconButton>
           <IconButton
             disabled
-            sx={{ color: 'white', ':disabled': { color: 'white', opacity: '0.5' } }}
+            sx={{
+              color: 'white',
+              ':disabled': { color: 'white', opacity: '0.5' },
+            }}
           >
             <ArrowUUpRight size="1rem" />
           </IconButton>
         </Stack>
-        <Stack direction="row" flexGrow={1} justifyContent="space-between" px="1rem">
+        <Stack
+          direction="row"
+          flexGrow={1}
+          justifyContent="space-between"
+          px="1rem"
+        >
           <Stack direction="row" gap="1.5rem">
             <IconButton sx={{ color: 'white' }}>
               <ArrowsOut size="1rem" />
@@ -244,7 +268,11 @@ const ToolbarPlugin = () => {
                 backgroundColor: '#D9D9D9 !important',
               }}
             />
-            <Typography fontSize="0.75rem" color="white" sx={{ marginLeft: '0.2rem' }}>
+            <Typography
+              fontSize="0.75rem"
+              color="white"
+              sx={{ marginLeft: '0.2rem' }}
+            >
               / 76
             </Typography>
           </Stack>

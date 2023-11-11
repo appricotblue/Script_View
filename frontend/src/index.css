@@ -101,18 +101,6 @@ html {
   min-width: 150px;
 }
 
-.dropdown .item .icon {
-  display: flex;
-  width: 20px;
-  height: 20px;
-  user-select: none;
-  margin-right: 12px;
-  line-height: 16px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
 .dropdown .divider {
   width: auto;
   background-color: #eee;

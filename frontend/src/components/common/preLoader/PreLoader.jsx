@@ -37,10 +37,14 @@ const PreLoader = () => {
 
   // setting className based on pathname
   const loaderLayerClass =
-    pathname === '/login' || pathname === '/signup' ? 'cd-loader-layer' : 'cd-loader-layer-light';
+    pathname === '/login' || pathname === '/signup'
+      ? 'cd-loader-layer'
+      : 'cd-loader-layer-light';
 
   const loaderLayer =
-    pathname === '/login' || pathname === '/signup' ? 'loader-layer' : 'loader-layer-light';
+    pathname === '/login' || pathname === '/signup'
+      ? 'loader-layer'
+      : 'loader-layer-light';
 
   return (
     <div className="loader-wrap" ref={loaderWrapRef}>

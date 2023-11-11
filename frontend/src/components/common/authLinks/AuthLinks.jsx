@@ -9,11 +9,17 @@ const AuthLinks = () => {
 
   return (
     <Box alignSelf="flex-start">
-      <Typography>{isLoginPage ? "Don't have an account?" : 'Already have an account?'}</Typography>
+      <Typography>
+        {isLoginPage ? "Don't have an account?" : 'Already have an account?'}
+      </Typography>
       <Link
         component={RouterLink}
         to={linkTo}
-        sx={{ textDecoration: 'none', color: 'inherit', ':hover': { cursor: 'pointer' } }}
+        sx={{
+          textDecoration: 'none',
+          color: 'inherit',
+          ':hover': { cursor: 'pointer' },
+        }}
       >
         <Typography fontWeight="700">{linkText}</Typography>
       </Link>

@@ -31,6 +31,7 @@ const LexicalComposerProvider = ({ children }) => {
         italic: 'text-italic',
         underline: 'text-underline',
       },
+      paragraph: 'paragraph',
       subheader: 'subheader',
       scene: 'scene',
       slugline: 'slugline',
@@ -43,7 +44,9 @@ const LexicalComposerProvider = ({ children }) => {
     onError: (e) => console.error(e),
   };
 
-  return <LexicalComposer initialConfig={lexicalConfig}>{children}</LexicalComposer>;
+  return (
+    <LexicalComposer initialConfig={lexicalConfig}>{children}</LexicalComposer>
+  );
 };
 
 LexicalComposerProvider.propTypes = {

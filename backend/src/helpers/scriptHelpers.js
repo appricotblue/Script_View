@@ -4,7 +4,6 @@ module.exports = {
   /** @param {string} id @returns {Promise<Object|null} */
   findScriptById: async (id) => {
     const data = await ScriptModel.findOne({ _id: id });
-    console.log(data);
     return data;
   },
 

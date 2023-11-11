@@ -66,7 +66,9 @@ const ScriptHeader = () => {
             sx={{ display: { xs: 'none', md: 'flex' } }}
           >
             <Stack direction="row" gap="0.75rem" marginLeft="5rem">
-              <Button sx={{ backgroundColor: '#F2F2F2' }}>Page Preferences</Button>
+              <Button sx={{ backgroundColor: '#F2F2F2' }}>
+                Page Preferences
+              </Button>
               <Button
                 sx={{
                   fontSize: 14,
@@ -113,13 +115,22 @@ const ScriptHeader = () => {
           </Stack>
 
           {isSmallScreen && (
-            <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerOpen}>
+            <IconButton
+              edge="end"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleDrawerOpen}
+            >
               <ListIcon size={32} weight="thin" />
             </IconButton>
           )}
         </Toolbar>
       </AppBar>
-      <Drawer anchor="left" open={isSmallScreen && isDrawerOpen} onClose={handleDrawerClose}>
+      <Drawer
+        anchor="left"
+        open={isSmallScreen && isDrawerOpen}
+        onClose={handleDrawerClose}
+      >
         <ul>
           <li>
             <a href="#">Home</a>

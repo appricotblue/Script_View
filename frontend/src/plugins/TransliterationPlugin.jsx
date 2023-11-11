@@ -1,18 +1,23 @@
 /* eslint-disable react/prop-types */
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { LexicalTypeaheadMenuPlugin, MenuOption } from '@lexical/react/LexicalTypeaheadMenuPlugin';
+import {
+  LexicalTypeaheadMenuPlugin,
+  MenuOption,
+} from '@lexical/react/LexicalTypeaheadMenuPlugin';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import { $createTextNode, $getSelection } from 'lexical';
+
 import { useDebounce, useTransliteration } from '@hooks';
 
+// Length of the input string sent to transliterate.
+const INPUT_LENGTH = 50;
+
 // regex to check if the user is typing only letters
-const lettersTriggerRegex = /^[a-zA-Z]+$/;
+const lettersTriggerRegex = new RegExp(`^[a-zA-Z]{1,${INPUT_LENGTH}}$`);
 
 // At most, 5 suggestions are shown in the popup.
 const SUGGESTION_LIST_LENGTH_LIMIT = 5;
-// Length of the input string sent to transliterate.
-const INPUT_LENGTH = 20;
 
 function useCachedTransliterationService(inputString) {
   const [results, setResults] = useState([]);
@@ -21,7 +26,7 @@ function useCachedTransliterationService(inputString) {
   // debounce callback
   const debounceCb = (string) => {
     transliterate(string).then((result) => {
-      setResults(result ?? []);
+      setResults(typeof result === 'string' ? [] : result);
     });
   };
 
@@ -47,7 +52,13 @@ class WordSuggestionAhead extends MenuOption {
   }
 }
 
-function WordSuggestionAheadMenuItem({ index, isSelected, onClick, onMouseEnter, option }) {
+function WordSuggestionAheadMenuItem({
+  index,
+  isSelected,
+  onClick,
+  onMouseEnter,
+  option,
+}) {
   let className = 'item';
   if (isSelected) {
     className += ' selected';

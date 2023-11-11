@@ -39,7 +39,11 @@
 
 const useTransliteration = () => {
   //  Define the transliterate function
-  const transliterate = async (sourceText, maxResult = 5, inputLanguageCode = 'ml-t-i0-und') => {
+  const transliterate = async (
+    sourceText,
+    maxResult = 5,
+    inputLanguageCode = 'ml-t-i0-und',
+  ) => {
     try {
       // Use a regular expression to split the source text into parts
       const parts = sourceText.split(/([0-9]+)/);

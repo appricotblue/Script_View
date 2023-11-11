@@ -8,7 +8,12 @@ const TextEditor = () => {
     <Stack
       direction="row"
       maxHeight="calc(100vh - 4.5rem)"
-      sx={{ overflowY: 'auto', flexGrow: 1, justifyContent: 'center', py: '1.2rem' }}
+      sx={{
+        overflowY: 'auto',
+        flexGrow: 1,
+        justifyContent: 'center',
+        py: '1.2rem',
+      }}
     >
       <Stack height="max-content" gap="1.27rem">
         <ToolbarPlugin />

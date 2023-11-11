@@ -1,17 +1,19 @@
-/* eslint-disable no-unused-vars */
-import { $applyNodeReplacement, $createParagraphNode, $createTextNode } from 'lexical';
+import { $applyNodeReplacement } from 'lexical';
 
-import DefaultParagraphNode from './DefaultParagraphNode';
+import DefaultActionNode from './DefaultActionNode';
 
-export const $createTransitionNode = () => $applyNodeReplacement(new TransitionNode());
+export const $createTransitionNode = () =>
+  $applyNodeReplacement(new TransitionNode());
 
-export class TransitionNode extends DefaultParagraphNode {
+export const $isTransitionNode = (node) => node instanceof TransitionNode;
+
+export class TransitionNode extends DefaultActionNode {
   constructor() {
     super();
   }
-  createDOM(_config, _editor) {
+  createDOM(config) {
     const p = document.createElement('p');
-    p.className = _config.theme.transition;
+    p.className = config.theme.transition;
     p.setAttribute('data-placeholder', 'Transition...');
     p.append(document.createTextNode('cut to'));
     return p;
@@ -27,7 +29,7 @@ export class TransitionNode extends DefaultParagraphNode {
     return 'transition';
   }
 
-  static importJSON(_) {
+  static importJSON() {
     return new TransitionNode();
   }
 

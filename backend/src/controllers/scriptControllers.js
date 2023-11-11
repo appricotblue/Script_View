@@ -31,7 +31,7 @@ module.exports = {
       const docData = await createScriptFromId(id);
       res.json({ author: docData.author, id: docData._id });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return res.status(500).json({ message: err.message });
     }
   },
@@ -40,7 +40,7 @@ module.exports = {
       const list = await getRecentDocList();
       res.json({ data: list });
     } catch (err) {
-      console.log(err);
+      console.error(err);
       return res.status(500).json({ message: err.message });
     }
   },
@@ -76,7 +76,7 @@ module.exports = {
         await page.addStyleTag({
           content: `body{display:flex;justify-content:center;}${css}`,
         });
-        page.setViewport({
+        await page.setViewport({
           height: 1080,
           width: 1920,
         });

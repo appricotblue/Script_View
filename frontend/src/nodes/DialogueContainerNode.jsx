@@ -1,10 +1,11 @@
-/* eslint-disable no-unused-vars */
-import DefaultParagraphNode from './DefaultParagraphNode';
-import DialogueNode from './DialogueNode';
-import ParentheticalNode from './ParentheticalNode';
+import DefaultActionNode from './DefaultActionNode';
 
 export const $createDialogueContainerNode = () => new DialogueContainerNode();
-export class DialogueContainerNode extends DefaultParagraphNode {
+
+export const $isDialogueContainerNode = (node) =>
+  node instanceof DialogueContainerNode;
+
+export class DialogueContainerNode extends DefaultActionNode {
   constructor() {
     super();
   }
@@ -15,16 +16,6 @@ export class DialogueContainerNode extends DefaultParagraphNode {
     return div;
   }
   updateDOM() {
-    const childrenSize = this.getChildrenSize();
-    if (childrenSize === 0 || !this.getParent()) return this.remove(true);
-    if (childrenSize === 1) {
-      const childType = this.getLastChild()?.__type;
-      const dialogueOrParenthetical =
-        childType === ParentheticalNode.getType() || childType === DialogueNode.getType();
-      if (!dialogueOrParenthetical) {
-        return this.remove(true);
-      }
-    }
     return false;
   }
 
@@ -33,6 +24,9 @@ export class DialogueContainerNode extends DefaultParagraphNode {
   }
   static getType() {
     return 'dialogue-container';
+  }
+  canBeEmpty() {
+    return false;
   }
 
   static importJSON(_) {

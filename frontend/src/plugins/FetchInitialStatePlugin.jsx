@@ -18,7 +18,6 @@ const FetchInitialStatePlugin = () => {
       }
     })
     .catch((err) => console.log('ERROR: ', err));
-
   return null;
 };
 

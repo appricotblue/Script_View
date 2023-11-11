@@ -4,13 +4,11 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { useMemo, useState } from 'react';
 import { Box, Paper } from '@mui/material';
 
-import useOnlineStatus from '@/utils/hooks/useOnlineStatus';
-
 import Style from './TextArea.module.css';
 
 const TextArea = () => {
   // margin in rem
-  const [margin, setMargin] = useState(3);
+  const [margin] = useState(3);
   const marginLineConf = {
     hrSideHeight: `calc(100% + ${margin * 2}rem)`,
     vrSideWidth: `calc(100% + ${margin * 2}rem)`,
@@ -53,19 +51,31 @@ const TextArea = () => {
         {/* Margin Lines */}
         <Box
           className={`${Style['side']} ${Style['side-left']}`}
-          sx={{ top: marginLineConf.leftTop, height: marginLineConf.hrSideHeight }}
+          sx={{
+            top: marginLineConf.leftTop,
+            height: marginLineConf.hrSideHeight,
+          }}
         ></Box>
         <Box
           className={`${Style['side']} ${Style['side-top']}`}
-          sx={{ left: marginLineConf.topLeft, width: marginLineConf.vrSideWidth }}
+          sx={{
+            left: marginLineConf.topLeft,
+            width: marginLineConf.vrSideWidth,
+          }}
         ></Box>
         <Box
           className={`${Style['side']} ${Style['side-right']}`}
-          sx={{ bottom: marginLineConf.rightBottom, height: marginLineConf.hrSideHeight }}
+          sx={{
+            bottom: marginLineConf.rightBottom,
+            height: marginLineConf.hrSideHeight,
+          }}
         ></Box>
         <Box
           className={`${Style['side']} ${Style['side-bottom']}`}
-          sx={{ right: marginLineConf.bottomRight, width: marginLineConf.vrSideWidth }}
+          sx={{
+            right: marginLineConf.bottomRight,
+            width: marginLineConf.vrSideWidth,
+          }}
         ></Box>
       </Box>
     </Paper>
