@@ -22,7 +22,9 @@ const PreLoader = () => {
       ease: 'expo.inOut',
       onComplete: () => {
         const cdLoaderLayer = document.querySelector(
-          pathname === '/' ? '.cd-loader-layer-light' : '.cd-loader-layer',
+          pathname === '/login' || pathname === '/signup'
+            ? 'cd-loader-layer'
+            : 'cd-loader-layer-light',
         );
         cdLoaderLayer.classList.add('closing');
         main.style.opacity = 1;
@@ -33,8 +35,16 @@ const PreLoader = () => {
     });
   }, []);
 
-  const loaderLayerClass = pathname === '/' ? 'cd-loader-layer-light' : 'cd-loader-layer';
-  const loaderLayer = pathname === '/' ? 'loader-layer-light' : 'loader-layer';
+  // setting className based on pathname
+  const loaderLayerClass =
+    pathname === '/login' || pathname === '/signup'
+      ? 'cd-loader-layer'
+      : 'cd-loader-layer-light';
+
+  const loaderLayer =
+    pathname === '/login' || pathname === '/signup'
+      ? 'loader-layer'
+      : 'loader-layer-light';
 
   return (
     <div className="loader-wrap" ref={loaderWrapRef}>

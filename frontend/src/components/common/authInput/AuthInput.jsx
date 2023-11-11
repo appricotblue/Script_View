@@ -6,7 +6,6 @@ const AuthInput = styled(TextField)(() => ({
   '& input': {
     height: '3.125rem',
     fontSize: '1rem',
-    color: 'white',
     paddingTop: '0',
     paddingBottom: '0',
     borderRadius: '0.25rem',

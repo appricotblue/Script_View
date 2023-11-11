@@ -1,9 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 
-import Login from '@pages/login';
-import Home from '@pages/home';
-
-import App from '../App';
+import { Header, WithHeaderMargin } from '@common';
+import { EditDocument, Home, Login, Signup } from '@pages';
+import { ScriptHeader } from '@script';
+import App from '@/App';
+import LexicalComposerProvider from '@/context/LexicalComposerInitial';
 
 const appRouter = createBrowserRouter([
   {
@@ -12,11 +13,33 @@ const appRouter = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        element: (
+          <>
+            <Header />
+            <WithHeaderMargin>
+              <Home />
+            </WithHeaderMargin>
+          </>
+        ),
+      },
+      {
+        path: '/document/:id',
+        element: (
+          <LexicalComposerProvider>
+            <ScriptHeader />
+            <WithHeaderMargin>
+              <EditDocument />
+            </WithHeaderMargin>
+          </LexicalComposerProvider>
+        ),
       },
       {
         path: '/login',
         element: <Login />,
+      },
+      {
+        path: '/signup',
+        element: <Signup />,
       },
     ],
   },

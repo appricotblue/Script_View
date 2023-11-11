@@ -1,22 +1,16 @@
-import { Outlet, useLocation } from 'react-router-dom';
+import { Box } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 
-import Header from '@common/header';
-import PreLoader from '@common/preLoader';
+// import { PreLoader } from '@common';
 
 function App() {
-  const { pathname } = useLocation();
-
-  // checking if header should be included
-  const shouldIncludeHeader = pathname !== '/login' && pathname !== '/signup';
-
   return (
     <>
       {/* <PreLoader /> */}
-      {/* Include header only when it is required */}
-      <div id="main">
-        {shouldIncludeHeader && <Header />}
+      {/* set opacity of main to 0 when using preloader */}
+      <Box id="main">
         <Outlet />
-      </div>
+      </Box>
     </>
   );
 }
