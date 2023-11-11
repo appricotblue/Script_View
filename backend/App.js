@@ -46,4 +46,4 @@ if (isProduction) {
 
 const port = PORT || 8080;
 
-server.listen(port, () => console.log(`server listening on port ${port}`));
+server.listen(port, () => console.log(`server listening on port ${port} !`));
