@@ -1,0 +1,31 @@
+name: scriptview.js CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: self-hosted  # Update this based on your self-hosted runner configuration
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}  # If you need a matrix, add it here
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install and Build Frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Install Backend
+        working-directory: backend
+        run: |
+          npm install
