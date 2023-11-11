@@ -20,12 +20,22 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install and Build Frontend
+ 
         working-directory: frontend
+        env:
+            VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
         run: |
           npm install
           npm run build
 
       - name: Install Backend
         working-directory: backend
+        env:
+            ORIGIN: ${{ secrets.ORIGIN }}
+            DB_URI: ${{ secrets.DB_URI }}
+            NODE_ENV: ${{ secrets.NODE_ENV }}
         run: |
           npm install
+          pm2 stop 0
+          pm2 start 0
+          sudo service nginx restart
