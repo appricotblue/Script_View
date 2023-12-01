@@ -20,6 +20,7 @@ const PrintPlugin = () => {
         editor.update(() => {
           // convert editor state into html
           const htmlString = $generateHtmlFromNodes(editor, null);
+
           const minifiedCss = MinifyCss(css);
           console.log(htmlString);
           fetch(`${VITE_BASE_URL}/api/scripts/export`, {

@@ -70,7 +70,7 @@ module.exports = {
         });
         const page = await browser.newPage();
         await page.setContent(
-          `<div style="width:40rem;word-wrap:break-word;">${html}</div>`,
+          `<div style="word-wrap:break-word;">${html}</div>`,
         );
         await page.addStyleTag({
           content: `body{display:flex;justify-content:center;}${css}`,
@@ -84,14 +84,15 @@ module.exports = {
           format: format || "A4",
           printBackground: true,
           margin: {
-            top: margin?.top || "0px",
-            bottom: margin?.bottom || "0px",
-            left: margin?.left || "0px",
-            right: margin?.right || "0px",
+            top: margin?.top || `${3 * 16}px`,
+            bottom: margin?.bottom || `${3 * 16}px`,
+            left: margin?.left || `${3 * 16}px`,
+            right: margin?.right || `${3 * 16}px`,
           },
-          scale: 1,
+          scale: 1.02,
           height: height || undefined,
           width: width || undefined,
+          preferCSSPageSize: true,
         });
         await browser.close();
         res.setHeader("Content-type", "application/pdf");

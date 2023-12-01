@@ -27,8 +27,8 @@ const TextArea = () => {
   return (
     <Paper
       sx={{
-        width: '40rem',
-        minHeight: '55.5rem',
+        width: '793px',
+        minHeight: '1122px',
         boxShadow: '2.99253px 2.99253px 13.46637px 0px rgba(0, 0, 0, 0.10)',
         display: 'flex',
         flexDirection: 'column',
