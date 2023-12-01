@@ -10,6 +10,7 @@ import TransitionNode from '@/nodes/TransitionNode';
 import DialogueContainerNode from '@/nodes/DialogueContainerNode';
 import DialogueNode from '@/nodes/DialogueNode';
 import ParentheticalNode from '@/nodes/ParentheticalNode';
+import { PageBreakNode } from '@/nodes/PageBreakNode/index';
 
 const LexicalComposerProvider = ({ children }) => {
   const lexicalConfig = {
@@ -24,6 +25,7 @@ const LexicalComposerProvider = ({ children }) => {
       DialogueContainerNode,
       DialogueNode,
       ParentheticalNode,
+      PageBreakNode,
     ],
     theme: {
       text: {

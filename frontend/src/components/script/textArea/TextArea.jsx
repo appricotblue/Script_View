@@ -1,8 +1,9 @@
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import { useMemo, useState } from 'react';
 import { Box, Paper } from '@mui/material';
+
+import ErrorBoundary from '@script/errorBoundary';
 
 import Style from './TextArea.module.css';
 
@@ -45,7 +46,7 @@ const TextArea = () => {
         <RichTextPlugin
           contentEditable={CustomContentEditable}
           placeholder={PlaceHolder}
-          ErrorBoundary={LexicalErrorBoundary}
+          ErrorBoundary={ErrorBoundary}
         />
 
         {/* Margin Lines */}

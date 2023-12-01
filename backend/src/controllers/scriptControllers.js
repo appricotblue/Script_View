@@ -69,7 +69,6 @@ module.exports = {
           args: ["--no-sandbox"],
         });
         const page = await browser.newPage();
-
         await page.setContent(
           `<div style="width:40rem;word-wrap:break-word;">${html}</div>`,
         );

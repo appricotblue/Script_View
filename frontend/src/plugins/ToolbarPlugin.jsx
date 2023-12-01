@@ -37,7 +37,11 @@ import {
   ArrowsOut,
   Binoculars,
   MagnifyingGlass,
+  Scissors,
 } from '@phosphor-icons/react';
+
+import { INSERT_PAGE_BREAK } from './PageBreakPlugin';
+import { INSERT_CONTENT_COMMAND } from './SideBarPlugin';
 
 const LowPriority = 1;
 const CustomTextActions = () => {
@@ -92,6 +96,7 @@ const CustomTextActions = () => {
       ),
     );
   }, [editor, updateToolbar]);
+
   const handleClick = (formatType) => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, formatType);
   };
@@ -134,6 +139,7 @@ const CustomTextActions = () => {
 
 const ToolbarPlugin = () => {
   const { palette } = useTheme();
+  const [editor] = useLexicalComposerContext();
   return (
     <Stack
       height="5.125rem"
@@ -304,7 +310,7 @@ const ToolbarPlugin = () => {
               sx={{
                 height: '1.125rem',
                 padding: '0',
-                width: '7.185rem',
+                maxWidth: '7.185rem',
                 border: 'none',
                 backgroundColor: '#D9D9D9',
                 borderRadius: '0.81rem',
@@ -316,6 +322,13 @@ const ToolbarPlugin = () => {
                 </InputAdornment>
               }
             />
+            <IconButton
+              onClick={() =>
+                editor.dispatchCommand(INSERT_PAGE_BREAK, undefined)
+              }
+            >
+              <Scissors color="white" />
+            </IconButton>
           </Stack>
         </Stack>
       </Stack>
