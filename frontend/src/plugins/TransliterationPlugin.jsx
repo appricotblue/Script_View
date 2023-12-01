@@ -7,7 +7,6 @@ import {
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import { $createTextNode, $getSelection } from 'lexical';
-
 import { useDebounce, useTransliteration } from '@hooks';
 
 // Length of the input string sent to transliterate.
