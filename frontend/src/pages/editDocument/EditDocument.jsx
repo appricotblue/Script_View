@@ -5,7 +5,7 @@ import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 
 import { ScriptSidebar, TextEditor } from '@script';
-import TransliterationPlugin from '@/plugins/TransliterationPlugin';
+import TextSuggestionPlugin from '@/plugins/TextSuggestionsPlugin';
 import PrintPlugin from '@/plugins/PrintPlugin';
 import AutoSavePlugin from '@/plugins/AutoSavePlugin';
 import FetchInitialStatePlugin from '@/plugins/FetchInitialStatePlugin';
@@ -21,7 +21,7 @@ const EditDocument = () => {
         <TextEditor />
         <AutoSavePlugin />
         <FetchInitialStatePlugin />
-        <TransliterationPlugin />
+        <TextSuggestionPlugin />
         <PrintPlugin />
         <PageBreakPlugin />
         <AutoFocusPlugin />

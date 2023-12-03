@@ -16,7 +16,18 @@ const INPUT_LENGTH = 50;
 const lettersTriggerRegex = new RegExp(`^[a-zA-Z]{1,${INPUT_LENGTH}}$`);
 
 // At most, 5 suggestions are shown in the popup.
-const SUGGESTION_LIST_LENGTH_LIMIT = 5;
+const TRANSLATE_SUGGESTION_LIST_LENGTH_LIMIT = 5;
+
+// Suggestions list for Slugline Component.
+const SLUGLINE_SUGGESTIONS = [
+  'Day/Int',
+  'Day/Ext',
+  'Day/Int/Ext',
+  'Night/Int',
+  'Night/Ext',
+  'Night/Int/Ext',
+  'Day/Night/Int/Ext',
+];
 
 function useCachedTransliterationService(inputString) {
   const [results, setResults] = useState([]);
@@ -36,7 +47,7 @@ function useCachedTransliterationService(inputString) {
       setResults([]);
       return;
     }
-    transliterateDebounced(inputString, SUGGESTION_LIST_LENGTH_LIMIT);
+    transliterateDebounced(inputString, TRANSLATE_SUGGESTION_LIST_LENGTH_LIMIT);
   }, [inputString]);
 
   return results;
@@ -79,7 +90,7 @@ function WordSuggestionAheadMenuItem({
   );
 }
 
-export default function TransliterationPlugin() {
+export default function TextSuggestionPlugin() {
   const [editor] = useLexicalComposerContext();
 
   const [queryString, setQueryString] = useState(null);
