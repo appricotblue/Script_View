@@ -1,6 +1,7 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $insertNodeToNearestRoot, mergeRegister } from '@lexical/utils';
+import { mergeRegister } from '@lexical/utils';
 import {
+  $getRoot,
   $getSelection,
   $isRangeSelection,
   COMMAND_PRIORITY_EDITOR,
@@ -32,7 +33,8 @@ export default function PageBreakPlugin() {
           const focusNode = selection.focus.getNode();
           if (focusNode !== null) {
             const pgBreak = $createPageBreakNode();
-            $insertNodeToNearestRoot(pgBreak);
+            const root = $getRoot();
+            root.append(pgBreak);
           }
 
           return true;
