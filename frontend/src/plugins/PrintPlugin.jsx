@@ -22,7 +22,6 @@ const PrintPlugin = () => {
           const htmlString = $generateHtmlFromNodes(editor, null);
 
           const minifiedCss = MinifyCss(css);
-          console.log(htmlString);
           fetch(`${VITE_BASE_URL}/api/scripts/export`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

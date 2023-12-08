@@ -53,7 +53,6 @@ const SideBarPlugin = () => {
 
       dialogue: () => {
         const nodes = selection.getNodes();
-        console.log(nodes);
         let DContainer;
         let Parenthetical;
         let Dialogue;
@@ -67,7 +66,6 @@ const SideBarPlugin = () => {
         }
 
         if (DContainer) {
-          console.log('Contains Dialogue Container parent');
           const dialogue = DContainer.getChildren().find((node) =>
             $isDialogueNode(node),
           );

@@ -9,6 +9,8 @@ import * as ReactDOM from 'react-dom';
 import { $createTextNode, $getSelection } from 'lexical';
 import { useDebounce, useTransliteration } from '@hooks';
 
+import { $isSluglineNode } from '@/nodes/SluglineNode';
+
 // Length of the input string sent to transliterate.
 const INPUT_LENGTH = 50;
 
@@ -28,18 +30,109 @@ const SLUGLINE_SUGGESTIONS = [
   'Night/Int/Ext',
   'Day/Night/Int/Ext',
 ];
+const NODE_TYPES = {
+  DEFAULT: 0,
+  SLUGLINE: 1,
+  SUBHEADER: 2,
+  DIALOGUE: 3,
+  PARENTHETICAL: 4,
+  DIALOGUE_CONTAINER: 5,
+  ACTION: 6,
+  SCENE: 7,
+};
 
-function useCachedTransliterationService(inputString) {
+/**
+ * checks and returns the result of type ahead trigger
+ * if the text contains letters with a '/' in it
+ *
+ * @param {String} text
+ * @returns {Object}
+ */
+function matchInputWithFWSlash(text) {
+  const sluglineRegex = new RegExp(/^[a-zA-Z]+(\/[a-zA-Z]+)*\/?$/);
+  const filtered = SLUGLINE_SUGGESTIONS.filter((value) => text === value);
+  const match = sluglineRegex.exec(text);
+  if (match !== null && filtered.length === 0) {
+    return {
+      matchingString: match[0],
+      replaceableString: match[0],
+      leadOffset: match.index,
+    };
+  }
+  return null;
+}
+
+/**
+ * get the last word with only
+ * letters and returns results for trigger fn.
+ * @param {string} text
+ * @returns {Object}
+ */
+function matchCommonText(text) {
+  const word = getLastWordWithOnlyLetters(text);
+  let match = null;
+  if (word) match = lettersTriggerRegex.exec(word);
+  if (match !== null) {
+    return {
+      matchingString: match[0],
+      replaceableString: match[0],
+      leadOffset: match.index,
+    };
+  }
+  return null;
+}
+
+/**
+ * returns the last word with only letters
+ *
+ * @param {String} input
+ * @returns {String}
+ */
+function getLastWordWithOnlyLetters(input) {
+  // Use a regular expression to find the last word with only letters
+  const matches = input.match(/[a-zA-Z]+(?=\s|$)/g);
+  // Check if there are any matches
+  if (matches && matches.length > 0) {
+    // Return the last match
+    if (/[^a-zA-Z]$/.test(input)) return null;
+    return matches.pop();
+  } else {
+    // No match found, return null
+    return null;
+  }
+}
+
+/**
+ * searches in slug line suggestion list
+ * for matching results
+ *
+ * @param {String} input
+ * @returns {Array}
+ */
+function searchSluglineSuggestion(input) {
+  return SLUGLINE_SUGGESTIONS.filter((value) => {
+    return value.toLowerCase().includes(input.toLowerCase());
+  });
+}
+
+/**
+ * returns a list of suggestions depending on nodeType.
+ * Normal text and suggestions for SlugLine nodes are implemented
+ *
+ * @param {String} inputString
+ * @param {Number} nodeType
+ * @returns {Array}
+ */
+function useSuggestionGenService(inputString, nodeType) {
   const [results, setResults] = useState([]);
   const transliterate = useTransliteration();
 
   // debounce callback
   const debounceCb = (string) => {
     transliterate(string).then((result) => {
-      setResults(typeof result === 'string' ? [] : result);
+      setResults(Array.isArray(result) ? result : []);
     });
   };
-
   const transliterateDebounced = useDebounce(debounceCb, 50);
 
   useLayoutEffect(() => {
@@ -47,7 +140,13 @@ function useCachedTransliterationService(inputString) {
       setResults([]);
       return;
     }
-    transliterateDebounced(inputString, TRANSLATE_SUGGESTION_LIST_LENGTH_LIMIT);
+    if (nodeType === NODE_TYPES.SLUGLINE) {
+      setResults(searchSluglineSuggestion(inputString));
+    } else
+      transliterateDebounced(
+        inputString,
+        TRANSLATE_SUGGESTION_LIST_LENGTH_LIMIT,
+      );
   }, [inputString]);
 
   return results;
@@ -95,11 +194,12 @@ export default function TextSuggestionPlugin() {
 
   const [queryString, setQueryString] = useState(null);
   const [results, setResults] = useState([]);
-  const transliterated = useCachedTransliterationService(queryString);
+  const [nodeType, setNodeType] = useState(NODE_TYPES.DEFAULT);
+  const suggestions = useSuggestionGenService(queryString, nodeType);
 
   useLayoutEffect(() => {
-    setResults(transliterated);
-  }, [transliterated]);
+    setResults(suggestions);
+  }, [suggestions]);
 
   const options = useMemo(
     () => results.map((result) => new WordSuggestionAhead(result)),
@@ -122,32 +222,20 @@ export default function TextSuggestionPlugin() {
     [editor],
   );
 
-  const matchLetters = useCallback(
+  const triggerFn = useCallback(
     (text) => {
-      function getLastWordWithOnlyLetters(input) {
-        // Use a regular expression to find the last word with only letters
-        const matches = input.match(/[a-zA-Z]+(?=\s|$)/g);
-        // Check if there are any matches
-        if (matches && matches.length > 0) {
-          // Return the last match
-          if (/[^a-zA-Z]$/.test(input)) return null;
-          return matches[matches.length - 1];
+      let result = null;
+      editor.getEditorState().read(() => {
+        const anchorParent = $getSelection().anchor.getNode().getParent();
+        if ($isSluglineNode(anchorParent)) {
+          result = matchInputWithFWSlash(text);
+          setNodeType(NODE_TYPES.SLUGLINE);
         } else {
-          // No match found, return null
-          return null;
+          result = matchCommonText(text);
+          setNodeType(NODE_TYPES.DEFAULT);
         }
-      }
-      const word = getLastWordWithOnlyLetters(text);
-      let match = null;
-      if (word) match = lettersTriggerRegex.exec(word);
-      if (match !== null) {
-        return {
-          leadOffset: match.index,
-          matchingString: match[0],
-          replaceableString: match[0],
-        };
-      }
-      return null;
+      });
+      return result;
     },
     [editor],
   );
@@ -155,7 +243,7 @@ export default function TextSuggestionPlugin() {
     <LexicalTypeaheadMenuPlugin
       onQueryChange={setQueryString}
       onSelectOption={onSelectOption}
-      triggerFn={matchLetters}
+      triggerFn={triggerFn}
       options={options}
       anchorClassName="typeahead-anchor"
       menuRenderFn={(
