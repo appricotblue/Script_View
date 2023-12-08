@@ -1,5 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { mergeRegister, $findMatchingParent } from '@lexical/utils';
+import { $findMatchingParent } from '@lexical/utils';
 import {
   $createParagraphNode,
   $getPreviousSelection,
@@ -29,25 +29,22 @@ export default function PageBreakPlugin() {
       throw new Error(
         'PageBreakPlugin: PageBreakNode is not registered on editor',
       );
+    return editor.registerCommand(
+      INSERT_PAGE_BREAK,
+      () => {
+        const selection = $getSelection();
 
-    return mergeRegister(
-      editor.registerCommand(
-        INSERT_PAGE_BREAK,
-        () => {
-          const selection = $getSelection();
+        if (!$isRangeSelection(selection)) return false;
 
-          if (!$isRangeSelection(selection)) return false;
+        const focusNode = selection.focus.getNode();
+        if (focusNode !== null) {
+          const pgBreak = $createPageBreakNode();
+          $insertNodeToNearestRoot(pgBreak);
+        }
 
-          const focusNode = selection.focus.getNode();
-          if (focusNode !== null) {
-            const pgBreak = $createPageBreakNode();
-            $insertNodeToNearestRoot(pgBreak);
-          }
-
-          return true;
-        },
-        COMMAND_PRIORITY_EDITOR,
-      ),
+        return true;
+      },
+      COMMAND_PRIORITY_EDITOR,
     );
   }, [editor]);
 
