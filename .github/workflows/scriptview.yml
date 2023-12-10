@@ -19,14 +19,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Cache Frontend Dependencies
-        uses: actions/cache@v2
-        with:
-          path: frontend/node_modules
-          key: frontend-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: |
-            frontend-${{ runner.os }}-
-
       - name: Install and Build Frontend
         working-directory: frontend
         env:
@@ -36,14 +28,6 @@ jobs:
           rm -rf node_modules
           npm install
           npm run build
-
-      - name: Cache Backend Dependencies
-        uses: actions/cache@v2
-        with:
-          path: backend/node_modules
-          key: backend-${{ runner.os }}-${{ hashFiles('backend/package-lock.json') }}
-          restore-keys: |
-            backend-${{ runner.os }}-
 
       - name: Install Backend
         working-directory: backend
