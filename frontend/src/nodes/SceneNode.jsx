@@ -13,7 +13,10 @@ export class SceneNode extends DefaultActionNode {
   createDOM(config) {
     const h4 = document.createElement('h4');
     h4.className = config.theme.scene;
+    const text = document.createTextNode('Scene/സീൻ:');
+    h4.appendChild(text);
     h4.setAttribute('data-placeholder', 'Scene...');
+    
 
     return h4;
   }
