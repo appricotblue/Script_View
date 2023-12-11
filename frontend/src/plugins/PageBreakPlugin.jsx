@@ -1,15 +1,23 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { mergeRegister } from '@lexical/utils';
+import { $findMatchingParent } from '@lexical/utils';
 import {
+  $createParagraphNode,
+  $getPreviousSelection,
   $getRoot,
   $getSelection,
+  $isNodeSelection,
   $isRangeSelection,
+  $isRootOrShadowRoot,
+  $isTextNode,
+  $splitNode,
   COMMAND_PRIORITY_EDITOR,
+  DEPRECATED_$isGridSelection,
   createCommand,
 } from 'lexical';
 import { useEffect } from 'react';
 
 import { $createPageBreakNode, PageBreakNode } from '@/nodes/PageBreakNode';
+import { $isDialogueContainerNode } from '@/nodes/DialogueContainerNode';
 
 export const INSERT_PAGE_BREAK = createCommand();
 
@@ -21,28 +29,81 @@ export default function PageBreakPlugin() {
       throw new Error(
         'PageBreakPlugin: PageBreakNode is not registered on editor',
       );
+    return editor.registerCommand(
+      INSERT_PAGE_BREAK,
+      () => {
+        const selection = $getSelection();
 
-    return mergeRegister(
-      editor.registerCommand(
-        INSERT_PAGE_BREAK,
-        () => {
-          const selection = $getSelection();
+        if (!$isRangeSelection(selection)) return false;
 
-          if (!$isRangeSelection(selection)) return false;
+        const focusNode = selection.focus.getNode();
+        if (focusNode !== null) {
+          const pgBreak = $createPageBreakNode();
+          $insertNodeToNearestRoot(pgBreak);
+        }
 
-          const focusNode = selection.focus.getNode();
-          if (focusNode !== null) {
-            const pgBreak = $createPageBreakNode();
-            const root = $getRoot();
-            root.append(pgBreak);
-          }
-
-          return true;
-        },
-        COMMAND_PRIORITY_EDITOR,
-      ),
+        return true;
+      },
+      COMMAND_PRIORITY_EDITOR,
     );
   }, [editor]);
 
   return null;
+}
+
+function $insertNodeToNearestRoot(node) {
+  const selection = $getSelection() || $getPreviousSelection();
+
+  if ($isRangeSelection(selection)) {
+    const { focus } = selection;
+    const focusNode = focus.getNode();
+    const focusOffset = focus.offset;
+    const DContainerParent = $findMatchingParent(focusNode, (parent) =>
+      $isDialogueContainerNode(parent),
+    );
+    if (DContainerParent) {
+      DContainerParent.insertAfter(node);
+      const paragraphNode = $createParagraphNode();
+      node.insertAfter(paragraphNode);
+      node.selectNext();
+    } else if ($isRootOrShadowRoot(focusNode)) {
+      const focusChild = focusNode.getChildAtIndex(focusOffset);
+      if (focusChild == null) {
+        focusNode.append(node);
+      } else {
+        focusChild.insertBefore(node);
+      }
+      node.selectNext();
+    } else {
+      let splitNode;
+      let splitOffset;
+      if ($isTextNode(focusNode)) {
+        splitNode = focusNode.getParentOrThrow();
+        splitOffset = focusNode.getIndexWithinParent();
+
+        if (focusOffset > 0) {
+          splitOffset += 1;
+          focusNode.splitText(focusOffset);
+        }
+      } else {
+        splitNode = focusNode;
+        splitOffset = focusOffset;
+      }
+      const [, rightTree] = $splitNode(splitNode, splitOffset);
+      rightTree.insertBefore(node);
+      rightTree.selectStart();
+    }
+  } else {
+    if ($isNodeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
+      const nodes = selection.getNodes();
+      nodes[nodes.length - 1].getTopLevelElementOrThrow().insertAfter(node);
+    } else {
+      const root = $getRoot();
+      root.append(node);
+    }
+    const paragraphNode = $createParagraphNode();
+    node.insertAfter(paragraphNode);
+    paragraphNode.select();
+  }
+  return node.getLatest();
 }

@@ -60,7 +60,12 @@ const TextArea = () => {
     bottomRight: `-${margin}rem`,
   };
   const CustomContentEditable = useMemo(() => {
-    return <ContentEditable className={Style['editor-input']} />;
+    return (
+      <ContentEditable
+        className={Style['editor-input']}
+        id="#contentEditable"
+      />
+    );
   }, []);
   const PlaceHolder = useMemo(() => {
     return <Box className={Style['editor-placeholder']}>Start Typing...</Box>;
