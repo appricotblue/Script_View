@@ -7,9 +7,12 @@ const { saveScript } = require("../helpers/socketHelpers");
  */
 
 module.exports = function (appServer) {
-  const io = new Server(appServer);
+  const io = new Server(appServer,{
+    cors:{origin:"*"}
+  });
 
   io.on("connection", (socket) => {
+    console.log('socket connected')
     // saves state. if error, emits SaveStateError
     socket.on("save-state", async (data) => {
       try {
