@@ -29,9 +29,6 @@ const TextArea = () => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
           const pageCount = Math.floor(newHeight / A4_HEIGHT); // Calculate number of A4 pages
-          console.log('newHeight',newHeight);
-          console.log('pageCount',pageCount);
-          console.log('height',height);
           
           if (pageCount > height) {
             // Trigger function when a new A4 page is filled with text
