@@ -2,13 +2,54 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { useMemo, useState } from 'react';
 import { Box, Paper } from '@mui/material';
+import { useEffect } from 'react';
+import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 import ErrorBoundary from '@script/errorBoundary';
 
 import Style from './TextArea.module.css';
+const A4_HEIGHT =  938; // Height of an A4 page in pixels
+
 
 const TextArea = () => {
   // margin in rem
+  //Chatgpt 
+  const [height, setHeight] = useState(0);
+  const [editor] = useLexicalComposerContext();
+
+  const handlePageBreak = () => {
+    editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
+  };
+
+   useEffect(() => {
+    const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
+    if (textareaElement) {
+      const observer = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          const newHeight = entry.contentRect.height;
+          const pageCount = Math.floor(newHeight / A4_HEIGHT); // Calculate number of A4 pages
+          console.log('newHeight',newHeight);
+          console.log('pageCount',pageCount);
+          console.log('height',height);
+          
+          if (pageCount > height) {
+            // Trigger function when a new A4 page is filled with text
+            handlePageBreak();
+            setHeight(pageCount); // Update the A4 page count
+          }
+        }
+      });
+
+      observer.observe(textareaElement);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [height, handlePageBreak]);
+  //Chat gpt
+
   const [margin] = useState(3);
   const marginLineConf = {
     hrSideHeight: `calc(100% + ${margin * 2}rem)`,
@@ -28,7 +69,7 @@ const TextArea = () => {
     <Paper
       sx={{
         width: '793px',
-        minHeight: '1122px',
+        minHeight: '938px',
         boxShadow: '2.99253px 2.99253px 13.46637px 0px rgba(0, 0, 0, 0.10)',
         display: 'flex',
         flexDirection: 'column',
