@@ -1,20 +1,19 @@
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Box, Paper } from '@mui/material';
-import { useEffect } from 'react';
-import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
+import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
 import ErrorBoundary from '@script/errorBoundary';
 
 import Style from './TextArea.module.css';
-const A4_HEIGHT =  938; // Height of an A4 page in pixels
-
+const A4_HEIGHT = 938; // Height of an A4 page in pixels
 
 const TextArea = () => {
   // margin in rem
-  //Chatgpt 
+  const [margin] = useState(3);
+  //Chatgpt
   const [height, setHeight] = useState(0);
   const [editor] = useLexicalComposerContext();
 
@@ -22,14 +21,14 @@ const TextArea = () => {
     editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
   };
 
-   useEffect(() => {
+  useEffect(() => {
     const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
     if (textareaElement) {
       const observer = new ResizeObserver((entries) => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
           const pageCount = Math.floor(newHeight / A4_HEIGHT); // Calculate number of A4 pages
-          
+
           if (pageCount > height) {
             // Trigger function when a new A4 page is filled with text
             handlePageBreak();
@@ -47,7 +46,6 @@ const TextArea = () => {
   }, [height, handlePageBreak]);
   //Chat gpt
 
-  const [margin] = useState(3);
   const marginLineConf = {
     hrSideHeight: `calc(100% + ${margin * 2}rem)`,
     vrSideWidth: `calc(100% + ${margin * 2}rem)`,
