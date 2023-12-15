@@ -10,9 +10,13 @@ import { $createTextNode, $getSelection } from 'lexical';
 import { useDebounce, useTransliteration } from '@hooks';
 
 import { $isSluglineNode } from '@/nodes/SluglineNode';
+import { $isSceneNode } from '@/nodes/SceneNode';
 
 // Length of the input string sent to transliterate.
 const INPUT_LENGTH = 50;
+
+// Regex to match string that includes forward slash (/)
+const fwSlashRegex = new RegExp(/^[a-zA-Z]+(\/[a-zA-Z]+)*\/?$/);
 
 // regex to check if the user is typing only letters
 const lettersTriggerRegex = new RegExp(`^[a-zA-Z]{1,${INPUT_LENGTH}}$`);
@@ -30,6 +34,11 @@ const SLUGLINE_SUGGESTIONS = [
   'Night/Int/Ext',
   'Day/Night/Int/Ext',
 ];
+
+// Suggestion list for Scene Component.
+const SCENE_SUGGESTIONS = ['FlashCut/ഫ്ലാഷ്ക്കട് : ', 'Scene/സീൻ : '];
+
+// NODE TYPES ENUM
 const NODE_TYPES = {
   DEFAULT: 0,
   SLUGLINE: 1,
@@ -40,18 +49,38 @@ const NODE_TYPES = {
   ACTION: 6,
   SCENE: 7,
 };
+Object.freeze(NODE_TYPES);
 
+// TODO - refactor this temporary code
 /**
  * checks and returns the result of type ahead trigger
- * if the text contains letters with a '/' in it
+ * for slugline.
  *
  * @param {String} text
  * @returns {Object}
  */
-function matchInputWithFWSlash(text) {
-  const sluglineRegex = new RegExp(/^[a-zA-Z]+(\/[a-zA-Z]+)*\/?$/);
+function matchInputInSlugline(text) {
   const filtered = SLUGLINE_SUGGESTIONS.filter((value) => text === value);
-  const match = sluglineRegex.exec(text);
+  const match = fwSlashRegex.exec(text);
+  if (match !== null && filtered.length === 0) {
+    return {
+      matchingString: match[0],
+      replaceableString: match[0],
+      leadOffset: match.index,
+    };
+  }
+  return null;
+}
+/**
+ * checks and returns the result of type-ahead trigger
+ * for Scene
+ * @param {String} text
+ * @returns {Object}
+ */
+function matchInputInScene(text) {
+  const fwSlashRegex = new RegExp(/^[a-zA-Z]+(\/[a-zA-Z]+)*\/?$/);
+  const filtered = SCENE_SUGGESTIONS.filter((value) => text === value);
+  const match = fwSlashRegex.exec(text);
   if (match !== null && filtered.length === 0) {
     return {
       matchingString: match[0],
@@ -114,6 +143,18 @@ function searchSluglineSuggestion(input) {
     return value.toLowerCase().includes(input.toLowerCase());
   });
 }
+/**
+ * searches in scene suggestion list
+ * for matching results
+ *
+ * @param {String} input
+ * @returns {Array}
+ */
+function searchSceneSuggestion(input) {
+  return SCENE_SUGGESTIONS.filter((value) => {
+    return value.toLowerCase().includes(input.toLowerCase());
+  });
+}
 
 /**
  * returns a list of suggestions depending on nodeType.
@@ -140,13 +181,20 @@ function useSuggestionGenService(inputString, nodeType) {
       setResults([]);
       return;
     }
-    if (nodeType === NODE_TYPES.SLUGLINE) {
-      setResults(searchSluglineSuggestion(inputString));
-    } else
-      transliterateDebounced(
-        inputString,
-        TRANSLATE_SUGGESTION_LIST_LENGTH_LIMIT,
-      );
+
+    switch (nodeType) {
+      case NODE_TYPES.SLUGLINE:
+        setResults(searchSluglineSuggestion(inputString));
+        break;
+      case NODE_TYPES.SCENE:
+        setResults(searchSceneSuggestion(inputString));
+        break;
+      default:
+        transliterateDebounced(
+          inputString,
+          TRANSLATE_SUGGESTION_LIST_LENGTH_LIMIT,
+        );
+    }
   }, [inputString]);
 
   return results;
@@ -228,8 +276,11 @@ export default function TextSuggestionPlugin() {
       editor.getEditorState().read(() => {
         const anchorParent = $getSelection().anchor.getNode().getParent();
         if ($isSluglineNode(anchorParent)) {
-          result = matchInputWithFWSlash(text);
+          result = matchInputInSlugline(text);
           setNodeType(NODE_TYPES.SLUGLINE);
+        } else if ($isSceneNode(anchorParent)) {
+          result = matchInputInScene(text);
+          setNodeType(NODE_TYPES.SCENE);
         } else {
           result = matchCommonText(text);
           setNodeType(NODE_TYPES.DEFAULT);
