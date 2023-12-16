@@ -1,18 +1,37 @@
 import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
 import { useGetDocList } from '@hooks';
+import { useEffect, useState } from 'react';
+
 import { DocCard, TemplateCard } from '@common';
+import { VITE_BASE_URL } from '@/constants';
 
 const Home = () => {
   const { isLoggedIn } = useSelector((state) => {
     return state.user;
   });
+  const [updatedDocList, setUpdatedDocList] = useState([]);
   const { palette } = useTheme();
   const docList = useGetDocList();
   const navigate = useNavigate();
+  useEffect(() => {
+    setUpdatedDocList(docList);
+  }, [docList]);
   if (!isLoggedIn) return <Navigate to="/login" />;
+
+  const deleteDoc = (id) => {
+    fetch(`${VITE_BASE_URL}/api/scripts/delete/${id}`, {
+      method: 'DELETE',
+    })
+      .then(async (res) => {
+        const json = await res.json();
+        setUpdatedDocList(json.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
   return (
     <Stack alignItems="center" width="100%" height="90vh">
       <Stack
@@ -46,11 +65,12 @@ const Home = () => {
         flexGrow={1}
         bgcolor={palette.primary.dark}
       >
-        {docList.map((item) => {
+        {updatedDocList.map((item) => {
           return (
             <DocCard
               key={item._id}
-              onClick={() => navigate(`/document/${item._id}`)}
+              onOpen={() => navigate(`/document/${item._id}`)}
+              handleDelete={() => deleteDoc(item._id)}
               data={item}
             />
           );

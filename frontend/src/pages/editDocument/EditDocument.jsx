@@ -8,7 +8,6 @@ import { ScriptSidebar, TextEditor } from '@script';
 import TextSuggestionPlugin from '@/plugins/TextSuggestionsPlugin';
 import PrintPlugin from '@/plugins/PrintPlugin';
 import AutoSavePlugin from '@/plugins/AutoSavePlugin';
-import FetchInitialStatePlugin from '@/plugins/FetchInitialStatePlugin';
 import useOnlineStatus from '@/utils/hooks/useOnlineStatus';
 import PageBreakPlugin from '@/plugins/PageBreakPlugin';
 
@@ -20,7 +19,6 @@ const EditDocument = () => {
         <ScriptSidebar />
         <TextEditor />
         <AutoSavePlugin />
-        <FetchInitialStatePlugin />
         <TextSuggestionPlugin />
         <PrintPlugin />
         <PageBreakPlugin />

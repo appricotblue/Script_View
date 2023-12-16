@@ -1,10 +1,12 @@
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { useParams } from 'react-router-dom';
 import { useDebounce } from '@hooks';
+import { useContext } from 'react';
 
-import useSocketRegistration from '@/utils/hooks/useSocketRegistration';
+import { ScriptSocketContext } from '@/context/ScriptSocketContext';
+
 const AutoSavePlugin = () => {
-  const [socket] = useSocketRegistration();
+  const { socket } = useContext(ScriptSocketContext);
   const { id } = useParams();
 
   const debounceCb = (editorState) => {

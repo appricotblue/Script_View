@@ -1,5 +1,6 @@
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import PropTypes from 'prop-types';
+import { useLoaderData } from 'react-router-dom';
 
 import SceneNode from '@/nodes/SceneNode';
 import SubHeaderNode from '@/nodes/SubHeaderNode';
@@ -13,6 +14,7 @@ import ParentheticalNode from '@/nodes/ParentheticalNode';
 import { PageBreakNode } from '@/nodes/PageBreakNode/index';
 
 const LexicalComposerProvider = ({ children }) => {
+  const editorState = useLoaderData().state;
   const lexicalConfig = {
     namespace: 'Script View Text Editor',
     nodes: [
@@ -44,6 +46,7 @@ const LexicalComposerProvider = ({ children }) => {
       dialogueContainer: 'dialogue-container',
     },
     onError: (e) => console.error(e),
+    editorState,
   };
 
   return (

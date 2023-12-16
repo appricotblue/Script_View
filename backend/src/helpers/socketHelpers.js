@@ -3,9 +3,16 @@ const ScriptModel = require("../model/scriptModel");
 module.exports = {
   /** @param {string} state @param {string} authorId */
   saveScript: async ({ state, id }) => {
-    const user = await ScriptModel.findOne({ _id: id });
-    if (user) {
-      await user.updateOne({ editorState: state });
+    const doc = await ScriptModel.findOne({ _id: id });
+    if (doc) {
+      await doc.updateOne({ editorState: state });
+    }
+  },
+  editScriptTitle: async ({ title, id }) => {
+    if (!title) throw Error("Title cannot be empty");
+    const doc = await ScriptModel.findOne({ _id: id });
+    if (doc) {
+      await doc.updateOne({ title });
     }
   },
 };
