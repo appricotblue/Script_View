@@ -5,8 +5,9 @@ import { useParams } from 'react-router-dom';
 import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
 import MinifyCss from 'minify-css-string';
 
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 import css from '@/pages/editDocument/Editor.css';
+import { VITE_BASE_URL } from '@/constants';
+
 export const PRINT_COMMAND = createCommand('print-command');
 
 const PrintPlugin = () => {

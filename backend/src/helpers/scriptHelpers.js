@@ -7,8 +7,8 @@ module.exports = {
     return data;
   },
 
-  /** @param {string} id @returns {Promise<Object>|null} */
-  createScriptFromId: async (id) => {
+  /** @returns {Promise<Object>|null} */
+  createNewScript: async () => {
     const data = await ScriptModel.create({ author: "user" });
     return data;
   },

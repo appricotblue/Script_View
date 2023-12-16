@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
+import { VITE_BASE_URL } from '@/constants';
 
 const useSocketRegistration = () => {
   const [socket, setSocket] = useState(null);

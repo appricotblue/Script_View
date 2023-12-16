@@ -1,7 +1,7 @@
 const { default: puppeteer } = require("puppeteer");
 const {
   findScriptById,
-  createScriptFromId,
+  createNewScript,
   getRecentDocList,
 } = require("../helpers/scriptHelpers");
 const { validateHTML } = require("../utils/validationUtils");
@@ -18,7 +18,11 @@ module.exports = {
     try {
       const data = await findScriptById(req.params.id);
       if (data) {
-        return res.json({ author: data.author, data: data.editorState });
+        return res.json({
+          author: data.author,
+          state: data.editorState,
+          title: data.title,
+        });
       }
       return res.status(404).json({ message: "Data not found" });
     } catch (err) {
@@ -26,10 +30,13 @@ module.exports = {
     }
   },
   createScript: async (req, res) => {
-    const { id } = req.params;
     try {
-      const docData = await createScriptFromId(id);
-      res.json({ author: docData.author, id: docData._id });
+      const docData = await createNewScript();
+      res.json({
+        author: docData.author,
+        id: docData._id,
+        title: docData.title,
+      });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: err.message });
@@ -103,6 +110,23 @@ module.exports = {
           .status(500)
           .json({ error: "Internal server error", message: err.message });
       }
+    }
+  },
+  deleteDoc: async (req, res) => {
+    const docId = req.params.id;
+    try {
+      const data = await findScriptById(docId);
+      if (data) {
+        await data.deleteOne();
+        const list = await getRecentDocList();
+        return res.json({ data: list });
+      }
+      return res.status(404);
+    } catch (err) {
+      console.error(err);
+      res
+        .status(500)
+        .json({ error: "Internal server error", message: err.message });
     }
   },
 };

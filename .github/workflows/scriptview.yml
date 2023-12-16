@@ -24,9 +24,9 @@ jobs:
         env:
           VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
         run: |
-          echo "VITE_BASE_URL=${VITE_BASE_URL}" > .env
           rm -rf node_modules
           npm install
+          echo "hello" > test.txt
           npm run build
 
       - name: Install Backend

@@ -5,7 +5,7 @@ import { Box, Paper } from '@mui/material';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
-import ErrorBoundary from '@script/errorBoundary';
+import { ScriptErrorBoundary } from '@script';
 
 import Style from './TextArea.module.css';
 const A4_HEIGHT = 938; // Height of an A4 page in pixels
@@ -17,10 +17,6 @@ const TextArea = () => {
   const [height, setHeight] = useState(0);
   const [editor] = useLexicalComposerContext();
 
-  const handlePageBreak = () => {
-    editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
-  };
-
   useEffect(() => {
     const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
     if (textareaElement) {
@@ -30,8 +26,7 @@ const TextArea = () => {
           const pageCount = Math.floor(newHeight / A4_HEIGHT); // Calculate number of A4 pages
 
           if (pageCount > height) {
-            // Trigger function when a new A4 page is filled with text
-            handlePageBreak();
+            editor.dispatchCommand(INSERT_PAGE_BREAK, undefined); // Trigger function when a new A4 page is filled with text
             setHeight(pageCount); // Update the A4 page count
           }
         }
@@ -43,7 +38,7 @@ const TextArea = () => {
         observer.disconnect();
       };
     }
-  }, [height, handlePageBreak]);
+  }, [height]);
   //Chat gpt
 
   const marginLineConf = {
@@ -87,7 +82,7 @@ const TextArea = () => {
         <RichTextPlugin
           contentEditable={CustomContentEditable}
           placeholder={PlaceHolder}
-          ErrorBoundary={ErrorBoundary}
+          ErrorBoundary={ScriptErrorBoundary}
         />
 
         {/* Margin Lines */}

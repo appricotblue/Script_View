@@ -2,9 +2,9 @@ import { Box, Icon, Paper, Typography } from '@mui/material';
 import { Plus } from '@phosphor-icons/react';
 import { useTheme } from '@emotion/react';
 import { useState } from 'react';
-import { v4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
+import { VITE_BASE_URL } from '@/constants';
 
 const TemplateCard = () => {
   const { palette } = useTheme();
@@ -14,8 +14,7 @@ const TemplateCard = () => {
   const handleClick = (e) => {
     if (isLoading) return e.stopPropagation();
     setLoading(true);
-    const id = v4();
-    fetch(`${VITE_BASE_URL}/api/scripts/create/${id}`)
+    fetch(`${VITE_BASE_URL}/api/scripts/create`)
       .then(async (response) => {
         const { id } = await response.json();
         navigate(`/document/${id}`);

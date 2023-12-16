@@ -13,18 +13,22 @@ import {
   Keyboard,
   List as ListIcon,
   CaretDown,
-  CloudCheck,
-  Pencil,
 } from '@phosphor-icons/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useLoaderData, useParams } from 'react-router-dom';
 
-import { GradientBtn } from '@common';
+import { GradientBtn, InlineEditable } from '@common';
 import { PRINT_COMMAND } from '@/plugins/PrintPlugin';
+import { ScriptSocketContext } from '@/context/ScriptSocketContext';
 
 const ScriptHeader = () => {
   const { palette } = useTheme();
   const [editor] = useLexicalComposerContext();
+  const { socket } = useContext(ScriptSocketContext);
+  const { id } = useParams();
+
+  const [titleValue, setTitleValue] = useState(useLoaderData().title);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width: 600px)');
 
@@ -34,6 +38,20 @@ const ScriptHeader = () => {
 
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
+  };
+
+  // manage inline editable
+  const onTitleBlur = () => {
+    if (!id) {
+      throw new Response('id not found', { status: 404 });
+    }
+    if (socket && socket.connected) {
+      if (titleValue != '') {
+        socket.emit('edit-title', { title: titleValue, id });
+      }
+    } else {
+      console.error('socket connection not open');
+    }
   };
   return (
     <>
@@ -84,17 +102,11 @@ const ScriptHeader = () => {
               </Button>
               <Button sx={{ backgroundColor: '#F2F2F2' }}>Insert</Button>
             </Stack>
-            <Button
-              startIcon={<CloudCheck siz={12} />}
-              endIcon={<Pencil size={12} weight="thin" />}
-              sx={{
-                marginLeft: '-5rem',
-                '& .MuiButton-endIcon': { marginLeft: '3px' },
-                '& .MuiButton-startIcon': { marginRight: '5px' },
-              }}
-            >
-              Jallikkettu Rough Script
-            </Button>
+            <InlineEditable
+              onBlur={onTitleBlur}
+              onChange={(e) => setTitleValue(e.target.value)}
+              value={titleValue}
+            />
             <Stack direction="row" gap="0.94rem">
               <GradientBtn size="large" sx={{ fontWeight: '600' }}>
                 Save Template
