@@ -1,5 +1,9 @@
 const { Server } = require("socket.io");
-const { saveScript, editScriptTitle } = require("../helpers/socketHelpers");
+const {
+  saveScript,
+  editScriptTitle,
+  updateCharacterList,
+} = require("../helpers/socketHelpers");
 /**
  * This function handles all operations related to web socket connection
  *
@@ -27,6 +31,15 @@ module.exports = function (appServer) {
         await editScriptTitle(data);
       } catch (err) {
         io.emit("editTitleError", { message: err.message, stack: err.stack });
+      }
+    });
+    socket.on("save-character", async (data, cb) => {
+      try {
+        await updateCharacterList(data);
+      } catch (err) {
+        io.emit("editTitleError", { message: err.message, stack: err.stack });
+      } finally {
+        cb("got it");
       }
     });
   });

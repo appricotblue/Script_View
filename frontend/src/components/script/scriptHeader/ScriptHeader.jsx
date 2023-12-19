@@ -14,23 +14,32 @@ import {
   List as ListIcon,
   CaretDown,
 } from '@phosphor-icons/react';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLoaderData, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import { GradientBtn, InlineEditable } from '@common';
 import { PRINT_COMMAND } from '@/plugins/PrintPlugin';
 import { ScriptSocketContext } from '@/context/ScriptSocketContext';
+import AddCharacterModal from '@script/addCharacterModal/AddCharacterModal';
+import { setCharacters } from '@/store/slices/scriptSlice';
 
 const ScriptHeader = () => {
   const { palette } = useTheme();
   const [editor] = useLexicalComposerContext();
   const { socket } = useContext(ScriptSocketContext);
   const { id } = useParams();
+  const { title, characters } = useLoaderData();
+  const dispatch = useDispatch();
 
-  const [titleValue, setTitleValue] = useState(useLoaderData().title);
+  const [titleValue, setTitleValue] = useState(title);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width: 600px)');
+
+  useEffect(() => {
+    dispatch(setCharacters(characters || []));
+  }, [characters]);
 
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true);
@@ -80,11 +89,14 @@ const ScriptHeader = () => {
           <Stack
             direction="row"
             justifyContent="space-between"
+            alignItems="center"
             width="100%"
             sx={{ display: { xs: 'none', md: 'flex' } }}
           >
             <Stack direction="row" gap="0.75rem" marginLeft="5rem">
-              <Button sx={{ backgroundColor: '#F2F2F2' }}>
+              <Button
+                sx={{ backgroundColor: '#F2F2F2', height: 'fit-content' }}
+              >
                 Page Preferences
               </Button>
               <Button
@@ -93,6 +105,7 @@ const ScriptHeader = () => {
                   backgroundColor: '#F2F2F2',
                   display: 'flex',
                   alignItems: 'center',
+                  height: 'fit-content',
                   '& .MuiButton-endIcon': { marginLeft: '6px' },
                 }}
                 endIcon={<CaretDown size={12} />}
@@ -100,7 +113,12 @@ const ScriptHeader = () => {
                 <span style={{ marginTop: '-0.125rem' }}>അ</span>{' '}
                 <Keyboard size={14} weight="thin" />
               </Button>
-              <Button sx={{ backgroundColor: '#F2F2F2' }}>Insert</Button>
+              <Button
+                sx={{ backgroundColor: '#F2F2F2', height: 'fit-content' }}
+              >
+                Insert
+              </Button>
+              <AddCharacterModal socket={socket} id={id} />
             </Stack>
             <InlineEditable
               onBlur={onTitleBlur}

@@ -7,6 +7,7 @@ const scriptSchema = new Schema(
       requried: "Requires Title",
       default: "Untitled Document",
     },
+    characters: { type: Array, default: [] },
     author: {
       // type: Schema.Types.ObjectId,
       // ref: "User",
