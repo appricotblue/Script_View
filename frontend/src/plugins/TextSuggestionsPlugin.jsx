@@ -179,9 +179,13 @@ function useSuggestionGenService(inputString, nodeType) {
   };
   const transliterateDebounced = useDebounce(debounceCb, 50);
 
+  //TODO - refactor this code
   const searchCharacter = (inputString) => {
+    let filtered = characters.filter((value) => value.includes(inputString));
+    if (filtered.length > 0) return setResults(filtered);
+
     transliterate(inputString).then((res) => {
-      let filtered = characters.filter((value) => value.includes(res[0]));
+      filtered = characters.filter((value) => value.includes(res[0]));
       setResults(filtered);
     });
   };
