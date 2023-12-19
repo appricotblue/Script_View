@@ -22,6 +22,7 @@ module.exports = {
           author: data.author,
           state: data.editorState,
           title: data.title,
+          characters: data.characters || [],
         });
       }
       return res.status(404).json({ message: "Data not found" });

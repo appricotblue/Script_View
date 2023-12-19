@@ -2,13 +2,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const scriptSlice = createSlice({
   name: 'scripts',
-  initialState: { socket: null },
+  initialState: { characters: [] },
   reducers: {
-    setSocket: (state, { payload }) => {
-      return { ...state, socket: payload.socket };
+    setCharacters: (state, { payload }) => {
+      return { ...state, characters: payload };
     },
   },
 });
 
-export const { setSocket } = scriptSlice.actions;
+export const { setCharacters } = scriptSlice.actions;
 export default scriptSlice.reducer;

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 const CustomInput = styled(Input)({
   marginLeft: '-5rem',
   userSelect: 'none !important',
+  height: 'fit-content',
   fieldSet: {
     display: 'none',
   },
@@ -32,6 +33,7 @@ const InlineEditable = ({ onBlur, value, onChange }) => {
       aria-describedby="document-title"
       inputProps={{
         'aria-label': 'document-title',
+        style: { padding: 0, textAlign: 'center' },
       }}
       onKeyDown={handleKeyDown}
       onBlur={onBlur}

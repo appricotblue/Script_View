@@ -8,9 +8,11 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
 import { $createTextNode, $getSelection } from 'lexical';
 import { useDebounce, useTransliteration } from '@hooks';
+import { useSelector } from 'react-redux';
 
 import { $isSluglineNode } from '@/nodes/SluglineNode';
 import { $isSceneNode } from '@/nodes/SceneNode';
+import { $isParentheticalNode } from '@/nodes/ParentheticalNode';
 
 // Length of the input string sent to transliterate.
 const INPUT_LENGTH = 50;
@@ -167,6 +169,7 @@ function searchSceneSuggestion(input) {
 function useSuggestionGenService(inputString, nodeType) {
   const [results, setResults] = useState([]);
   const transliterate = useTransliteration();
+  const { characters } = useSelector((state) => state.scripts);
 
   // debounce callback
   const debounceCb = (string) => {
@@ -175,6 +178,13 @@ function useSuggestionGenService(inputString, nodeType) {
     });
   };
   const transliterateDebounced = useDebounce(debounceCb, 50);
+
+  const searchCharacter = (inputString) => {
+    transliterate(inputString).then((res) => {
+      let filtered = characters.filter((value) => value.includes(res[0]));
+      setResults(filtered);
+    });
+  };
 
   useLayoutEffect(() => {
     if (inputString == null || inputString.length > INPUT_LENGTH) {
@@ -189,11 +199,11 @@ function useSuggestionGenService(inputString, nodeType) {
       case NODE_TYPES.SCENE:
         setResults(searchSceneSuggestion(inputString));
         break;
+      case NODE_TYPES.PARENTHETICAL:
+        searchCharacter(inputString);
+        break;
       default:
-        transliterateDebounced(
-          inputString,
-          TRANSLATE_SUGGESTION_LIST_LENGTH_LIMIT,
-        );
+        transliterateDebounced(inputString);
     }
   }, [inputString]);
 
@@ -281,6 +291,9 @@ export default function TextSuggestionPlugin() {
         } else if ($isSceneNode(anchorParent)) {
           result = matchInputInScene(text);
           setNodeType(NODE_TYPES.SCENE);
+        } else if ($isParentheticalNode(anchorParent)) {
+          result = matchCommonText(text);
+          setNodeType(NODE_TYPES.PARENTHETICAL);
         } else {
           result = matchCommonText(text);
           setNodeType(NODE_TYPES.DEFAULT);

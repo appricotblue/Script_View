@@ -34,6 +34,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'prettier/prettier': ['error', { printWidth: 80 }],
+    'no-console': 1,
     'import/no-unresolved': 0,
     'no-unused-vars': [2, { args: 'none' }],
     'import/order': [

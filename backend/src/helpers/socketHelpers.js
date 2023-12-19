@@ -15,4 +15,11 @@ module.exports = {
       await doc.updateOne({ title });
     }
   },
+  updateCharacterList: async ({ characters, id }) => {
+    if (!Array.isArray(characters)) throw Error("Invalid payload");
+    const doc = await ScriptModel.findOne({ _id: id });
+    if (doc) {
+      await doc.updateOne({ characters });
+    }
+  },
 };
