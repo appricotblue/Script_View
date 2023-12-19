@@ -1,46 +1,90 @@
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Box, Paper } from '@mui/material';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
-import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
 import { ScriptErrorBoundary } from '@script';
 
 import Style from './TextArea.module.css';
+
 const A4_HEIGHT = 938; // Height of an A4 page in pixels
 
 const TextArea = () => {
   // margin in rem
   const [margin] = useState(3);
   //Chatgpt
-  const [height, setHeight] = useState(0);
-  const [editor] = useLexicalComposerContext();
+  // const [height, setHeight] = useState(0);
 
-  useEffect(() => {
-    const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
-    if (textareaElement) {
-      const observer = new ResizeObserver((entries) => {
-        for (let entry of entries) {
-          const newHeight = entry.contentRect.height;
-          const pageCount = Math.floor(newHeight / A4_HEIGHT); // Calculate number of A4 pages
+  // useEffect(() => {
+  //   const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
+  //   if (textareaElement) {
+  //     const observer = new ResizeObserver((entries) => {
+  //       for (let entry of entries) {
+  //         const newHeight = entry.contentRect.height;
+  //         const pageCount = Math.floor(newHeight / A4_HEIGHT); // Calculate number of A4 pages
 
-          if (pageCount > height) {
-            editor.dispatchCommand(INSERT_PAGE_BREAK, undefined); // Trigger function when a new A4 page is filled with text
-            setHeight(pageCount); // Update the A4 page count
-          }
-        }
-      });
+  //         if (pageCount > height) {
+  //           editor.dispatchCommand(INSERT_PAGE_BREAK, undefined); // Trigger function when a new A4 page is filled with text
+  //           setHeight(pageCount); // Update the A4 page count
+  //         }
+  //       }
+  //     });
 
-      observer.observe(textareaElement);
+  //     observer.observe(textareaElement);
 
-      return () => {
-        observer.disconnect();
-      };
-    }
-  }, [height]);
+  //     return () => {
+  //       observer.disconnect();
+  //     };
+  //   }
+  // }, [height]);
   //Chat gpt
 
+  // TODO - Remove this temporary code
+  const contRef = useRef(null);
+  const [pinPoints, setPinPoints] = useState([{ id: 0, top: 0 }]);
+  useEffect(() => {
+    const calculatePinPoints = () => {
+      if (contRef.current) {
+        const containerHeight = contRef.current.clientHeight;
+        const existingPinPoints = pinPoints.length;
+
+        // Calculate the number of additional page counts needed
+        const additionalPinPoints = Math.floor(
+          (containerHeight - existingPinPoints * A4_HEIGHT) / A4_HEIGHT + 1,
+        );
+        console.log({ additionalPinPoints });
+
+        // Create new page counts and update the state
+        setPinPoints([
+          { id: 0, top: 0 },
+          ...Array.from({ length: additionalPinPoints }, (_, index) => {
+            console.log({
+              id: existingPinPoints + index,
+              top: index + 1,
+            });
+            return {
+              id: existingPinPoints + index, // Ensure unique id
+              top: (index + 1) * A4_HEIGHT - 10, // Adjust for the page count size
+            };
+          }),
+        ]);
+      }
+    };
+
+    // Initial page count setup
+    calculatePinPoints();
+
+    // Watch for size changes using ResizeObserver
+    const resizeObserver = new ResizeObserver(calculatePinPoints);
+    if (contRef.current && contRef.current.parentElement) {
+      resizeObserver.observe(contRef.current.parentElement);
+    }
+
+    return () => {
+      // Disconnect the ResizeObserver when the component unmounts
+      resizeObserver.disconnect();
+    };
+  }, []);
   const marginLineConf = {
     hrSideHeight: `calc(100% + ${margin * 2}rem)`,
     vrSideWidth: `calc(100% + ${margin * 2}rem)`,
@@ -77,7 +121,20 @@ const TextArea = () => {
         margin={`${margin}rem`}
         position="relative"
         className={Style['editor-inner']}
+        ref={contRef}
       >
+        {pinPoints.map((point, index) => (
+          <div
+            key={point.id}
+            style={{
+              position: 'absolute',
+              top: `${point.top}px`,
+              left: '-10px',
+            }}
+          >
+            {index + 1}
+          </div>
+        ))}
         {/* Content Editable */}
         <RichTextPlugin
           contentEditable={CustomContentEditable}
