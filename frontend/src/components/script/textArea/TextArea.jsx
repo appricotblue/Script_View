@@ -2,46 +2,51 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Box, Paper } from '@mui/material';
-
 import { ScriptErrorBoundary } from '@script';
-
 import Style from './TextArea.module.css';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
 
 const A4_HEIGHT = 938; // Height of an A4 page in pixels
 
 const TextArea = () => {
   // margin in rem
   const [margin] = useState(3);
-  //Chatgpt
-  // const [height, setHeight] = useState(0);
-
-  // useEffect(() => {
-  //   const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
-  //   if (textareaElement) {
-  //     const observer = new ResizeObserver((entries) => {
-  //       for (let entry of entries) {
-  //         const newHeight = entry.contentRect.height;
-  //         const pageCount = Math.floor(newHeight / A4_HEIGHT); // Calculate number of A4 pages
-
-  //         if (pageCount > height) {
-  //           editor.dispatchCommand(INSERT_PAGE_BREAK, undefined); // Trigger function when a new A4 page is filled with text
-  //           setHeight(pageCount); // Update the A4 page count
-  //         }
-  //       }
-  //     });
-
-  //     observer.observe(textareaElement);
-
-  //     return () => {
-  //       observer.disconnect();
-  //     };
-  //   }
-  // }, [height]);
-  //Chat gpt
-
-  // TODO - Remove this temporary code
+  const [editor] = useLexicalComposerContext();
   const contRef = useRef(null);
   const [pinPoints, setPinPoints] = useState([{ id: 0, top: 0 }]);
+
+  //Auto Page Break
+  const [height, setHeight] = useState(0);
+  const prevHeightRef = useRef(0);
+
+  useEffect(() => {
+    const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
+    if (textareaElement) {
+      const observer = new ResizeObserver((entries) => {
+        for (let entry of entries) {
+          const newHeight = entry.contentRect.height;
+          const pageCount = Math.floor(newHeight / A4_HEIGHT);
+
+          if (pageCount > prevHeightRef.current) {
+            prevHeightRef.current = pageCount; // Update the previous height reference
+
+            // Trigger function when a new A4 page is filled with text
+            editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
+            setHeight(pageCount); // Update the A4 page count
+          }
+        }
+      });
+
+      observer.observe(textareaElement);
+
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, []);
+
+  // TODO - Remove this temporary code
   useEffect(() => {
     const calculatePinPoints = () => {
       if (contRef.current) {
@@ -85,6 +90,7 @@ const TextArea = () => {
       resizeObserver.disconnect();
     };
   }, []);
+
   const marginLineConf = {
     hrSideHeight: `calc(100% + ${margin * 2}rem)`,
     vrSideWidth: `calc(100% + ${margin * 2}rem)`,
@@ -140,7 +146,20 @@ const TextArea = () => {
           contentEditable={CustomContentEditable}
           placeholder={PlaceHolder}
           ErrorBoundary={ScriptErrorBoundary}
-        />
+        >
+           {pinPoints.map((point, index) => (
+          <div
+            key={point.id}
+            style={{
+              position: 'absolute',
+              top: `${point.top}px`,
+              left: '-10px',
+            }}
+          >
+            {index + 1}
+          </div>
+        ))}
+        </RichTextPlugin>
 
         {/* Margin Lines */}
         <Box

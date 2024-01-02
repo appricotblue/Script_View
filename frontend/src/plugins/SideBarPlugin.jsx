@@ -9,6 +9,7 @@ import {
   createCommand,
 } from 'lexical';
 import { $setBlocksType } from '@lexical/selection';
+import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import { useLayoutEffect } from 'react';
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
 import { $findMatchingParent } from '@lexical/utils';
@@ -225,6 +226,7 @@ const SideBarPlugin = () => {
       >
         Components
       </Divider>
+      {/* <Button sx={{color:'white'}} onClick={()=>editor.dispatchCommand(INSERT_TABLE_COMMAND,{columns:3,rows:3,includeHeaders:true})}>INSERT Table</Button> */}
       {[
         ['Scene'],
         ['Sub', 'Header'],
