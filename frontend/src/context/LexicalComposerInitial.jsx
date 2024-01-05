@@ -1,6 +1,8 @@
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import PropTypes from 'prop-types';
 import { useLoaderData } from 'react-router-dom';
+// REVIEW
+import {TableNode,TableCellNode,TableRowNode} from '@lexical/table'
 
 import SceneNode from '@/nodes/SceneNode';
 import SubHeaderNode from '@/nodes/SubHeaderNode';
@@ -28,6 +30,9 @@ const LexicalComposerProvider = ({ children }) => {
       DialogueNode,
       ParentheticalNode,
       PageBreakNode,
+      TableNode,
+      TableCellNode,
+      TableRowNode
     ],
     theme: {
       text: {

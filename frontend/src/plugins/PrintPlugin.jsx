@@ -4,7 +4,6 @@ import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { COMMAND_PRIORITY_NORMAL, createCommand } from 'lexical';
 import MinifyCss from 'minify-css-string';
-
 import css from '@/pages/editDocument/Editor.css';
 import { VITE_BASE_URL } from '@/constants';
 

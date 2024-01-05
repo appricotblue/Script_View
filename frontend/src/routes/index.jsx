@@ -1,6 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { Suspense } from 'react';
-
 import { Header, WithHeaderMargin } from '@common';
 import { EditDocument, Home, Login, Signup } from '@pages';
 import { ScriptHeader } from '@script';
@@ -9,6 +8,7 @@ import LexicalComposerProvider from '@/context/LexicalComposerInitial';
 import ErrorBoundary from '@common/errorBoundary';
 import ScriptSocketProvider from '@/context/ScriptSocketContext';
 import { VITE_BASE_URL } from '@/constants';
+import IndexPage from '@pages/indexPage';
 
 const loadScriptData = async ({ params: { id } }) => {
   try {
@@ -72,6 +72,10 @@ const appRouter = createBrowserRouter([
         path: '/signup',
         element: <Signup />,
       },
+      {
+        path:'/index',
+        element:<IndexPage />
+      }
     ],
   },
 ]);
