@@ -97,7 +97,7 @@ module.exports = {
             left: margin?.left || `${3 * 16}px`,
             right: margin?.right || `${3 * 16}px`,
           },
-          scale: 1.02,
+          scale: 1,
           height: height || undefined,
           width: width || undefined,
           preferCSSPageSize: true,

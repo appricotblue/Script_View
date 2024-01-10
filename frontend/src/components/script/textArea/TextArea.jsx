@@ -3,7 +3,6 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Box, Paper } from '@mui/material';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getRoot } from 'lexical';
 
 import { ScriptErrorBoundary } from '@script';
 import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
@@ -27,10 +26,7 @@ const TextArea = () => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
           const pageCount = Math.floor(newHeight / A4_HEIGHT);
-          console.log({ pageCount, preveCount: prevHeightRef.current });
-          editor.getEditorState().read(() => {
-            if ($getRoot().getChildren().length <= 1) prevHeightRef.current = 0;
-          });
+
           if (pageCount > prevHeightRef.current) {
             prevHeightRef.current = pageCount; // Update the previous height reference
 
