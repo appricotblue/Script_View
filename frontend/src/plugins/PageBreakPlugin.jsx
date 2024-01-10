@@ -1,5 +1,5 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $findMatchingParent } from '@lexical/utils';
+import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import {
   $createParagraphNode,
   $getPreviousSelection,
@@ -16,7 +16,11 @@ import {
 } from 'lexical';
 import { useEffect } from 'react';
 
-import { $createPageBreakNode, PageBreakNode } from '@/nodes/PageBreakNode';
+import {
+  $createPageBreakNode,
+  $isPageBreakNode,
+  PageBreakNode,
+} from '@/nodes/PageBreakNode';
 import { $isDialogueContainerNode } from '@/nodes/DialogueContainerNode';
 
 export const INSERT_PAGE_BREAK = createCommand();
@@ -29,22 +33,40 @@ export default function PageBreakPlugin() {
       throw new Error(
         'PageBreakPlugin: PageBreakNode is not registered on editor',
       );
-    return editor.registerCommand(
-      INSERT_PAGE_BREAK,
-      () => {
-        const selection = $getSelection();
+    return mergeRegister(
+      editor.registerUpdateListener(({ editorState }) => {
+        editorState.read(() => {
+          const root = $getRoot();
+          const filtered = root
+            .getChildren()
+            .filter((node) => $isPageBreakNode(node));
+          filtered.forEach((node, index) => {
+            editor
+              .getElementByKey(node.__key)
+              .setAttribute(
+                'count',
+                `page ${index + 1}/${filtered.length + 1}`,
+              );
+          });
+        });
+      }),
+      editor.registerCommand(
+        INSERT_PAGE_BREAK,
+        () => {
+          const selection = $getSelection();
 
-        if (!$isRangeSelection(selection)) return false;
+          if (!$isRangeSelection(selection)) return false;
 
-        const focusNode = selection.focus.getNode();
-        if (focusNode !== null) {
-          const pgBreak = $createPageBreakNode();
-          $insertNodeToNearestRoot(pgBreak);
-        }
+          const focusNode = selection.focus.getNode();
+          if (focusNode !== null) {
+            const pgBreak = $createPageBreakNode();
+            $insertNodeToNearestRoot(pgBreak);
+          }
 
-        return true;
-      },
-      COMMAND_PRIORITY_EDITOR,
+          return true;
+        },
+        COMMAND_PRIORITY_EDITOR,
+      ),
     );
   }, [editor]);
 
