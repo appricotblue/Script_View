@@ -2,10 +2,13 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Box, Paper } from '@mui/material';
-import { ScriptErrorBoundary } from '@script';
-import Style from './TextArea.module.css';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $getRoot } from 'lexical';
+
+import { ScriptErrorBoundary } from '@script';
 import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
+
+import Style from './TextArea.module.css';
 
 const A4_HEIGHT = 938; // Height of an A4 page in pixels
 
@@ -13,11 +16,8 @@ const TextArea = () => {
   // margin in rem
   const [margin] = useState(3);
   const [editor] = useLexicalComposerContext();
-  const contRef = useRef(null);
-  const [pinPoints, setPinPoints] = useState([{ id: 0, top: 0 }]);
 
   //Auto Page Break
-  const [height, setHeight] = useState(0);
   const prevHeightRef = useRef(0);
 
   useEffect(() => {
@@ -27,13 +27,15 @@ const TextArea = () => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
           const pageCount = Math.floor(newHeight / A4_HEIGHT);
-
+          console.log({ pageCount, preveCount: prevHeightRef.current });
+          editor.getEditorState().read(() => {
+            if ($getRoot().getChildren().length <= 1) prevHeightRef.current = 0;
+          });
           if (pageCount > prevHeightRef.current) {
             prevHeightRef.current = pageCount; // Update the previous height reference
 
             // Trigger function when a new A4 page is filled with text
             editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
-            setHeight(pageCount); // Update the A4 page count
           }
         }
       });
@@ -44,51 +46,6 @@ const TextArea = () => {
         observer.disconnect();
       };
     }
-  }, []);
-
-  // TODO - Remove this temporary code
-  useEffect(() => {
-    const calculatePinPoints = () => {
-      if (contRef.current) {
-        const containerHeight = contRef.current.clientHeight;
-        const existingPinPoints = pinPoints.length;
-
-        // Calculate the number of additional page counts needed
-        const additionalPinPoints = Math.floor(
-          (containerHeight - existingPinPoints * A4_HEIGHT) / A4_HEIGHT + 1,
-        );
-        console.log({ additionalPinPoints });
-
-        // Create new page counts and update the state
-        setPinPoints([
-          { id: 0, top: 0 },
-          ...Array.from({ length: additionalPinPoints }, (_, index) => {
-            console.log({
-              id: existingPinPoints + index,
-              top: index + 1,
-            });
-            return {
-              id: existingPinPoints + index, // Ensure unique id
-              top: (index + 1) * A4_HEIGHT - 10, // Adjust for the page count size
-            };
-          }),
-        ]);
-      }
-    };
-
-    // Initial page count setup
-    calculatePinPoints();
-
-    // Watch for size changes using ResizeObserver
-    const resizeObserver = new ResizeObserver(calculatePinPoints);
-    if (contRef.current && contRef.current.parentElement) {
-      resizeObserver.observe(contRef.current.parentElement);
-    }
-
-    return () => {
-      // Disconnect the ResizeObserver when the component unmounts
-      resizeObserver.disconnect();
-    };
   }, []);
 
   const marginLineConf = {
@@ -127,39 +84,13 @@ const TextArea = () => {
         margin={`${margin}rem`}
         position="relative"
         className={Style['editor-inner']}
-        ref={contRef}
       >
-        {pinPoints.map((point, index) => (
-          <div
-            key={point.id}
-            style={{
-              position: 'absolute',
-              top: `${point.top}px`,
-              left: '-10px',
-            }}
-          >
-            {index + 1}
-          </div>
-        ))}
         {/* Content Editable */}
         <RichTextPlugin
           contentEditable={CustomContentEditable}
           placeholder={PlaceHolder}
           ErrorBoundary={ScriptErrorBoundary}
-        >
-           {pinPoints.map((point, index) => (
-          <div
-            key={point.id}
-            style={{
-              position: 'absolute',
-              top: `${point.top}px`,
-              left: '-10px',
-            }}
-          >
-            {index + 1}
-          </div>
-        ))}
-        </RichTextPlugin>
+        ></RichTextPlugin>
 
         {/* Margin Lines */}
         <Box
