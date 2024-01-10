@@ -101,6 +101,9 @@ module.exports = {
           height: height || undefined,
           width: width || undefined,
           preferCSSPageSize: true,
+          displayHeaderFooter: true,
+          headerTemplate: `<div style="display:none;"></div>`,
+          footerTemplate: `<div style="font-size:10px; text-align:center; width:100%;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>`,
         });
         await browser.close();
         res.setHeader("Content-type", "application/pdf");
