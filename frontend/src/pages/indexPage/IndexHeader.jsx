@@ -3,12 +3,14 @@ import { AppBar, Button, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useT
 import { CaretDown, CaretLeft, Keyboard, List as ListIcon } from '@phosphor-icons/react';
 import AddCharacterModal from '@script/addCharacterModal/AddCharacterModal';
 import React, { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 
 const IndexHeader = () => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [titleValue, setTitleValue] = useState('');
     const { palette } = useTheme();
     const isSmallScreen = useMediaQuery('(max-width: 600px)');
+    const {id} = useParams();
 
     const handleDrawerOpen = () => {
         setIsDrawerOpen(true);
@@ -19,18 +21,18 @@ const IndexHeader = () => {
     };
 
     // manage inline editable
-  const onTitleBlur = () => {
-    if (!id) {
-      throw new Response('id not found', { status: 404 });
+    const onTitleBlur = () => {
+        if (!id) {
+            throw new Response('id not found', { status: 404 });
+        }
+        if (socket && socket.connected) {
+            if (titleValue != '') {
+                socket.emit('edit-title', { title: titleValue, id });
+            }
+        } else {
+            console.error('socket connection not open');
+        }
     }
-    if (socket && socket.connected) {
-      if (titleValue != '') {
-        socket.emit('edit-title', { title: titleValue, id });
-      }
-    } else {
-      console.error('socket connection not open');
-    }
-  }
 
     return (
         <>
@@ -64,12 +66,13 @@ const IndexHeader = () => {
                         sx={{ display: { xs: 'none', md: 'flex' } }}
                     >
                         <Stack direction="row" gap="0.75rem" marginLeft="5rem">
-                            <Button
-                                sx={{ backgroundColor: '#F2F2F2', height: 'fit-content' }}
-                            >
-                                Go to Script
-                            </Button>
-                            {/* <AddCharacterModal socket={socket} id={id} /> */}
+                            <Link to={`/document/${id}`}>
+                                <Button
+                                    sx={{ backgroundColor: '#F2F2F2', height: 'fit-content' }}
+                                >
+                                    Go to Script
+                                </Button>
+                            </Link>
                         </Stack>
                         <InlineEditable
                             onBlur={onTitleBlur}
