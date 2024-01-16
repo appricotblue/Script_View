@@ -16,7 +16,7 @@ import {
 } from '@phosphor-icons/react';
 import { useContext, useEffect, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useLoaderData, useParams } from 'react-router-dom';
+import { Link, useLoaderData, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { GradientBtn, InlineEditable } from '@common';
@@ -113,11 +113,13 @@ const ScriptHeader = () => {
                 <span style={{ marginTop: '-0.125rem' }}>അ</span>{' '}
                 <Keyboard size={14} weight="thin" />
               </Button>
-              <Button
-                sx={{ backgroundColor: '#F2F2F2', height: 'fit-content' }}
-              >
-                Insert
-              </Button>
+              <Link to={`/document/${id}/index`}>
+                <Button
+                  sx={{ backgroundColor: '#F2F2F2', height: 'fit-content' }}
+                >
+                  One Line
+                </Button>
+              </Link>
               <AddCharacterModal socket={socket} id={id} />
             </Stack>
             <InlineEditable

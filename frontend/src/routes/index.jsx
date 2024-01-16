@@ -73,7 +73,7 @@ const appRouter = createBrowserRouter([
         element: <Signup />,
       },
       {
-        path:'/index',
+        path:'/document/:id/index',
         element:<IndexPage />
       }
     ],
