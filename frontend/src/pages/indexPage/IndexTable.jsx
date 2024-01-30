@@ -1,0 +1,264 @@
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  styled
+} from '@mui/material';
+import Style from './TextArea.module.css';
+import { useTitle } from '@/context/OnelineTitleContext';
+import { PlusCircle } from '@phosphor-icons/react';
+
+const IndexTable = () => {
+  const [margin] = useState(3);
+  const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
+  const [tableData, setTableData] = useState([
+    {
+      location: '',
+      scene: '',
+      time: '',
+      IntOrExt: '',
+      Action: '',
+      Character: ''
+    }
+  ]);
+  const { oneLineTitle } = useTitle();
+
+  const TableCellStyled = styled(TableCell)({
+    borderRight: '1px solid #DDDDDD',
+    fontWeight: 'bold',
+    position: 'relative',
+    padding: '8px', // Adjust padding to create space for the button
+  });
+
+  const handleCellChange = (event, index, key) => {
+    const updatedTableData = tableData.map((row, i) => {
+      if (i === index) {
+        return {
+          ...row,
+          [key]: event.target.innerText
+        };
+      }
+      return row;
+    });
+    setTableData(updatedTableData);
+  };
+
+  const handleSubmit = async () => {
+    if (oneLineTitle.trim() !== '') {
+      try {
+        const response = await fetch('http://localhost:8080/api/scripts/storeOneLineData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ oneLiners: tableData, title: oneLineTitle }),
+        });
+
+        console.log(tableData);
+
+        if (response.ok) {
+          console.log('Data stored successfully');
+        } else {
+          console.error('Failed to store data');
+        }
+      } catch (error) {
+        console.error('Error while making API call:', error);
+      }
+    } else {
+      alert('Enter a title');
+    }
+  };
+
+  const handleKeyPress = (event, index) => {
+    if (event.key === 'Enter') {
+      if (index === tableData.length - 1) {
+        const newTableRow = {
+          location: '',
+          scene: '',
+          time: '',
+          IntOrExt: '',
+          Action: '',
+          Character: ''
+        };
+        setTableData([...tableData, newTableRow]);
+      }
+    } else if (event.key === 'Backspace') {
+      const currentCharacter = event.target.textContent;
+      if (currentCharacter.length < 1) {
+        if (index === tableData.length - 1 && index !== 0) {
+          setTableData(tableData.slice(0, -1));
+        }
+      }
+    }
+  };
+
+  const handleRowClear = (event, index) => {
+    const currentCharacter = event.target.textContent;
+    if (currentCharacter.length < 1) {
+      if (event.key === 'Backspace') {
+        const currentRow = tableData[index];
+        const isRowEmpty = Object.values(currentRow).every(value => value === '');
+        if (isRowEmpty && index !== 0) {
+          const updatedTableData = tableData.filter((_, i) => i !== index);
+          setTableData(updatedTableData);
+        }
+      }
+    }
+  };
+
+  const handleInsertRowAbove = (index) => {
+    const newTableRow = {
+      location: '',
+      scene: '',
+      time: '',
+      IntOrExt: '',
+      Action: '',
+      Character: ''
+    };
+    const updatedTableData = [...tableData.slice(0, index), newTableRow, ...tableData.slice(index)];
+    setTableData(updatedTableData);
+  };
+
+  const handleInsertRowBelow = (index) => {
+    const newTableRow = {
+      location: '',
+      scene: '',
+      time: '',
+      IntOrExt: '',
+      Action: '',
+      Character: ''
+    };
+    const updatedTableData = [...tableData.slice(0, index + 1), newTableRow, ...tableData.slice(index + 1)];
+    setTableData(updatedTableData);
+  };
+
+  const handleRemoveRow = (index) => {
+    const updatedTableData = tableData.filter((_, i) => i !== index);
+    setTableData(updatedTableData);
+  };
+
+  return (
+    <>
+      <Paper
+        sx={{
+          width: '1100px',
+          minHeight: '1000px',
+          boxShadow: '2.99253px 2.99253px 13.46637px 0px rgba(0, 0, 0, 0.10)',
+          display: 'flex',
+          flexDirection: 'column',
+          marginTop: '7rem'
+        }}
+        className={Style['container']}
+      >
+        <Box
+          height="100%"
+          flexGrow={1}
+          margin={`${margin}rem`}
+          position="relative"
+          className={Style['editor-inner']}
+        >
+          <TableContainer sx={{ border: '1px solid #DDDDDD', width: '100%' }}>
+            <Table>
+              <TableHead sx={{ backgroundColor: '#F2F2F2' }}>
+                <TableRow>
+                  <TableCellStyled>Scene</TableCellStyled>
+                  <TableCellStyled>Location</TableCellStyled>
+                  <TableCellStyled>Time</TableCellStyled>
+                  <TableCellStyled>Int/Ext</TableCellStyled>
+                  <TableCellStyled>Action</TableCellStyled>
+                  <TableCellStyled>Character</TableCellStyled>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {tableData.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCellStyled
+                      contentEditable
+                      onBlur={(event) => handleCellChange(event, index, 'scene')}
+                      onKeyDown={(event) => handleRowClear(event, index)}
+                    >
+                      {row.scene}
+                    </TableCellStyled>
+                    <TableCellStyled
+                      contentEditable
+                      onBlur={(event) => handleCellChange(event, index, 'location')}
+                    >
+                      {row.location}
+                    </TableCellStyled>
+                    <TableCellStyled
+                      contentEditable
+                      onBlur={(event) => handleCellChange(event, index, 'time')}
+                    >
+                      {row.time}
+                    </TableCellStyled>
+                    <TableCellStyled
+                      contentEditable
+                      onBlur={(event) => handleCellChange(event, index, 'IntOrExt')}
+                    >
+                      {row.IntOrExt}
+                    </TableCellStyled>
+                    <TableCellStyled
+                      contentEditable
+                      onBlur={(event) => handleCellChange(event, index, 'Action')}
+                    >
+                      {row.Action}
+                    </TableCellStyled>
+                    <TableCellStyled
+                      contentEditable
+                      onBlur={(event) => handleCellChange(event, index, 'Character')}
+                      onKeyDown={(event) => handleKeyPress(event, index)}
+                    >
+                      {row.Character}
+                    </TableCellStyled>
+
+                    <TableCellStyled sx={{ position: 'absolute', border: 'none', outline: 'none' }}>
+                      <div
+                        onMouseEnter={() => setHoveredRowIndex(index)}
+                        onMouseLeave={() => setHoveredRowIndex(null)}
+                        style={{ position: 'relative', }}
+                      >
+                        <PlusCircle size={23} />
+                        {hoveredRowIndex === index && (
+                          <ButtonGroup
+                            orientation="vertical"
+                            aria-label="vertical contained button group"
+                            variant="contained"
+                            sx={{ position: 'absolute', left: '100%', top: 0, zIndex: 1, }}
+                          >
+                            <Button onClick={() => handleRemoveRow(index)} color="primary">
+                              Remove
+                            </Button>
+                            <Button onClick={() => handleInsertRowAbove(index)} color="primary">
+                              Insert Above
+                            </Button>
+                            <Button onClick={() => handleInsertRowBelow(index)} color="primary">
+                              Insert Below
+                            </Button>
+                          </ButtonGroup>
+                        )}
+                      </div>
+                    </TableCellStyled>
+
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Button onClick={handleSubmit} variant="contained" color="primary" style={{ marginTop: '1rem' }}>
+            Submit
+          </Button>
+        </Box>
+      </Paper>
+    </>
+  );
+};
+
+export default IndexTable;
