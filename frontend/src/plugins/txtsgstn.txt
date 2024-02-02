@@ -177,7 +177,6 @@ function useSuggestionGenService(inputString, nodeType) {
       setResults(Array.isArray(result) ? result : []);
     });
   };
-  
   const transliterateDebounced = useDebounce(debounceCb, 50);
 
   //TODO - refactor this code

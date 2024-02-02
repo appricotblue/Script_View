@@ -31,6 +31,7 @@ module.exports = {
       return res.status(500).json({ message: err.message });
     }
   },
+  
   createScript: async (req, res) => {
     try {
       const docData = await createNewScript();
@@ -44,6 +45,7 @@ module.exports = {
       return res.status(500).json({ message: err.message });
     }
   },
+  
   listRecent: async (req, res) => {
     try {
       const list = await getRecentDocList();
@@ -117,6 +119,7 @@ module.exports = {
       }
     }
   },
+
   deleteDoc: async (req, res) => {
     const docId = req.params.id;
     try {

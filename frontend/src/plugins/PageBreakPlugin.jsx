@@ -26,6 +26,9 @@ import { $isDialogueContainerNode } from '@/nodes/DialogueContainerNode';
 export const INSERT_PAGE_BREAK = createCommand();
 
 export default function PageBreakPlugin() {
+
+  const EXTRA_PAGE_HEIGHT = 938; 
+
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
@@ -69,7 +72,6 @@ export default function PageBreakPlugin() {
             const pgBreak = $createPageBreakNode();
             $insertNodeToNearestRoot(pgBreak);
           }
-
           return true;
         },
         COMMAND_PRIORITY_EDITOR,

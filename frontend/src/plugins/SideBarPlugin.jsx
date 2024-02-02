@@ -10,8 +10,8 @@ import {
 } from 'lexical';
 import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
-import { useLayoutEffect } from 'react';
-import { Button, Divider, Stack, Typography, useTheme } from '@mui/material';
+import { useLayoutEffect, useState } from 'react';
+import { Box, Button, Divider, Menu, MenuItem, Stack, Typography, useTheme } from '@mui/material';
 import { $findMatchingParent } from '@lexical/utils';
 
 import SceneNode, { $createSceneNode } from '@/nodes/SceneNode';
@@ -31,6 +31,11 @@ import {
   $createParentheticalNode,
   $isParentheticalNode,
 } from '@/nodes/ParentheticalNode';
+import { $createCutbackNode } from '@/nodes/CutBackNode';
+import { $createFlashcutNode } from '@/nodes/FlashCutNode';
+import { $createIntercutNode } from '@/nodes/InterCutNode';
+import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
+import { $createParentheticalMainNode } from '@/nodes/ParanthticalMain';
 
 export const INSERT_CONTENT_COMMAND = createCommand('insert-content');
 
@@ -97,41 +102,38 @@ const SideBarPlugin = () => {
       },
 
       parenthetical: () => {
-        const nodes = selection.getNodes();
-        let DContainer;
-        let Parenthetical;
-        let Dialogue;
-
-        for (const node of nodes) {
-          let matchingParent = findDialogueContainerParent(node);
-          if (matchingParent) {
-            DContainer = matchingParent;
-            break;
-          }
-        }
-
-        if (DContainer) {
-          const dialogue = DContainer.getChildren().find((node) =>
-            $isDialogueNode(node),
-          );
-          if (dialogue) {
-            const newPare = $createParentheticalNode();
-            DContainer.insertAfter(newPare);
-            return newPare.select();
-          }
-          const pare = $findMatchingParent(
-            selection.anchor.getNode(),
-            (parent) => $isParentheticalNode(parent),
-          );
-          if (pare) {
-            return pare.select();
-          }
-        } else {
-          Parenthetical = $createParentheticalNode();
-          $insertNodes([Parenthetical]);
-          return Parenthetical.select();
-        }
+        const newParentheticalMain = $createParentheticalMainNode();
+      
+        // Insert the newParentheticalMain node directly without checking for DialogueContainer
+        $insertNodes([newParentheticalMain]);
+        
+        return newParentheticalMain.select();
       },
+
+      flashcut: () => {
+        const newFlashcut = $createFlashcutNode();
+
+        $insertNodes([newFlashcut]);
+
+        return newFlashcut.select();
+      },
+
+      cutback: () => {
+        const newCutback = $createCutbackNode();
+
+        $insertNodes([newCutback]);
+
+        return newCutback.select();
+      },
+
+      intercut: () => {
+        const newIntercut = $createIntercutNode();
+
+        $insertNodes([newIntercut]);
+
+        return newIntercut.select();
+      },
+
     };
 
     function handleNodeInsert(nodeToInsert, createNodeToInsert) {
@@ -217,7 +219,9 @@ const SideBarPlugin = () => {
     const removeKeyDownListener = editor.registerCommand(
       KEY_DOWN_COMMAND,
       (event) => {
-        if ((event.ctrlKey || event.metaKey) && event.altKey) {
+        const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
+
+        if ((event.ctrlKey || (isMac && event.metaKey)) && event.altKey) {
           const payload = {
             KeyA: 'action',
             KeyS: 'slugline',
@@ -225,6 +229,9 @@ const SideBarPlugin = () => {
             KeyN: 'scene',
             KeyT: 'transition',
             KeyD: 'dialogue',
+            KeyF: 'flashcut',
+            KeyC: 'cutback',
+            KeyI: 'intercut'
           }[event.code];
           if (payload) {
             event.preventDefault();
@@ -236,6 +243,7 @@ const SideBarPlugin = () => {
       },
       COMMAND_PRIORITY_NORMAL,
     );
+
     return () => {
       removeInsertContentListener();
       removeKeyDownListener();
@@ -244,7 +252,19 @@ const SideBarPlugin = () => {
 
   const handleClick = (payload) => {
     editor.dispatchCommand(INSERT_CONTENT_COMMAND, payload);
+    setAnchorEl(null);
+
   };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Stack gap="1rem" padding="1.5rem 1.45rem 0 1.5rem">
       <Divider
@@ -269,17 +289,25 @@ const SideBarPlugin = () => {
         ['Action'],
         ['Dialogue'],
         ['Parenthetical'],
-        ['Transition'],
+        // ['Transition'],
+        // ['Flashcut'],
+        // ['Cutback'],
+        // ['Intercut']
       ].map((node) => {
+        const isMac = /Mac|iPod|iPhone|iPad/.test(navigator.platform);
         const combo = {
-          scene: 'Ctrl + Alt + N',
-          subheader: 'Ctrl + Alt + H',
-          slugline: 'Ctrl + Alt + S',
-          action: 'Ctrl + Alt + A',
-          dialogue: 'Ctrl + Alt + D',
-          parenthetical: 'Ctrl + Alt + P',
-          transition: 'Ctrl + Alt + T',
+          scene: isMac ? 'Cmd + Alt + N' : 'Ctrl + Alt + N',
+          subheader: isMac ? 'Cmd + Alt + H' : 'Ctrl + Alt + H',
+          slugline: isMac ? 'Cmd + Alt + S' : 'Ctrl + Alt + S',
+          action: isMac ? 'Cmd + Alt + A' : 'Ctrl + Alt + A',
+          dialogue: isMac ? 'Cmd + Alt + D' : 'Ctrl + Alt + D',
+          parenthetical: isMac ? 'Cmd + Alt + P' : 'Ctrl + Alt + P',
+          transition: isMac ? 'Cmd + Alt + T' : 'Ctrl + Alt + T',
+          flashcut: isMac ? 'Cmd + Alt + F' : 'Ctrl + Alt + F',
+          cutback: isMac ? 'Cmd + Alt + C' : 'Ctrl + Alt + C',
+          intercut: isMac ? 'Cmd + Alt + I' : 'Ctrl + Alt + I'
         };
+
         return (
           <Button
             key={node.join('')}
@@ -310,6 +338,85 @@ const SideBarPlugin = () => {
           </Button>
         );
       })}
+
+      <Button
+        variant="contained"
+        onClick={handleMenuClick}
+        sx={{
+          color: palette.primary.lowContrastText,
+          display: 'block',
+          padding: '0.7rem 0.8rem',
+          textAlign: 'start',
+          border: '1px solid #ffffff1f',
+          borderImageSlice: 1,
+          borderRadius: '0.38rem',
+          boxShadow: '2px 2px 6px 0px rgba(0, 0, 0, 0.37)',
+        }}
+      >
+        <Typography
+          component="span"
+          sx={{ display: 'block' }}
+          fontSize="1.125rem"
+          fontWeight="500"
+        >
+          Transitions
+        </Typography>
+      </Button>
+
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+      >
+        <MenuItem onClick={() => handleClick('flashcut')} sx={{ display: 'grid', width: '150px' }}>
+          <Typography component="span" fontSize="0.75rem" fontWeight="200">
+            Ctrl + Alt + F
+          </Typography>
+          <Typography>
+            Flash Cut
+          </Typography>
+        </MenuItem>
+        <Divider sx={{backgroundColor:'black'}}/>
+        <MenuItem onClick={() => handleClick('transition')} sx={{ display: 'grid', width: '150px' }}>
+          <Typography component="span" fontSize="0.75rem" fontWeight="200">
+            Ctrl + Alt + T
+          </Typography>
+          <Typography>
+            Cut to
+          </Typography>
+        </MenuItem>
+        <Divider sx={{backgroundColor:'black'}}/>
+        <MenuItem onClick={() => handleClick('cutback')} sx={{ display: 'grid', width: '150px' }}>
+          <Typography component="span" fontSize="0.75rem" fontWeight="200">
+            Ctrl + Alt + C
+          </Typography>
+          <Typography>
+            Cut Back
+          </Typography>
+        </MenuItem>
+        <Divider sx={{backgroundColor:'black'}}/>
+        <MenuItem onClick={() => handleClick('intercut')} sx={{ display: 'grid', width: '150px' }}>
+          <Typography component="span" fontSize="0.75rem" fontWeight="200">
+            Ctrl + Alt + I
+          </Typography>
+          <Typography>
+            Intercut
+          </Typography>
+        </MenuItem>
+      </Menu>
+
     </Stack>
   );
 };

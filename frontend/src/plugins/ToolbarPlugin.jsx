@@ -21,7 +21,9 @@ import {
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
   FORMAT_TEXT_COMMAND,
+  REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
+  UNDO_COMMAND,
 } from 'lexical';
 import { mergeRegister } from '@lexical/utils';
 import { useCallback, useEffect, useState } from 'react';
@@ -110,6 +112,7 @@ const CustomTextActions = () => {
   const handleClick = (formatType) => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, formatType);
   };
+  
   return (
     <Stack direction="row">
       {[
@@ -147,28 +150,29 @@ const CustomTextActions = () => {
   );
 };
 
-const ToolbarPlugin = () => {
+const ToolbarPlugin = ({ setSearchText }) => {
   const { palette } = useTheme();
   const [editor] = useLexicalComposerContext();
   const [fontSize, setFontSize] = useState(12);
   const [fontFamily, setFontFamily] = useState('Roboto');
   const availableFonts = ['Roboto', 'Arial', 'Times New Roman', 'Verdana'];
-  const [searchTerm, setSearchTerm] = useState('');
+  // const [searchTerm, setSearchText] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
   const { pageNumber, setPageNum } = usePageNumber()
   const [gotoPage, setGotoPage] = useState()
-  
+
   const { zoomLevel, enableScreenEnlarge, handleZoomIn, handleZoomOut, hideSidebars, zoomValue } = useZoom();
-  
+
   const setPageToGo = (e) => {
     let pageNum = e.target.value
     setGotoPage(pageNum)
   }
 
   const handleFontSizeChange = (amount) => {
-    const newFontSize = fontSize + amount;
-    setFontSize(newFontSize);
-    editor.dispatchCommand(FORMAT_TEXT_COMMAND, { fontSize: `${newFontSize}px` });
+    // const newFontSize = fontSize + amount;
+    // setFontSize(newFontSize);
+    // editor.dispatchCommand(FORMAT_TEXT_COMMAND, { fontSize: `${newFontSize}px` });
+    editor.dispatchCommand(UNDO_COMMAND)
   };
 
   const handleFontFamilyChange = (event) => {
@@ -179,7 +183,7 @@ const ToolbarPlugin = () => {
 
   const handleSearchTermChange = (e) => {
     const serchText = e.target.value
-    setSearchTerm(serchText)
+    setSearchText(serchText)
   }
 
   const fullscreen = () => {
@@ -202,11 +206,26 @@ const ToolbarPlugin = () => {
     setIsFullscreen(false);
   };
 
-  const isZoomed = zoomLevel > 110;
+  const undo = () => {
+    // document.execCommand('undo', false, null);
+    editor.dispatchCommand(UNDO_COMMAND)
+  }
+
+  const redo = () => {
+    // document.execCommand('redo', false, null);
+    editor.dispatchCommand(REDO_COMMAND)
+  }
+
+  // const isZoomed = zoomLevel > 110;
+
+  const testFunctions = () => {
+    editor.dispatchCommand(SELECT_ALL_COMMAND)
+  }
+
 
   useEffect(() => {
     setGotoPage(pageNumber)
-  },[pageNumber])
+  }, [pageNumber])
 
   return (
     <Stack
@@ -311,11 +330,11 @@ const ToolbarPlugin = () => {
         }
       >
         <Stack direction="row" gap="1.9rem">
-          <IconButton sx={{ color: 'white' }}>
+          <IconButton sx={{ color: 'white' }} onClick={undo} >
             <ArrowUUpLeft size="1rem" />
           </IconButton>
           <IconButton
-            disabled
+            onClick={redo}
             sx={{
               color: 'white',
               ':disabled': { color: 'white', opacity: '0.5' },
@@ -331,12 +350,14 @@ const ToolbarPlugin = () => {
           px="1rem"
         >
           <Stack direction="row" gap="1.5rem">
-            <IconButton onClick={fullscreen}  sx={{ color: 'white' }}>
+            <IconButton onClick={fullscreen} sx={{ color: 'white' }}>
               <ArrowsOut size="1rem" />
             </IconButton>
-            <IconButton sx={{ color: 'white' }}>
-              <Binoculars size="1rem" />
+
+            <IconButton sx={{ color: 'white' }} onClick={testFunctions}>
+              <Binoculars size="1rem"/>
             </IconButton>
+
           </Stack>
           <Stack direction="row" alignItems="center">
             <Typography fontSize="0.75rem" color="white">
@@ -353,7 +374,7 @@ const ToolbarPlugin = () => {
                 marginLeft: '0.5rem',
                 borderRadius: '0.81rem',
                 border: 'none',
-                outline:'none',
+                outline: 'none',
                 color: 'black !important',
                 backgroundColor: '#D9D9D9 !important',
               }}
@@ -367,7 +388,8 @@ const ToolbarPlugin = () => {
             </Typography>
           </Stack>
           <Stack direction="row" alignItems="center" gap="0.8rem">
-            <Button
+
+          <Button
               sx={{
                 color: 'white',
                 fontWeight: '400',
@@ -381,17 +403,17 @@ const ToolbarPlugin = () => {
 
             <Paper
               component="form"
-              sx={{ p: '2px 4px', display: 'flex',backgroundColor:'#D9D9D9', alignItems: 'center', borderRadius:'10px', height:'1.5rem' }}
+              sx={{ p: '2px 4px', display: 'flex', backgroundColor: '#D9D9D9', alignItems: 'center', borderRadius: '10px', height: '1.5rem' }}
             >
               <InputBase
-                value={searchTerm}
+                // value={searchTerm}
                 onChange={handleSearchTermChange}
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search by word"
                 inputProps={{ 'aria-label': 'search google maps' }}
               />
               <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-              <MagnifyingGlass size="1rem" />
+                <MagnifyingGlass size="1rem" />
               </IconButton>
             </Paper>
 

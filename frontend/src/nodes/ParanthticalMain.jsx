@@ -1,20 +1,26 @@
-import { ElementNode } from 'lexical';
+import { $applyNodeReplacement } from 'lexical';
 
-import { $createDialogueNode, $isDialogueNode } from './DialogueNode';
-import { $createMentionNode } from './MentionNode';
-export const $createParentheticalNode = () => new ParentheticalNode();
-export const $isParentheticalNode = (node) => node instanceof ParentheticalNode;
+import DefaultActionNode from './DefaultActionNode';
 
-export class ParentheticalNode extends ElementNode {
+export const $createParentheticalMainNode = () =>
+  $applyNodeReplacement(new ParentheticalMainNode());
+
+export const $isParentheticalMainNode = (node) => node instanceof ParentheticalMainNode;
+
+export class ParentheticalMainNode extends DefaultActionNode {
   constructor() {
     super();
   }
 
   createDOM(config) {
-    const div = document.createElement('div');
-    div.className = config.theme.parenthetical;
-      div.setAttribute('data-placeholder', 'Parenthetical...');
-    return div;
+    const container = document.createElement('div');
+    container.className = 'parentheticalMain';
+    
+    const textContent = document.createElement('span');
+    textContent.setAttribute('data-placeholder', 'Insert your parenthetical text here');
+    
+    container.append(textContent);
+    return container;
   }
 
   updateDOM() {
@@ -22,42 +28,19 @@ export class ParentheticalNode extends ElementNode {
   }
 
   static clone(node) {
-    return new ParentheticalNode(node.__key);
+    return new ParentheticalMainNode(node.__key);
   }
   static getType() {
-    return 'parenthetical';
+    return 'parentheticalMain';
   }
+
   static importJSON() {
-    return new ParentheticalNode();
-  }
-
-  isParentRequired() {
-    return true;
-  }
-
-  /** inserts dialogueNode if doesn't exist. select next if does. */
-  insertNewAfter(_, restoreSelection) {
-    if (!$isDialogueNode(this.getNextSibling())) {
-      const dialogue = $createDialogueNode();
-      this.insertAfter(dialogue, restoreSelection);
-      return dialogue;
-    }
-
-    return this.selectNext();
-  }
-
-  remove(preserveEmptyParent) {
-    if (this.getNextSibling()) this.selectNext();
-    return super.remove(preserveEmptyParent);
-  }
-
-  collapseAtStart() {
-    return this.remove();
+    return new ParentheticalMainNode();
   }
 
   exportJSON() {
     return {
-      type: 'parenthetical',
+      type: 'parentheticalMain',
       version: 1,
       children: [],
       format: '',
@@ -67,4 +50,4 @@ export class ParentheticalNode extends ElementNode {
   }
 }
 
-export default ParanthticalMain;
+export default ParentheticalMainNode;

@@ -20,7 +20,7 @@ const AutoSavePlugin = () => {
     saveDebounce(JSON.stringify(editorState.toJSON()));
     const jsonData = JSON.stringify(editorState.toJSON()) 
     const parsedData = JSON.parse(jsonData);
-    console.log(parsedData.root.children[0].children[0].text)
+    // console.log(parsedData.root.children[0].children[0].text)
   };
   return <OnChangePlugin onChange={onChange} ignoreSelectionChange={true} />;
 };

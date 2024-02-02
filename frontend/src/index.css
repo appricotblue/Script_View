@@ -204,3 +204,19 @@ html {
   text-align: right;
   /* Add any additional styling for the placeholder here */
 }
+
+
+.parentheticalMain::before,
+.parentheticalMain::after {
+  content: '(';
+  margin-right: 4px;
+}
+
+.parentheticalMain{
+  display: flex;
+}
+
+.parentheticalMain::after {
+  content: ')';
+  margin-left: 4px;
+}

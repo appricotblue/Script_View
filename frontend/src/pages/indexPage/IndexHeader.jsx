@@ -1,4 +1,5 @@
 import { useTitle } from '@/context/OnelineTitleContext';
+import { PRINT_COMMAND } from '@/plugins/PrintPlugin';
 import { GradientBtn, InlineEditable } from '@common';
 import { AppBar, Button, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material';
 import { CaretDown, CaretLeft, Keyboard, List as ListIcon } from '@phosphor-icons/react';
@@ -6,7 +7,7 @@ import AddCharacterModal from '@script/addCharacterModal/AddCharacterModal';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-const IndexHeader = () => {
+const IndexHeader = ({onDownload}) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [titleValue, setTitleValue] = useState('');
     const { palette } = useTheme();
@@ -69,7 +70,8 @@ const IndexHeader = () => {
                         }}
                         startIcon={<CaretLeft size="1.5rem" weight="thin" />}
                     >
-                        Back to Home
+                        <Link to={'/'} style={{
+                            textDecoration: 'none', color: 'inherit'}}>Back to Home</Link>
                     </Button>
                     <Stack
                         direction="row"
@@ -101,7 +103,7 @@ const IndexHeader = () => {
                                     color: '#fff',
                                     ':hover': { background: '#000' },
                                 }}
-                                onClick={() => editor.dispatchCommand(PRINT_COMMAND)}
+                                onClick={onDownload} 
                             >
                                 Download
                             </GradientBtn>

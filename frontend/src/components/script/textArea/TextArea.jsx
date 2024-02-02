@@ -1,7 +1,7 @@
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { useMemo, useState, useEffect, useRef } from 'react';
-import { Box, Button, Paper } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 import { ScriptErrorBoundary } from '@script';
@@ -10,13 +10,14 @@ import { INSERT_PAGE_BREAK } from '@/plugins/PageBreakPlugin';
 import Style from './TextArea.module.css';
 import { useZoom } from '@/context/ZoomContext';
 import { usePageNumber } from '@/context/PageNumberContext';
-import { $getSelection, $isRangeSelection } from 'lexical';
-import { $findMatchingParent } from '@lexical/utils';
-import { $isPageBreakNode } from '@/nodes/PageBreakNode';
+import { $getRoot } from 'lexical';
+// import { $getSelection, $isRangeSelection } from 'lexical';
+// import { $findMatchingParent } from '@lexical/utils';
+// import { $isPageBreakNode } from '@/nodes/PageBreakNode';
 
 const A4_HEIGHT = 938; // Height of an A4 page in pixels
 
-const TextArea = () => {
+const TextArea = ({ searchText }) => {
   // margin in rem
   const [margin] = useState(3);
   const [editor] = useLexicalComposerContext();
@@ -30,13 +31,14 @@ const TextArea = () => {
 
 
   useEffect(() => {
+    console.log(searchText);
     const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
     if (textareaElement) {
       const observer = new ResizeObserver((entries) => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
           const pageCount = Math.floor(newHeight / A4_HEIGHT);
-
+          
           // console.log(pageCount);
           // console.log(prevHeightRef.current);
           // console.log(pageNumber);
@@ -46,6 +48,10 @@ const TextArea = () => {
             setPageNum(pageCount);
             // Trigger function when a new A4 page is filled with text
             editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
+            editor.update(() => {
+              $getRoot().getTextContent()
+            })
+            // textareaElement.Style
           } else if (pageCount < prevHeightRef.current) {
             // Reset the previous height reference after clearing a page break
             prevHeightRef.current = pageCount;
@@ -57,11 +63,11 @@ const TextArea = () => {
       observer.observe(textareaElement);
 
       return () => {
-        observer.disconnect();
+        observer.disconnect();  
       };
     }
 
-  }, [editor.dispatchCommand, pageNumber, setPageNum]);
+  }, [editor.dispatchCommand, pageNumber, setPageNum, searchText]);
 
   const marginLineConf = {
     hrSideHeight: `calc(100% + ${margin * 2}rem)`,
@@ -71,7 +77,6 @@ const TextArea = () => {
     rightBottom: `-${margin}rem`,
     bottomRight: `-${margin}rem`,
   };
-
 
   const CustomContentEditable = useMemo(() => {
     return (

@@ -10,11 +10,12 @@ import useOnlineStatus from '@/utils/hooks/useOnlineStatus';
 import PageBreakPlugin from '@/plugins/PageBreakPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useZoom } from '@/context/ZoomContext';
+import { useState } from 'react';
 
 const EditDocument = () => {
   
   const isOnline = useOnlineStatus();
-  const { enlargeValue,showSidebars } = useZoom();
+  const { enlargeValue, showSidebars } = useZoom();
 
   if (isOnline)
     return (

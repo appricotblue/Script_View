@@ -2,8 +2,11 @@ import { Stack } from '@mui/material';
 
 import ToolbarPlugin from '@/plugins/ToolbarPlugin';
 import { TextArea } from '@script';
+import { useState } from 'react';
 
 const TextEditor = () => {
+  const [searchText, setSearchText] = useState('');
+
   return (
     <Stack
       direction="row"
@@ -16,8 +19,10 @@ const TextEditor = () => {
       }}
     >
       <Stack height="max-content" gap="1.27rem">
-        <ToolbarPlugin />
-        <TextArea />
+        {/* <ToolbarPlugin />
+        <TextArea /> */}
+        <ToolbarPlugin setSearchText={setSearchText} />
+        <TextArea searchText={searchText} />
       </Stack>
     </Stack>
   );

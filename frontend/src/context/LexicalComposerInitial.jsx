@@ -14,6 +14,10 @@ import DialogueContainerNode from '@/nodes/DialogueContainerNode';
 import DialogueNode from '@/nodes/DialogueNode';
 import ParentheticalNode from '@/nodes/ParentheticalNode';
 import { PageBreakNode } from '@/nodes/PageBreakNode/index';
+import FlashcutNode from '@/nodes/FlashCutNode';
+import CutbackNode from '@/nodes/CutBackNode';
+import IntercutNode from '@/nodes/InterCutNode';
+import ParentheticalMainNode from '@/nodes/ParanthticalMain';
 
 const LexicalComposerProvider = ({ children }) => {
   const editorState = useLoaderData().state;
@@ -32,7 +36,11 @@ const LexicalComposerProvider = ({ children }) => {
       PageBreakNode,
       TableNode,
       TableCellNode,
-      TableRowNode
+      TableRowNode,
+      FlashcutNode,
+      CutbackNode,
+      IntercutNode,
+      ParentheticalMainNode
     ],
     theme: {
       text: {

@@ -21,7 +21,7 @@ export class ParentheticalNode extends ElementNode {
     // if (!this.isDialogueParent()) {
     //   div.style.fontStyle = 'italic';
     // }
-
+    
     return div;
   }
 
@@ -56,7 +56,6 @@ export class ParentheticalNode extends ElementNode {
       this.insertAfter(dialogue, restoreSelection);
       return dialogue;
     }
-
     return this.selectNext();
   }
 

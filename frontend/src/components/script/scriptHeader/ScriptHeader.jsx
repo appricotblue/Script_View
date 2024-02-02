@@ -89,7 +89,7 @@ const ScriptHeader = () => {
             }}
             startIcon={<CaretLeft size="1.5rem" weight="thin" />}
           >
-            Back to Home
+            <Link to={'/'} style={{color:'inherit', textDecoration:'none'}}>Back to Home</Link>
           </Button>
           <Stack
             direction="row"
@@ -104,7 +104,7 @@ const ScriptHeader = () => {
               >
                 Page Preferences
               </Button> */}
-              <Button
+              {/* <Button
                 sx={{
                   fontSize: 14,
                   backgroundColor: '#F2F2F2',
@@ -117,7 +117,7 @@ const ScriptHeader = () => {
               >
                 <span style={{ marginTop: '-0.125rem' }}>അ</span>{' '}
                 <Keyboard size={14} weight="thin" />
-              </Button>
+              </Button> */}
               <Link to={`/document/${id}/index`}>
                 <Button
                   sx={{ backgroundColor: '#F2F2F2', height: 'fit-content' }}
