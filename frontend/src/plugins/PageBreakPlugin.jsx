@@ -27,7 +27,7 @@ export const INSERT_PAGE_BREAK = createCommand();
 
 export default function PageBreakPlugin() {
 
-  const EXTRA_PAGE_HEIGHT = 938; 
+  const EXTRA_PAGE_HEIGHT = 938;
 
   const [editor] = useLexicalComposerContext();
 
@@ -124,7 +124,8 @@ function $insertNodeToNearestRoot(node) {
       rightTree.insertBefore(node);
       rightTree.selectStart();
     }
-  } else {
+  }
+  else {
     if ($isNodeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
       const nodes = selection.getNodes();
       nodes[nodes.length - 1].getTopLevelElementOrThrow().insertAfter(node);

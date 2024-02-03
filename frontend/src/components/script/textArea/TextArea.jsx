@@ -11,9 +11,6 @@ import Style from './TextArea.module.css';
 import { useZoom } from '@/context/ZoomContext';
 import { usePageNumber } from '@/context/PageNumberContext';
 import { $getRoot } from 'lexical';
-// import { $getSelection, $isRangeSelection } from 'lexical';
-// import { $findMatchingParent } from '@lexical/utils';
-// import { $isPageBreakNode } from '@/nodes/PageBreakNode';
 
 const A4_HEIGHT = 938; // Height of an A4 page in pixels
 
@@ -38,19 +35,15 @@ const TextArea = ({ searchText }) => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
           const pageCount = Math.floor(newHeight / A4_HEIGHT);
-          
-          // console.log(pageCount);
-          // console.log(prevHeightRef.current);
-          // console.log(pageNumber);
 
           if (pageCount > prevHeightRef.current) {
             prevHeightRef.current = pageCount; // Update the previous height reference
             setPageNum(pageCount);
             // Trigger function when a new A4 page is filled with text
             editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
-            editor.update(() => {
-              $getRoot().getTextContent()
-            })
+            // editor.update(() => {
+            //   $getRoot().__size(A4_HEIGHT*2)
+            // })
             // textareaElement.Style
           } else if (pageCount < prevHeightRef.current) {
             // Reset the previous height reference after clearing a page break
@@ -63,7 +56,7 @@ const TextArea = ({ searchText }) => {
       observer.observe(textareaElement);
 
       return () => {
-        observer.disconnect();  
+        observer.disconnect();
       };
     }
 
@@ -93,7 +86,7 @@ const TextArea = ({ searchText }) => {
 
   const currentwidth = zoomLevel + 793
 
-  return (  
+  return (
     <Paper
       sx={{
         width: '793px',

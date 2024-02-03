@@ -7,6 +7,7 @@ const { createServer } = require("node:http");
 const path = require("node:path");
 const scriptRouter = require("./src/routes/scriptRouter");
 const fontsRouter = require("./src/routes/fontsRouter");
+const authRouter = require("./src/routes/authRouter");
 const socket = require("./src/socket");
 const establishDB = require("./src/configs/db");
 const corsConfig = require("./src/configs/cors");
@@ -35,6 +36,7 @@ establishDB();
 // routing
 app.use("/api/scripts/", scriptRouter);
 app.use("/fonts/", fontsRouter);
+app.use("/auth/",authRouter)
 
 // point the static files to production build of frontend
 if (isProduction) {

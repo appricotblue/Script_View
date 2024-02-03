@@ -10,13 +10,13 @@ import MemoizedIndexTable from './IndexTable';
 const IndexPage = () => {
   return (
     // <LexicalComposerContext>
-      <Box bgcolor={'whitesmoke'}>
-        {/* <IndexHeader /> */}
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <Box bgcolor={'whitesmoke'} height={'100vh'}>
+      {/* <IndexHeader /> */}
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', }}>
         {/* <IndexTable /> */}
         <MemoizedIndexTable />
-        </Box>
       </Box>
+    </Box>
     // </LexicalComposerContext>
   )
 }

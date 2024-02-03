@@ -1,67 +1,68 @@
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { Autocomplete, Box, Button, ButtonGroup, Paper, TableContainer, TextField } from '@mui/material';
-import { PlusCircle } from '@phosphor-icons/react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import React, { memo, useEffect, useState } from 'react';
 import IndexHeader from './IndexHeader';
-import { useTransliteration } from '@hooks';
-
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import Style from './TextArea.module.css';
+import { AutoComplete } from 'primereact/autocomplete';
+import 'primereact/resources/themes/saga-blue/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+import { useTransliteration } from '@hooks';
+import { VITE_BASE_URL } from '@/constants';
+import { PlusCircle } from '@phosphor-icons/react';
 import { useTitle } from '@/context/OnelineTitleContext';
 
 const IndexTable = () => {
-  const [margin] = useState(3);
-  const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
+
   const [tableData, setTableData] = useState([
-    {
+    { scene: '', location: '', time: '', intOrExt: '', action: '', character: '' },
+  ]);
+
+  const [suggestions, setSuggestions] = useState([])
+
+  const { oneLineTitle } = useTitle();
+
+  const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
+
+  const handleInsertRowAbove = (index) => {
+    const newTableRow = {
       location: '',
       scene: '',
       time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
-    },
-  ]);
-
-  const { oneLineTitle } = useTitle();
-
-  const handleCellChange = (event, index, key) => {
-    const updatedTableData = tableData.map((row, i) => {
-      if (i === index) {
-        return {
-          ...row,
-          [key]: event.target.value,
-        };
-      }
-      return row;
-    });
+    };
+    const updatedTableData = [...tableData.slice(0, index), newTableRow, ...tableData.slice(index)];
     setTableData(updatedTableData);
   };
 
-  const handleSubmit = async () => {
-    if (oneLineTitle.trim() !== '') {
-      try {
-        const response = await fetch('http://localhost:8080/api/scripts/storeOneLineData', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ oneLiners: tableData, title: oneLineTitle }),
-        });
+  const handleInsertRowBelow = (index) => {
+    const newTableRow = {
+      location: '',
+      scene: '',
+      time: '',
+      IntOrExt: '',
+      Action: '',
+      Character: '',
+    };
+    const updatedTableData = [...tableData.slice(0, index + 1), newTableRow, ...tableData.slice(index + 1)];
+    setTableData(updatedTableData);
+  };
 
-        console.log(tableData);
-
-        if (response.ok) {
-          console.log('Data stored successfully');
-        } else {
-          console.error('Failed to store data');
-        }
-      } catch (error) {
-        console.error('Error while making API call:', error);
-      }
-    } else {
-      alert('Enter a title');
-    }
+  const handleRemoveRow = (index) => {
+    const updatedTableData = tableData.filter((_, i) => i !== index);
+    setTableData(updatedTableData);
   };
 
   const handleKeyPress = (event, index) => {
@@ -102,66 +103,55 @@ const IndexTable = () => {
     }
   };
 
-  const handleInsertRowAbove = (index) => {
-    const newTableRow = {
-      location: '',
-      scene: '',
-      time: '',
-      IntOrExt: '',
-      Action: '',
-      Character: '',
-    };
-    const updatedTableData = [...tableData.slice(0, index), newTableRow, ...tableData.slice(index)];
-    setTableData(updatedTableData);
-  };
+  const handleSubmit = async () => {
+    if (oneLineTitle.trim() !== '') {
+      try {
+        const response = await fetch(`${VITE_BASE_URL}/api/scripts/storeOneLineData`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ oneLiners: tableData, title: oneLineTitle }),
+        });
 
-  const handleInsertRowBelow = (index) => {
-    const newTableRow = {
-      location: '',
-      scene: '',
-      time: '',
-      IntOrExt: '',
-      Action: '',
-      Character: '',
-    };
-    const updatedTableData = [...tableData.slice(0, index + 1), newTableRow, ...tableData.slice(index + 1)];
-    setTableData(updatedTableData);
-  };
+        console.log(tableData);
 
-  const handleRemoveRow = (index) => {
-    const updatedTableData = tableData.filter((_, i) => i !== index);
-    setTableData(updatedTableData);
-  };
-
-  const tableRef = useRef(null);
-
-  const downloadPDF = () => {
-    if (tableRef.current) {
-      const element = tableRef.current;
-      html2canvas(element).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'PNG', 10, 10);
-        pdf.save('table.pdf');
-      });
+        if (response.ok) {
+          console.log('Data stored successfully');
+        } else {
+          console.error('Failed to store data');
+        }
+      } catch (error) {
+        console.error('Error while making API call:', error);
+      }
+    } else {
+      alert('Enter a title');
     }
   };
 
-  const [searchOptions, setSearchOptions] = useState([]);
-  const [searchLoading, setSearchLoading] = useState(false);
+  const handleAutocompleteChange = (index, value, field, e) => {
+    const updatedTableData = [...tableData];
+    updatedTableData[index][field] = value;
+    setTableData(updatedTableData);
+    console.log(tableData);
+    fetchSearchOptions(e, index, field)
+  };
+
+  const fetchSearchOptions = async (event, index, key) => {
+    const response = await transliterate(event.target.value);
+    setSuggestions(response);
+    const updatedTableData = [...tableData];
+    updatedTableData[index][key] = event.target.value;
+    setTableData(updatedTableData);
+    console.log(suggestions);
+  };
+
+  const search = (event, index, field) => {
+    // e.preventDefault()
+    fetchSearchOptions(event, index, field);
+  };
 
   const transliterate = useTransliteration();
-
-  const fetchSearchOptions = async (inputValue, index, key) => {
-    setSearchLoading(true);
-
-    const response = await transliterate(inputValue);
-    setSearchOptions(response);
-    const updatedTableData = [...tableData];
-    updatedTableData[index][key] = inputValue;
-    setTableData(updatedTableData);
-    setSearchLoading(false);
-  };
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -179,7 +169,8 @@ const IndexTable = () => {
 
   return (
     <>
-      <IndexHeader onDownload={downloadPDF} />
+      <IndexHeader />
+
       <Paper
         sx={{
           width: '1100px',
@@ -191,29 +182,24 @@ const IndexTable = () => {
         }}
         className={Style['container']}
       >
-        <Box
-          height="100%"
-          flexGrow={1}
-          margin={`${margin}rem`}
-          position="relative"
-          className={Style['editor-inner']}
-        >
-          <TableContainer ref={tableRef} sx={{ border: '1px solid #DDDDDD', width: '100%' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-evenly', paddingBlock: '10px', backgroundColor: '#DDDDDD' }}>
-              <Box>Scene</Box>
-              <Box>Location</Box>
-              <Box>Time</Box>
-              <Box>Int/Ext</Box>
-              <Box>Action</Box>
-              <Box>Character</Box>
-            </Box>
-            <Box>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650, }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ border: '#cfcfcf 1px solid' }} align="center">Scene</TableCell>
+                <TableCell sx={{ border: '#cfcfcf 1px solid' }} align="center">Location</TableCell>
+                <TableCell sx={{ border: '#cfcfcf 1px solid' }} align="center">Time</TableCell>
+                <TableCell sx={{ border: '#cfcfcf 1px solid' }} align="center">IntOrExt</TableCell>
+                <TableCell sx={{ border: '#cfcfcf 1px solid' }} align="center">Action</TableCell>
+                <TableCell sx={{ border: '#cfcfcf 1px solid' }} align="center">Character</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
               {tableData.map((row, index) => (
-                <Box key={index} sx={{ display: 'flex', justifyContent: 'space-evenly', flexGrow: '1' }}>
-                  <div
+                <>
+                  <Box sx={{ position: 'absolute', zIndex: '1', left: '145px', marginTop: '14px' }}
                     onMouseEnter={() => setHoveredRowIndex(index)}
                     onMouseLeave={() => setHoveredRowIndex(null)}
-                    style={{ border: '#DDDDDD 1px solid', alignItems: 'center', display: 'flex', paddingInline: '5px' }}
                   >
                     <PlusCircle size={23} />
                     {hoveredRowIndex === index && (
@@ -221,7 +207,7 @@ const IndexTable = () => {
                         orientation="vertical"
                         aria-label="vertical contained button group"
                         variant="contained"
-                        sx={{ position: 'absolute', zIndex: 1 }}
+                        sx={{ position: 'absolute', zIndex: 1, right: 15, top: 10 }}
                       >
                         <Button onClick={() => handleRemoveRow(index)} color="primary">
                           Remove
@@ -234,137 +220,30 @@ const IndexTable = () => {
                         </Button>
                       </ButtonGroup>
                     )}
-                  </div>
-                  <Autocomplete
-                    options={searchOptions}
-                    loading={searchLoading}
-                    inputValue={row.scene}
-                    onInputChange={(event, newInputValue) => fetchSearchOptions(newInputValue, index, 'scene')}
-                    filterOptions={(option) => option}
-                    onKeyDown={(event) => handleRowClear(event, index)}
-                    style={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        value={row.scene}
-                        onChange={(event) => handleCellChange(event, index, 'scene')}
-                        InputProps={{
-                          ...params.InputProps,
-                        }}
-                      />
-                    )}
-                  />
-                  <Autocomplete
-                    options={searchOptions}
-                    loading={searchLoading}
-                    inputValue={row.location}
-                    onInputChange={(event, newInputValue) => fetchSearchOptions(newInputValue, index, 'location')}
-                    filterOptions={(option) => option}
-                    style={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        onChange={(event) => handleCellChange(event, index, 'location')}
-                        value={row.location}
-                        InputProps={{
-                          ...params.InputProps,
-                        }}
-                      />
-                    )}
-                  />
-                  <Autocomplete
-                    options={searchOptions}
-                    loading={searchLoading}
-                    inputValue={row.time}
-                    onInputChange={(event, newInputValue) => fetchSearchOptions(newInputValue, index, 'time')}
-                    filterOptions={(option) => option}
-                    style={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        onChange={(event) => handleCellChange(event, index, 'time')}
-                        value={row.time}
-                        InputProps={{
-                          ...params.InputProps,
-                        }}
-                      />
-                    )}
-                  />
-                  <Autocomplete
-                    options={searchOptions}
-                    loading={searchLoading}
-                    inputValue={row.IntOrExt}
-                    onInputChange={(event, newInputValue) => fetchSearchOptions(newInputValue, index, 'IntOrExt')}
-                    filterOptions={(option) => option}
-                    style={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        onChange={(event) => handleCellChange(event, index, 'IntOrExt')}
-                        value={row.IntOrExt}
-                        InputProps={{
-                          ...params.InputProps,
-                        }}
-                      />
-                    )}
-                  />
-                  <Autocomplete
-                    options={searchOptions}
-                    loading={searchLoading}
-                    inputValue={row.Action}
-                    onInputChange={(event, newInputValue) => fetchSearchOptions(newInputValue, index, 'Action')}
-                    filterOptions={(option) => option}
-                    style={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        onChange={(event) => handleCellChange(event, index, 'Action')}
-                        value={row.Action}
-                        InputProps={{
-                          ...params.InputProps,
-                        }}
-                      />
-                    )}
-                  />
-                  <Autocomplete
-                    options={searchOptions}
-                    loading={searchLoading}
-                    inputValue={row.Character}
-                    onInputChange={(event, newInputValue) => fetchSearchOptions(newInputValue, index, 'Character')}
-                    filterOptions={(option) => option}
-                    style={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="outlined"
-                        onChange={(event) => handleCellChange(event, index, 'Character')}
-                        onKeyDown={(event) => handleKeyPress(event, index)}
-                        value={row.Character}
-                        InputProps={{
-                          ...params.InputProps,
-                        }}
-                      />
-                    )}
-                  />
-                </Box>
+                  </Box>
+                  <TableRow key={index}>
+                    {Object.keys(row).map((field) => (
+                      <TableCell key={field} align="right" sx={{ padding: '0', margin: '0' }}>
+                        <AutoComplete
+                          value={row[field]}
+                          suggestions={suggestions ? suggestions : ['']}
+                          completeMethod={(e) => search(e, index, field)}
+                          // onKeyUp={fetchSearchOptions}
+                          onChange={(e) => handleAutocompleteChange(index, e.value, field, e)}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </>
               ))}
-            </Box>
-          </TableContainer>
-          <Button onClick={handleSubmit} variant="contained" color="primary" style={{ marginTop: '1rem' }}>
-            Submit
-          </Button>
-        </Box>
+            </TableBody>
+          </Table>
+          <Button onClick={handleSubmit} variant='contained' sx={{ display: 'flex', margin: '20px' }}>Submit</Button>
+        </TableContainer>
       </Paper>
     </>
   );
 };
-
-// export default IndexTable;
 
 const MemoizedIndexTable = memo(IndexTable);
 export default MemoizedIndexTable;

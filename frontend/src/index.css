@@ -10,7 +10,12 @@
   --secondary-contrast-text: #000;
   --secondary-low-contrast-text: rgba(0, 0, 0, 0.6);
   --secondary-low-contrast-icons: rgba(0, 0, 0, 0.3);
-  --tertiary-main: linear-gradient(94deg, #c5ac57 10.11%, #c5ac57 46.89%, #e1d5ab 85.01%);
+  --tertiary-main: linear-gradient(
+    94deg,
+    #c5ac57 10.11%,
+    #c5ac57 46.89%,
+    #e1d5ab 85.01%
+  );
 }
 
 html {
@@ -198,13 +203,11 @@ html {
   background-position: center;
 }
 
-
 /* Example CSS in your stylesheets */
 .parenthetical span::placeholder {
   text-align: right;
   /* Add any additional styling for the placeholder here */
 }
-
 
 .parentheticalMain::before,
 .parentheticalMain::after {
@@ -212,11 +215,26 @@ html {
   margin-right: 4px;
 }
 
-.parentheticalMain{
+.parentheticalMain {
   display: flex;
 }
 
 .parentheticalMain::after {
   content: ')';
   margin-left: 4px;
+}
+
+.p-inputtext {
+  padding: 0;
+  padding-block: 12px;
+  box-shadow: none;
+  border-color: #cfcfcf;
+}
+
+.p-autocomplete-loader {
+  display: none;
+}
+
+.css-11xur9t-MuiPaper-root-MuiTableContainer-root {
+  box-shadow: none !important;
 }

@@ -15,7 +15,6 @@ export const OneLineTitleProvider = ({ children }) => {
             {children}
         </OneLineTitleContext.Provider>
     )
-
 };
 
 export const useTitle = () => {

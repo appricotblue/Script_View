@@ -62,7 +62,6 @@ const appRouter = createBrowserRouter([
       {
         path: '/document/:id',
         loader: loadScriptData,
-
         element: (
           <Suspense fallback={<div>Loading</div>}>
             <ComposedScriptPage />

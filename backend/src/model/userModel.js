@@ -9,13 +9,13 @@ const {
 
 const userSchema = new Schema(
   {
-    firstName: {
+    firstname: {
       type: String,
       required: "Requires FirstName",
       trim: true,
       validate: { validator: validateName },
     },
-    lastName: {
+    lastname: {
       type: String,
       required: "Requires LastName",
       trim: true,
@@ -33,29 +33,35 @@ const userSchema = new Schema(
       type: String,
       required: "Requires Password",
     },
+    scripts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Script",
+      },
+    ],
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-// hash the password before saving
-userSchema.pre("save", function (next) {
-  const user = this;
+// // hash the password before saving
+// userSchema.pre("save", function (next) {
+//   const user = this;
 
-  // only hash the password if the password is modified(New)
-  if (!user.isModified("password")) return next();
-  // validate password
-  if (!validatePassword(user.password))
-    return next(new Error("Password Invalid"));
+//   // only hash the password if the password is modified(New)
+//   if (!user.isModified("password")) return next();
+//   // validate password
+//   if (!validatePassword(user.password))
+//     return next(new Error("Password Invalid"));
 
-  // generate salt and hash the password
-  genSalt(10, (err, salt) => {
-    if (err) return next(err);
-    hash(user.password, salt, (err, hash) => {
-      if (err) return next(err);
-      user.password = hash;
-      next();
-    });
-  });
-});
+//   // generate salt and hash the password
+//   genSalt(10, (err, salt) => {
+//     if (err) return next(err);
+//     hash(user.password, salt, (err, hash) => {
+//       if (err) return next(err);
+//       user.password = hash;
+//       next();
+//     });
+//   });
+// });
 
-module.exports = model("User", userSchema);
+module.exports = model("user", userSchema);
