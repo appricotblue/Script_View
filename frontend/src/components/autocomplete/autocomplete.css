@@ -1,0 +1,34 @@
+.container {
+  width: 100%;
+  height: 70px;
+  position: relative;
+  text-align: left;
+}
+.inp {
+  width: 100%;
+  height: 100%;
+  padding: 5px 10px;
+  border: none;
+  border-right: 1px solid #cfcfcf;
+  outline: none;
+  font-family: inherit;
+}
+.modal { 
+  width: 90%;
+  height: auto;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  z-index: 999;
+  background-color: white;
+}
+.model-item{
+    padding: 5px;
+    cursor: pointer;
+}
+
+.model-item:hover{
+    background: gray;
+}
