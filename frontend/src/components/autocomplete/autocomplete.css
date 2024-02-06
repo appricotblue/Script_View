@@ -5,15 +5,14 @@
   text-align: left;
 }
 .inp {
-  width: 100%;
+  width: inherit;
   height: 100%;
   padding: 5px 10px;
   border: none;
-  border-right: 1px solid #cfcfcf;
   outline: none;
   font-family: inherit;
 }
-.modal { 
+.modal {
   width: 90%;
   height: auto;
   position: absolute;
@@ -23,16 +22,17 @@
   border-radius: 5px;
   z-index: 999;
   background-color: white;
+  overflow: hidden;
 }
-.model-item{
-    padding: 5px;
-    cursor: pointer;
-}
-
-.model-item:hover{
-    background: gray;
+.model-item {
+  padding: 5px;
+  cursor: pointer;
 }
 
-.selected{
-  background-color: red;
+.model-item:hover {
+  background: rgb(207, 207, 207);
+}
+
+.selected {
+  background-color: rgb(236, 236, 236);
 }

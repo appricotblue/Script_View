@@ -13,31 +13,62 @@ const AutocompleteField = ({
   const modalRef = useRef(null);
   const inpRef = useRef(null);
   const [isModalOpen, setIsModalopen] = useState(false);
-  const [FieldName, setFieldName] = useState('');
   const [selectedItemIndex, setSelectedItemIndex] = useState(-1);
+  const [tableOpen, setTableOpen] = useState({
+    scene: false,
+    location: false,
+    time: false,
+    intOrExt: false,
+    action: false,
+    character: false,
+  });
 
   const handleItemAdd = (item, index, field) => {
-    const values = [...tableData];
-    const currentFieldValue = values[index][field];
-    const words = currentFieldValue.split(' ');
+    if (item && suggestions) {
+      const values = [...tableData];
+      const currentFieldValue = values[index][field];
+      const delimiterRegex = /[,.?\[\](_)+\s]+/;
+      const words = currentFieldValue.split(delimiterRegex);
 
-    if (words.length > 0) {
-      words[words.length - 1] = item;
-      values[index][field] = words.join(' ') + ' ';
+      if (words.length > 0) {
+        words[words.length - 1] = item;
+        values[index][field] = words.join(' ') + ' ';
+      }
+      setTableData(values);
+      setSuggestions([]);
+      inpRef.current.focus();
+      setSelectedItemIndex(-1);
+    } else {
+      console.log('err');
     }
-    setTableData(values);
-    setSuggestions([]);
-    inpRef.current.focus();
+  };
+
+  const handleItemAddWhithEnter = (item, index) => {
+    setTableData((prev) => {
+      const prevdata = [...prev];
+      prevdata[index][field] = item;
+      return prevdata;
+    });
   };
 
   const handleInput = (index, value, field) => {
+    setIsModalopen(true);
+    setTableOpen((prev) => ({ ...prev, [field]: true }));
     handleAutocompleteChange(index, value, field);
+  };
+
+  const handleModalClose = () => {
+    setTimeout(() => {
+      setTableOpen((prev) => ({ ...prev, [field]: false }));
+      setSelectedItemIndex(-1);
+    }, 300);
   };
 
   const handleSpaceKey = (e) => {
     const inputValue = e.target.value;
     if (e.key === ' ' && inputValue.trim() !== '') {
       setSuggestions([]);
+      setSelectedItemIndex(-1);
     }
   };
 
@@ -45,46 +76,27 @@ const AutocompleteField = ({
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       setSelectedItemIndex((prevIndex) =>
-        Math.min(prevIndex + 1, suggestions.length - 1),
+        prevIndex === suggestions.length - 1 ? 0 : prevIndex + 1,
       );
-      // console.log('down');
-      // console.log(selectedItemIndex);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedItemIndex((prevIndex) => Math.max(prevIndex - 1, -1));
-      // console.log('up');
-    } else if (e.key === 'Enter' && selectedItemIndex !== -1) {
-      handleItemAdd(suggestions[selectedItemIndex]);
-      // console.log('enter');
-    }
-  };
-
-  // useEffect(() => {
-  //   document.addEventListener('keydown', handleKeyDown);
-  //   return () => {
-  //     document.removeEventListener('keydown', handleKeyDown);
-  //   };
-  // }, [selectedItemIndex]);
-
-  const renderSuggestions = () => {
-    if (suggestions && field === FieldName && suggestions.length > 0) {
-      return (
-        <div className="modal">
-          {suggestions.map((item, ind) => (
-            <div
-              className="model-item"
-              onClick={() => handleItemAdd(item)}
-              key={ind}
-            >
-              {item}
-            </div>
-          ))}
-        </div>
+      setSelectedItemIndex((prevIndex) =>
+        prevIndex === 0 ? suggestions.length - 1 : prevIndex - 1,
       );
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedItemIndex !== -1) {
+        handleItemAddWhithEnter(suggestions[selectedItemIndex], index);
+      }
     }
-    console.log('none');
-    return null;
   };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedItemIndex]);
   return (
     <div className="container">
       <textarea
@@ -97,17 +109,12 @@ const AutocompleteField = ({
           handleInput(index, e.target.value, field);
         }}
         onFocus={() => {
-          setFieldName(field);
+          setTableOpen((prev) => ({ ...prev, [field]: true }));
         }}
-        onBlur={() => {
-          setTimeout(() => {
-            setFieldName('');
-            setSuggestions([]);
-          }, 200);
-        }}
+        onBlur={handleModalClose}
         onKeyUp={(e) => handleSpaceKey(e)}
       />
-      {suggestions && field === FieldName && suggestions.length > 1 && (
+      {isModalOpen && tableOpen[field] && suggestions.length > 1 && (
         <div ref={modalRef} className="modal">
           {suggestions.map((item, ind) => {
             return (

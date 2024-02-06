@@ -22,6 +22,7 @@ import { VITE_BASE_URL } from '@/constants';
 import { PlusCircle } from '@phosphor-icons/react';
 import { useTitle } from '@/context/OnelineTitleContext';
 import AutocompleteField from '@/components/autocomplete/AutocompleteField';
+import axios from 'axios';
 
 const IndexTable = () => {
   const [tableData, setTableData] = useState([
@@ -29,11 +30,13 @@ const IndexTable = () => {
       scene: '',
       location: '',
       time: '',
-      intOrExt: '',
-      action: '',
-      character: '',
+      IntOrExt: '',
+      Action: '',
+      Character: '',
     },
   ]);
+
+  useEffect(() => {}, []);
 
   const [suggestions, setSuggestions] = useState([]);
 
@@ -158,7 +161,8 @@ const IndexTable = () => {
 
   const fetchSearchOptions = async (value) => {
     const inputText = value;
-    const words = inputText.split(' ');
+    const delimiterRegex = /[,.?\[\](_)+\s]+/;
+    const words = inputText.split(delimiterRegex);
     const lastWord = words.pop();
     const response = await transliterate(lastWord);
     setSuggestions(response);
@@ -171,7 +175,21 @@ const IndexTable = () => {
 
   const transliterate = useTransliteration();
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${VITE_BASE_URL}/api/scripts/getOnelines/${id}`,
+      );
+      const { data } = response;
+      console.log('responce', response.data.oneLiners[0].oneLiners);
+      setTableData(response.data.oneLiners[0].oneLiners);
+    } catch (error) {
+      console.error('Error while fetching data:', error);
+    }
+  };
+
   useEffect(() => {
+    fetchData();
     const handleBeforeUnload = (event) => {
       const message = 'Are you sure you want to leave?';
       event.returnValue = message; // Standard for most browsers
@@ -191,7 +209,7 @@ const IndexTable = () => {
 
       <Paper
         sx={{
-          width: '1100px',
+          width: '1200px',
           minHeight: '1000px',
           boxShadow: '2.99253px 2.99253px 13.46637px 0px rgba(0, 0, 0, 0.10)',
           display: 'flex',
@@ -200,7 +218,10 @@ const IndexTable = () => {
         }}
         className={Style['container']}
       >
-        <TableContainer component={Paper}>
+        <TableContainer
+          component={Paper}
+          sx={{ padding: '40px', minHeight: '1000px' }}
+        >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -231,7 +252,7 @@ const IndexTable = () => {
                     sx={{
                       position: 'absolute',
                       zIndex: '1',
-                      left: '145px',
+                      marginLeft: '-32px',
                       marginTop: '14px',
                     }}
                     onMouseEnter={() => setHoveredRowIndex(index)}
@@ -276,7 +297,13 @@ const IndexTable = () => {
                       <TableCell
                         key={field}
                         align="right"
-                        sx={{ padding: '0', margin: '0' }}
+                        sx={{
+                          padding: '0',
+                          margin: '0',
+                          borderColor: 'rgb(207, 207, 207) ',
+                          borderWidth: '1px',
+                          borderStyle: 'solid',
+                        }}
                       >
                         {/* <Autocomplete
                           value={row[field]}
