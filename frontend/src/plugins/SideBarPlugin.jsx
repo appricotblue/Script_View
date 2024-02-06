@@ -104,7 +104,6 @@ const SideBarPlugin = () => {
       parenthetical: () => {
         const newParentheticalMain = $createParentheticalMainNode();
       
-        // Insert the newParentheticalMain node directly without checking for DialogueContainer
         $insertNodes([newParentheticalMain]);
         
         return newParentheticalMain.select();

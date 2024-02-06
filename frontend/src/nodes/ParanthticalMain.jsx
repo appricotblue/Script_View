@@ -1,13 +1,14 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createParentheticalMainNode = () =>
   $applyNodeReplacement(new ParentheticalMainNode());
 
 export const $isParentheticalMainNode = (node) => node instanceof ParentheticalMainNode;
 
-export class ParentheticalMainNode extends DefaultActionNode {
+export class ParentheticalMainNode extends DefaultParagraphNode {
   constructor() {
     super();
   }
@@ -15,10 +16,11 @@ export class ParentheticalMainNode extends DefaultActionNode {
   createDOM(config) {
     const container = document.createElement('div');
     container.className = 'parentheticalMain';
-    
+
     const textContent = document.createElement('span');
+    textContent.className = 'parentheticalMainSpan';
     textContent.setAttribute('data-placeholder', 'Insert your parenthetical text here');
-    
+
     container.append(textContent);
     return container;
   }

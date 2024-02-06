@@ -21,11 +21,13 @@ import { useTransliteration } from '@hooks';
 import { VITE_BASE_URL } from '@/constants';
 import { PlusCircle } from '@phosphor-icons/react';
 import { useTitle } from '@/context/OnelineTitleContext';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const IndexTable = () => {
 
   const [tableData, setTableData] = useState([
-    { scene: '', location: '', time: '', intOrExt: '', action: '', character: '' },
+    { scene: '', location: '', time: '', IntOrExt: '', Action: '', Character: '' },
   ]);
 
   const [suggestions, setSuggestions] = useState([])
@@ -103,20 +105,24 @@ const IndexTable = () => {
     }
   };
 
+  const { id } = useParams()
+
   const handleSubmit = async () => {
     if (oneLineTitle.trim() !== '') {
       try {
-        const response = await fetch(`${VITE_BASE_URL}/api/scripts/storeOneLineData`, {
-          method: 'POST',
+        const response = await axios.post(`${VITE_BASE_URL}/api/scripts/storeOneLineData`, {
+          title: oneLineTitle,
+          scriptId: id,
+          oneLiners: tableData,
+        }, {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ oneLiners: tableData, title: oneLineTitle }),
         });
 
         console.log(tableData);
 
-        if (response.ok) {
+        if (response.status === 200) {
           console.log('Data stored successfully');
         } else {
           console.error('Failed to store data');
@@ -154,6 +160,20 @@ const IndexTable = () => {
   const transliterate = useTransliteration();
 
   useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${VITE_BASE_URL}/api/scripts/getOnelines/${id}`);
+        const { data } = response;
+        console.log("responce", response.data.oneLiners[0].oneLiners);
+        setTableData(response.data.oneLiners[0].oneLiners);
+      } catch (error) {
+        console.error('Error while fetching data:', error);
+      }
+    };
+
+    fetchData();
+
     const handleBeforeUnload = (event) => {
       const message = "Are you sure you want to leave?";
       event.returnValue = message; // Standard for most browsers
@@ -166,6 +186,8 @@ const IndexTable = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, []);
+
+  console.log(tableData);
 
   return (
     <>
@@ -197,7 +219,7 @@ const IndexTable = () => {
             <TableBody>
               {tableData.map((row, index) => (
                 <>
-                  <Box sx={{ position: 'absolute', zIndex: '1', left: '145px', marginTop: '14px' }}
+                  <Box sx={{ position: 'absolute', zIndex: '1', marginLeft: '-35px', marginTop: '14px' }}
                     onMouseEnter={() => setHoveredRowIndex(index)}
                     onMouseLeave={() => setHoveredRowIndex(null)}
                   >

@@ -1,13 +1,14 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createTransitionNode = () =>
   $applyNodeReplacement(new TransitionNode());
 
 export const $isTransitionNode = (node) => node instanceof TransitionNode;
 
-export class TransitionNode extends DefaultActionNode {
+export class TransitionNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

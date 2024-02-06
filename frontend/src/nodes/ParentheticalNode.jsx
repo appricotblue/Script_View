@@ -13,7 +13,7 @@ export class ParentheticalNode extends ElementNode {
 
   createDOM(config) {
     const div = document.createElement('div');
-    const placeholder = this.isDialogueParent() ? 'Enter character                :' : 'Enter parenthetical...';
+    const placeholder = this.isDialogueParent() ? 'Enter character' : 'Enter parenthetical...';
 
     div.className = this.isDialogueParent() ? config.theme.parenthetical : config.theme.dialogue;
     div.setAttribute('data-placeholder', placeholder);

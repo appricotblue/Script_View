@@ -31,30 +31,59 @@ module.exports = {
       return res.status(500).json({ message: err.message });
     }
   },
-  
+
+  // createScript: async (req, res) => {
+  //   try {
+  //     const docData = await createNewScript();
+  //     res.json({
+  //       author: docData.author,
+  //       id: docData._id,
+  //       title: docData.title,
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     return res.status(500).json({ message: err.message });
+  //   }
+  // },
+
   createScript: async (req, res) => {
+    const { userId } = req.body;
     try {
-      const docData = await createNewScript();
+      console.log("Creating script for userId:", userId);
+      const docData = await createNewScript(userId);
+      console.log("Script created successfully:", docData);
       res.json({
         author: docData.author,
         id: docData._id,
         title: docData.title,
       });
     } catch (err) {
-      console.error(err);
-      return res.status(500).json({ message: err.message });
+      console.error("Error creating script:", err);
+      return res.status(500).json({ message: err.message, userId });
     }
   },
-  
+
+  // listRecent: async (req, res) => {
+  //   try {
+  //     const list = await getRecentDocList();
+  //     res.json({ data: list });
+  //   } catch (err) {
+  //     console.error(err);
+  //     return res.status(500).json({ message: err.message });
+  //   }
+  // },
+
   listRecent: async (req, res) => {
     try {
-      const list = await getRecentDocList();
+      const { userId } = req.body;
+      const list = await getRecentDocList(userId);
       res.json({ data: list });
     } catch (err) {
       console.error(err);
       return res.status(500).json({ message: err.message });
     }
   },
+
   exportFile: async (req, res) => {
     const { docFormat, css, html, margin, format, width, height } = req.body;
     const docFormatValidator = {
@@ -137,19 +166,21 @@ module.exports = {
         .json({ error: "Internal server error", message: err.message });
     }
   },
+
   addOneLine: async (req, res) => {
     try {
-      const { title, oneLiners } = req.body;
+      const { title, scriptId ,oneLiners } = req.body;
 
-      if (title === undefined || !oneLiners) {
+      if (title === undefined || !oneLiners || !scriptId) {
         return res.status(400).json({ message: "Invalid add request" });
       }
 
-      let oneLineData = await OneLineSchema.findOne({ title: title });
+      let oneLineData = await OneLineSchema.findOne({ scriptId : scriptId });
 
       if (!oneLineData) {
         oneLineData = new OneLineSchema({
           title,
+          scriptId,
           oneLiners,
         });
       } else {
@@ -169,4 +200,26 @@ module.exports = {
         .json({ error: "Runtime error", message: err.message });
     }
   },
+
+  getOneLinesByScriptId: async (req, res) => {
+    try {
+      const { id } = req.params;
+  
+      if (!id) {
+        return res.status(400).json({ message: "Invalid scriptId in the request" });
+      }
+  
+      const oneLineData = await OneLineSchema.find({ scriptId : id });
+  
+      if (!oneLineData) {
+        return res.json({ message: "No one-liners found for the specified scriptId" });
+      }
+  
+      return res.json({ message: "One-liners fetched successfully", oneLiners: oneLineData });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Runtime error", message: err.message });
+    }
+  },
+
 };

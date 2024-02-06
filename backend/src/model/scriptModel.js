@@ -9,10 +9,9 @@ const scriptSchema = new Schema(
     },
     characters: { type: Array, default: [] },
     author: {
-      // type: Schema.Types.ObjectId,
-      // ref: "User",
-      // required: "Requires Author",
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: "Requires Author",
     },
     editorState: { type: String, default: null },
   },

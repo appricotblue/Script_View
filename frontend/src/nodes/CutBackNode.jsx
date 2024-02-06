@@ -1,13 +1,14 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createCutbackNode = () =>
   $applyNodeReplacement(new CutbackNode());
 
 export const $isCutbackNode = (node) => node instanceof CutbackNode;
 
-export class CutbackNode extends DefaultActionNode {
+export class CutbackNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

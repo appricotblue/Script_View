@@ -1,13 +1,14 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createSluglineNode = () =>
   $applyNodeReplacement(new SluglineNode());
 
 export const $isSluglineNode = (node) => node instanceof SluglineNode;
 
-export class SluglineNode extends DefaultActionNode {
+export class SluglineNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

@@ -7,16 +7,17 @@ const {
   deleteDoc,
   storeOneLine,
   addOneLine,
+  getOneLinesByScriptId,
 } = require("../controllers/scriptControllers");
 
 // initial state
 router.get("/get-initial/:id", getInitial);
 
 // create document
-router.get("/create", createScript);
+router.post("/create", createScript);
 
 // get recently updated document list
-router.get("/list_recent", listRecent);
+router.post("/list_recent", listRecent);
 
 // export content (eg:pdf)
 router.post("/export", exportFile);
@@ -25,7 +26,9 @@ router.post("/export", exportFile);
 router.delete("/delete/:id", deleteDoc);
 
 // store oneline
-router.post('/storeOneLineData', addOneLine);
+router.post("/storeOneLineData", addOneLine);
+
+// fetch onelines
+router.get("/getOnelines/:id", getOneLinesByScriptId)
 
 module.exports = router;
-

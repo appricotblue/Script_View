@@ -1,11 +1,12 @@
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createDialogueContainerNode = () => new DialogueContainerNode();
 
 export const $isDialogueContainerNode = (node) =>
   node instanceof DialogueContainerNode;
 
-export class DialogueContainerNode extends DefaultActionNode {
+export class DialogueContainerNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

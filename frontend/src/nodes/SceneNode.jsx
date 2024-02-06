@@ -1,11 +1,12 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createSceneNode = () => $applyNodeReplacement(new SceneNode());
 export const $isSceneNode = (node) => node instanceof SceneNode;
 
-export class SceneNode extends DefaultActionNode {
+export class SceneNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

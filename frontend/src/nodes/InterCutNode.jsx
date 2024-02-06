@@ -1,13 +1,14 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createIntercutNode = () =>
   $applyNodeReplacement(new IntercutNode());
 
 export const $isIntercutNode = (node) => node instanceof IntercutNode;
 
-export class IntercutNode extends DefaultActionNode {
+export class IntercutNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

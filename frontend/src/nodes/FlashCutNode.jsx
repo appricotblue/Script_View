@@ -1,13 +1,14 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createFlashcutNode = () =>
   $applyNodeReplacement(new FlashcutNode());
 
 export const $isFlashcutNode = (node) => node instanceof FlashcutNode;
 
-export class FlashcutNode extends DefaultActionNode {
+export class FlashcutNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

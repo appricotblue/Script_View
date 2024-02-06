@@ -1,12 +1,13 @@
 import { $applyNodeReplacement } from 'lexical';
 
 import DefaultActionNode from './DefaultActionNode';
+import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createSubHeaderNode = () =>
   $applyNodeReplacement(new SubHeaderNode());
 export const $isSubHeaderNode = (node) => node instanceof SubHeaderNode;
 
-export class SubHeaderNode extends DefaultActionNode {
+export class SubHeaderNode extends DefaultParagraphNode {
   constructor() {
     super();
   }

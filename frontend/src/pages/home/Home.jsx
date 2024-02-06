@@ -8,6 +8,7 @@ import { DocCard, TemplateCard } from '@common';
 import { VITE_BASE_URL } from '@/constants';
 
 const Home = () => {
+  
   const { isLoggedIn } = useSelector((state) => {
     return state.user;
   });
@@ -33,7 +34,6 @@ const Home = () => {
       });
   };
 
-  
   return (
     <Stack alignItems="center" width="100%" height="90vh">
       <Stack

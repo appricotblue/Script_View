@@ -1,27 +1,53 @@
 import { Box, Icon, Paper, Typography } from '@mui/material';
 import { Plus } from '@phosphor-icons/react';
 import { useTheme } from '@emotion/react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { VITE_BASE_URL } from '@/constants';
+import axios from 'axios';
 
 const TemplateCard = () => {
   const { palette } = useTheme();
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleClick = (e) => {
+  const userId = localStorage.getItem('userId');
+
+  // const handleClick = (e) => {
+  //   if (isLoading) return e.stopPropagation();
+  //   setLoading(true);
+  //   fetch(`${VITE_BASE_URL}/api/scripts/create`)
+  //     .then(async (response) => {
+  //       const { id } = await response.json();
+  //       navigate(`/document/${id}`);
+  //     })
+  //     .catch((err) => console.log(err))
+  //     .finally(() => setLoading(false));
+  // };
+
+  const handleClick = async (e) => {
     if (isLoading) return e.stopPropagation();
     setLoading(true);
-    fetch(`${VITE_BASE_URL}/api/scripts/create`)
-      .then(async (response) => {
-        const { id } = await response.json();
-        navigate(`/document/${id}`);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+    try {
+      const response = await axios.post(`${VITE_BASE_URL}/api/scripts/create`, { userId });
+      console.log(response);
+      const { id } = response.data;
+      console.log('Script created successfully:', id);
+      navigate(`/document/${id}`);
+    }
+    catch (err) {
+      console.error('Error creating script:', err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+
+  useEffect(() => {
+    console.log(userId);
+  }, [])
+
   return (
     <Box color={palette.primary.contrastText}>
       <Paper

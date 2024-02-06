@@ -208,9 +208,7 @@ html {
   text-align: right;
   /* Add any additional styling for the placeholder here */
 }
-
-.parentheticalMain::before,
-.parentheticalMain::after {
+.parentheticalMain::before {
   content: '(';
   margin-right: 4px;
 }

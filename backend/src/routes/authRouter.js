@@ -10,8 +10,8 @@ router.post("/login", async (req, res) => {
     const user = await userModel.findOne({ email });
 
     // Check if the user exists and validate the password
-    if (user && bcrypt.compareSync(password, user.password)) {
-      res.status(200).json({ message: "Login successful!" });
+    if (user && password == user.password) {
+      res.status(200).json({ message: "Login successful!", user });
     } else {
       res.status(401).json({ message: "Invalid credentials" });
     }
@@ -37,7 +37,7 @@ router.post("/register", async (req, res) => {
     // Save the user to the database
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully!" });
+    res.status(201).json({ message: "User registered successfully!", newUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
