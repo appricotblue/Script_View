@@ -149,15 +149,15 @@ const IndexTable = () => {
     }
   };
 
-  const handleAutocompleteChange = (index, value, field, e) => {
-    fetchSearchOptions(e, index, field);
+  const handleAutocompleteChange = (index, value, field) => {
+    fetchSearchOptions(value);
     const updatedTableData = [...tableData];
-    updatedTableData[index][field] = e.target.value;
+    updatedTableData[index][field] = value;
     setTableData(updatedTableData);
   };
 
-  const fetchSearchOptions = async (event, index, key) => {
-    const inputText = event.target.value;
+  const fetchSearchOptions = async (value) => {
+    const inputText = value;
     const words = inputText.split(' ');
     const lastWord = words.pop();
     const response = await transliterate(lastWord);
@@ -278,7 +278,7 @@ const IndexTable = () => {
                         align="right"
                         sx={{ padding: '0', margin: '0' }}
                       >
-                        {/* <AutoComplete
+                        {/* <Autocomplete
                           value={row[field]}
                           suggestions={suggestions ? suggestions : ['']}
                           completeMethod={(e) => search(e, index, field)}
