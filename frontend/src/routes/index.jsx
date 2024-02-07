@@ -10,6 +10,7 @@ import ScriptSocketProvider from '@/context/ScriptSocketContext';
 import { VITE_BASE_URL } from '@/constants';
 import IndexPage from '@pages/indexPage';
 import { useZoom } from '@/context/ZoomContext';
+import PricingPlans from '@common/pricing plans/PricingPlans';
 
 const loadScriptData = async ({ params: { id } }) => {
   try {
@@ -58,6 +59,10 @@ const appRouter = createBrowserRouter([
             </WithHeaderMargin>
           </>
         ),
+      },
+      {
+        path: '/subscribe',
+        element: <PricingPlans></PricingPlans>
       },
       {
         path: '/document/:id',

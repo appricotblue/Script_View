@@ -7,7 +7,7 @@ import AddCharacterModal from '@script/addCharacterModal/AddCharacterModal';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-const IndexHeader = ({onDownload}) => {
+const IndexHeader = ({ onDownload }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [titleValue, setTitleValue] = useState('');
     const { palette } = useTheme();
@@ -45,8 +45,8 @@ const IndexHeader = ({onDownload}) => {
     }
 
     useEffect(() => {
-      console.log(oneLineTitle);
-    },[])
+        console.log(oneLineTitle);
+    }, [])
 
     return (
         <>
@@ -71,7 +71,8 @@ const IndexHeader = ({onDownload}) => {
                         startIcon={<CaretLeft size="1.5rem" weight="thin" />}
                     >
                         <Link to={'/'} style={{
-                            textDecoration: 'none', color: 'inherit'}}>Back to Home</Link>
+                            textDecoration: 'none', color: 'inherit'
+                        }}>Back to Home</Link>
                     </Button>
                     <Stack
                         direction="row"
@@ -103,7 +104,7 @@ const IndexHeader = ({onDownload}) => {
                                     color: '#fff',
                                     ':hover': { background: '#000' },
                                 }}
-                                onClick={onDownload} 
+                                onClick={onDownload}
                             >
                                 Download
                             </GradientBtn>

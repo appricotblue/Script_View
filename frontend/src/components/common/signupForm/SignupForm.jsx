@@ -80,7 +80,9 @@ const SignupForm = () => {
         });
         if (response.status === 201) {
           const userId = response.data.newUser._id;
+          const userName = response.data.newUser.firstname
           localStorage.setItem('userId', userId);
+          localStorage.setItem('userName', userName)
           dispatch(setLogin(true));
           Swal.fire({
             icon: 'success',

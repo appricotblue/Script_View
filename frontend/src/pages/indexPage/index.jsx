@@ -10,7 +10,7 @@ import MemoizedIndexTable from './IndexTable';
 const IndexPage = () => {
   return (
     // <LexicalComposerContext>
-    <Box bgcolor={'whitesmoke'} height={'100vh'}>
+    <Box bgcolor={'whitesmoke'} height={'100vh'} sx={{ overflowY: 'scroll' }}>
       {/* <IndexHeader /> */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', }}>
         {/* <IndexTable /> */}

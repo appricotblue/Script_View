@@ -13,7 +13,6 @@ import {
   TableRow,
 } from '@mui/material';
 import Style from './TextArea.module.css';
-// import { AutoComplete } from 'primereact/autocomplete';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -171,7 +170,6 @@ const IndexTable = () => {
   };
 
   const search = (event, index, field) => {
-    // e.preventDefault()
     fetchSearchOptions(event, index, field);
   };
 
@@ -309,13 +307,6 @@ const IndexTable = () => {
                           borderStyle: 'solid',
                         }}
                       >
-                        {/* <Autocomplete
-                          value={row[field]}
-                          suggestions={suggestions ? suggestions : ['']}
-                          completeMethod={(e) => search(e, index, field)}
-                          // onKeyUp={fetchSearchOptions}
-                          onChange={(e) => handleAutocompleteChange(index, e.value, field, e)}
-                        /> */}
                         <AutocompleteField
                           suggestions={suggestions}
                           index={index}

@@ -36,7 +36,9 @@ const LoginForm = () => {
 
       if (response.status === 200) {
         const userId = response.data.user._id;
+        const userName = response.data.user.firstname
         localStorage.setItem('userId', userId);
+        localStorage.setItem('userName', userName)
         dispatch(setLogin(true));
 
         Swal.fire({
