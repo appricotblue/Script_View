@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   Button,
   Divider,
@@ -23,6 +22,7 @@ import {
   FORMAT_TEXT_COMMAND,
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
+  SELECT_ALL_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
 import { mergeRegister } from '@lexical/utils';
@@ -169,11 +169,11 @@ const ToolbarPlugin = ({ setSearchText }) => {
   }
 
   const handleFontSizeChange = (amount) => {
-    // const newFontSize = fontSize + amount;
-    // setFontSize(newFontSize);
-    // editor.dispatchCommand(FORMAT_TEXT_COMMAND, { fontSize: `${newFontSize}px` });
-    editor.dispatchCommand(UNDO_COMMAND)
-  };
+    const newFontSize = fontSize + amount;
+    setFontSize(newFontSize);
+    editor.dispatchCommand(FORMAT_TEXT_COMMAND, { fontSize: `${newFontSize}px` });
+    // editor.dispatchCommand(UNDO_COMMAND)
+    };
 
   const handleFontFamilyChange = (event) => {
     const newFontFamily = event.target.value;

@@ -24,7 +24,6 @@ const LoginForm = () => {
     const { value, name } = e.target
     const existingData = loginCreds
     setLoginCreds({ ...existingData, [name]: value })
-    console.log(loginCreds);
   }
 
   const handleLogin = async () => {

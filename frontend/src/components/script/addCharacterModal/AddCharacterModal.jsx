@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import AsyncSelect from 'react-select/async-creatable';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { setCharacters } from '@/store/slices/scriptSlice';
 
 // import { debounce as _debounce } from 'lodash';
@@ -44,6 +43,7 @@ const AddCharacterModal = ({ socket = {}, id }) => {
   const handleClose = () => {
     setOpen(false);
   };
+  
   const handleSubmit = () => {
     if (!id) {
       throw new Response('id not found', { status: 404 });
@@ -58,6 +58,7 @@ const AddCharacterModal = ({ socket = {}, id }) => {
       setOpen(false);
     }
   };
+
   const modalContent = (
     <Modal
       open={open}

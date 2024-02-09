@@ -67,6 +67,7 @@ const ScriptHeader = () => {
       console.error('socket connection not open');
     }
   };
+
   return (
     <>
       <AppBar
@@ -89,7 +90,7 @@ const ScriptHeader = () => {
             }}
             startIcon={<CaretLeft size="1.5rem" weight="thin" />}
           >
-            <Link to={'/'} style={{color:'inherit', textDecoration:'none'}}>Back to Home</Link>
+            <Link to={'/'} style={{ color: 'inherit', textDecoration: 'none' }}>Back to Home</Link>
           </Button>
           <Stack
             direction="row"

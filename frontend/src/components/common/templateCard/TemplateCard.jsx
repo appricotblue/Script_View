@@ -45,7 +45,7 @@ const TemplateCard = () => {
 
 
   useEffect(() => {
-    console.log(userId);
+    // console.log(userId);
   }, [])
 
   return (

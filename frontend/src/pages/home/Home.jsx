@@ -19,7 +19,10 @@ const Home = () => {
   useEffect(() => {
     setUpdatedDocList(docList);
   }, [docList]);
-  if (!isLoggedIn) return <Navigate to="/login" />;
+
+  const currentUser = localStorage.getItem('userName')
+
+  if (!currentUser) return <Navigate to="/login" />;
 
   const deleteDoc = (id) => {
     fetch(`${VITE_BASE_URL}/api/scripts/delete/${id}`, {

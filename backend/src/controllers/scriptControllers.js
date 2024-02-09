@@ -6,6 +6,7 @@ const {
 } = require("../helpers/scriptHelpers");
 const { validateHTML } = require("../utils/validationUtils");
 const OneLineSchema = require("../model/oneLineModel");
+const ScriptModel = require("../model/scriptModel");
 
 /**
  * Controller functions for script router
@@ -169,13 +170,13 @@ module.exports = {
 
   addOneLine: async (req, res) => {
     try {
-      const { title, scriptId ,oneLiners } = req.body;
+      const { title, scriptId, oneLiners } = req.body;
 
       if (title === undefined || !oneLiners || !scriptId) {
         return res.status(400).json({ message: "Invalid add request" });
       }
 
-      let oneLineData = await OneLineSchema.findOne({ scriptId : scriptId });
+      let oneLineData = await OneLineSchema.findOne({ scriptId: scriptId });
 
       if (!oneLineData) {
         oneLineData = new OneLineSchema({
@@ -184,6 +185,7 @@ module.exports = {
           oneLiners,
         });
       } else {
+        oneLineData.title = title
         oneLineData.oneLiners = oneLiners;
       }
 
@@ -204,22 +206,54 @@ module.exports = {
   getOneLinesByScriptId: async (req, res) => {
     try {
       const { id } = req.params;
-  
+
       if (!id) {
-        return res.status(400).json({ message: "Invalid scriptId in the request" });
+        return res
+          .status(400)
+          .json({ message: "Invalid scriptId in the request" });
       }
-  
-      const oneLineData = await OneLineSchema.find({ scriptId : id });
-  
+
+      const oneLineData = await OneLineSchema.find({ scriptId: id });
+
       if (!oneLineData) {
-        return res.json({ message: "No one-liners found for the specified scriptId" });
+        return res.json({
+          message: "No one-liners found for the specified scriptId",
+        });
       }
-  
-      return res.json({ message: "One-liners fetched successfully", oneLiners: oneLineData });
+
+      return res.json({
+        message: "One-liners fetched successfully",
+        oneLiners: oneLineData,
+      });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: "Runtime error", message: err.message });
+      return res
+        .status(500)
+        .json({ error: "Runtime error", message: err.message });
     }
   },
 
+  getCharacters: async (req, res) => {
+    try {
+      const { scriptId } = req.params;
+
+      const script = await ScriptModel.findById(scriptId);
+
+      if (!script) {
+        return res.status(404).json({ error: "script not found" });
+      } else {
+        const { characters } = script;
+        if (characters.length < 1) {
+          res.json('No characters found, add from Script page')
+        }
+        else {
+          res.json({ characters });
+        }
+      }
+    }
+    catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 };

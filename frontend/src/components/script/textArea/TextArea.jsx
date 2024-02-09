@@ -27,7 +27,7 @@ const TextArea = ({ searchText }) => {
   const { pageNumber, setPageNum } = usePageNumber()
 
   useEffect(() => {
-    console.log(searchText);
+    // console.log(searchText);
     const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
     if (textareaElement) {
       const observer = new ResizeObserver((entries) => {

@@ -68,7 +68,7 @@ const SignupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(signUpCreds);
+    // console.log(signUpCreds);
     const isValid = validateForm();
     if (isValid) {
       try {
@@ -93,8 +93,8 @@ const SignupForm = () => {
           setTimeout(() => {
             navigate('/');
           }, 1000);
-          console.log(response);
-          console.log(userId);
+          // console.log(response);
+          // console.log(userId);
         }
         else {
           console.log(response);

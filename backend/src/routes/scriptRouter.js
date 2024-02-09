@@ -8,6 +8,7 @@ const {
   storeOneLine,
   addOneLine,
   getOneLinesByScriptId,
+  getCharacters,
 } = require("../controllers/scriptControllers");
 
 // initial state
@@ -29,6 +30,9 @@ router.delete("/delete/:id", deleteDoc);
 router.post("/storeOneLineData", addOneLine);
 
 // fetch onelines
-router.get("/getOnelines/:id", getOneLinesByScriptId)
+router.get("/getOnelines/:id", getOneLinesByScriptId);
+
+// fetch characters
+router.get("/getCharacters/:scriptId", getCharacters);
 
 module.exports = router;

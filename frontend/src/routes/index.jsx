@@ -33,12 +33,12 @@ const ComposedScriptPage = () => {
 
   return (
     <LexicalComposerProvider>
-      <ScriptSocketProvider>
+      {/* <ScriptSocketProvider> */}
         {showSidebars && <ScriptHeader />}
         <WithHeaderMargin>
           <EditDocument />
         </WithHeaderMargin>
-      </ScriptSocketProvider>
+      {/* </ScriptSocketProvider> */}
     </LexicalComposerProvider>
   );
 };

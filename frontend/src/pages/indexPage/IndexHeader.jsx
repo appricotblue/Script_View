@@ -1,18 +1,21 @@
 import { useTitle } from '@/context/OnelineTitleContext';
+import { ScriptSocketContext } from '@/context/ScriptSocketContext';
 import { PRINT_COMMAND } from '@/plugins/PrintPlugin';
 import { GradientBtn, InlineEditable } from '@common';
 import { AppBar, Button, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material';
 import { CaretDown, CaretLeft, Keyboard, List as ListIcon } from '@phosphor-icons/react';
 import AddCharacterModal from '@script/addCharacterModal/AddCharacterModal';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-const IndexHeader = ({ onDownload }) => {
+const IndexHeader = ({ onDownload, onTitleChange, titleValue, setTableModalOpen }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-    const [titleValue, setTitleValue] = useState('');
+    // const [titleValue, setTitleValue] = useState('untited');
     const { palette } = useTheme();
     const isSmallScreen = useMediaQuery('(max-width: 600px)');
     const { id } = useParams();
+
+    const { socket } = useContext(ScriptSocketContext);
 
     const handleDrawerOpen = () => {
         setIsDrawerOpen(true);
@@ -38,14 +41,19 @@ const IndexHeader = ({ onDownload }) => {
 
     const { oneLineTitle, setTitleName } = useTitle()
 
+    // const onInputChange = (e) => {
+    //     const oneLineTitle = e.target.value
+    //     setTitleValue(oneLineTitle)
+    //     setTitleName(oneLineTitle)
+    // }
+
     const onInputChange = (e) => {
-        const oneLineTitle = e.target.value
-        setTitleValue(oneLineTitle)
-        setTitleName(oneLineTitle)
-    }
+        const newTitle = e.target.value;
+        onTitleChange(newTitle);
+    };
 
     useEffect(() => {
-        console.log(oneLineTitle);
+        // console.log(oneLineTitle);
     }, [])
 
     return (
@@ -89,6 +97,7 @@ const IndexHeader = ({ onDownload }) => {
                                     Go to Script
                                 </Button>
                             </Link>
+                            <AddCharacterModal socket={socket} id={id} />
                         </Stack>
                         <InlineEditable
                             onBlur={onTitleBlur}
@@ -104,9 +113,9 @@ const IndexHeader = ({ onDownload }) => {
                                     color: '#fff',
                                     ':hover': { background: '#000' },
                                 }}
-                                onClick={onDownload}
+                                onClick={() => setTableModalOpen(true)}
                             >
-                                Download
+                                Save Preview
                             </GradientBtn>
                         </Stack>
                     </Stack>
