@@ -67,6 +67,7 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
     setTableData(updatedTableData);
     handleSubmit()
   };
+  
   const handleInsertRowAbove = (index) => {
     const newTableRow =
     {
@@ -83,7 +84,7 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       ...tableData.slice(index),
     ];
     setTableData(updatedTableData);
-    handleSubmit()
+    // handleSubmit()
   };
 
   const handleInsertRowBelow = (index) => {
@@ -102,7 +103,7 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       ...tableData.slice(index + 1),
     ];
     setTableData(updatedTableData);
-    handleSubmit()
+    // handleSubmit()
   };
 
   const handleResetRow = (index) => {
@@ -286,7 +287,6 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                   <td>
                     <AutoCompleteTextArea
                       handleSubmit={handleSubmit}
-
                       name="location"
                       specifiedFieldName="location"
                       index={ind}
@@ -299,7 +299,6 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                   <td>
                     <AutoCompleteTextArea
                       handleSubmit={handleSubmit}
-
                       name="time"
                       index={ind}
                       tableData={tableData}
@@ -354,6 +353,7 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                   </td>
                   <td>
                     <Autocomplete
+                      onFocus={fetchCharacters}
                       multiple
                       id="tags-outlined"
                       options={characters ? characters : []}

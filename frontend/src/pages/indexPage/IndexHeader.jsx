@@ -2,7 +2,7 @@ import { useTitle } from '@/context/OnelineTitleContext';
 import { ScriptSocketContext } from '@/context/ScriptSocketContext';
 import { PRINT_COMMAND } from '@/plugins/PrintPlugin';
 import { GradientBtn, InlineEditable } from '@common';
-import { AppBar, Button, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material';
+import { AppBar, Box, Button, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material';
 import { CaretDown, CaretLeft, Keyboard, List as ListIcon } from '@phosphor-icons/react';
 import AddCharacterModal from '@script/addCharacterModal/AddCharacterModal';
 import React, { useContext, useEffect, useState } from 'react';
@@ -97,7 +97,7 @@ const IndexHeader = ({ onDownload, onTitleChange, titleValue, setTableModalOpen 
                                     Go to Script
                                 </Button>
                             </Link>
-                            <AddCharacterModal socket={socket} id={id} />
+                            <Button sx={{padding:0, margin:0}}><AddCharacterModal socket={socket} id={id} /></Button>
                         </Stack>
                         <InlineEditable
                             onBlur={onTitleBlur}
