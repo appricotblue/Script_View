@@ -12,11 +12,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Use Node.js 20
+      - name: Use Node.js 20 for Frontend
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
       - name: Install and Build Frontend
         working-directory: frontend
         env:
@@ -27,6 +26,10 @@ jobs:
           echo "hello" > test.txt
           NODE_OPTIONS="--max_old_space_size=4096" npm run build
 
+      - name: Use Node.js 20 for Backend
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
       - name: Install Backend
         working-directory: backend
         env:
