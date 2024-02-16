@@ -12,7 +12,7 @@ import full_logo_image from '@assets/images/logoBlack.svg';
 import { Avatar, Badge, Menu, MenuItem, Tooltip } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Bell } from '@phosphor-icons/react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -77,6 +77,8 @@ export default function Header() {
     navigate('/login')
   }
 
+  const userId = localStorage.getItem("userId");
+
   return (
     <Box sx={{ flexGrow: 1, }}>
       <AppBar position="static" sx={{ backgroundColor: 'white' }} >
@@ -114,7 +116,7 @@ export default function Header() {
                     <Box onClick={handleOpenUserMenu} sx={{ p: 0, display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center' }}>
                       <Avatar sx={{ width: 28, height: 28 }} alt="" src="" />
                       <Typography sx={{ fontFamily: 'inherit', fontWeight: '600' }}>
-                        {currentUser?currentUser:'User'}
+                        {currentUser ? currentUser : 'User'}
                       </Typography>
                       <KeyboardArrowDownIcon></KeyboardArrowDownIcon>
                     </Box>
@@ -138,6 +140,13 @@ export default function Header() {
                 >
                   <MenuItem onClick={handleLogOut} sx={{ width: '150px', }}>
                     <Typography textAlign="center" sx={{ marginInline: 'auto' }}>Logout</Typography>
+                  </MenuItem>
+                  <MenuItem onClick={() => {
+                    handleLogOut
+                    navigate(`/profile/${userId}`)
+                  }}
+                    sx={{ width: '150px', }}>
+                    <Typography textAlign="center" sx={{ marginInline: 'auto', }}>Profile</Typography>
                   </MenuItem>
                 </Menu>
               </Box>

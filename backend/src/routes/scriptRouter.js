@@ -10,15 +10,17 @@ const {
   getOneLinesByScriptId,
   getCharacters,
 } = require("../controllers/scriptControllers");
+const checkScriptSubscription = require("../middlewares/checkScriptSubscription");
+const checkSubscription = require("../middlewares/checkSubscription");
 
 // initial state
 router.get("/get-initial/:id", getInitial);
 
 // create document
-router.post("/create", createScript);
+router.post("/create", checkSubscription, createScript);
 
 // get recently updated document list
-router.post("/list_recent", listRecent);
+router.post("/list_recent", checkSubscription, listRecent);
 
 // export content (eg:pdf)
 router.post("/export", exportFile);

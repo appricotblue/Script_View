@@ -7,6 +7,7 @@ const {
 const { validateHTML } = require("../utils/validationUtils");
 const OneLineSchema = require("../model/oneLineModel");
 const ScriptModel = require("../model/scriptModel");
+const checkSubscription = require("../middlewares/checkSubscription");
 
 /**
  * Controller functions for script router

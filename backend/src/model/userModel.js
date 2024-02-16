@@ -1,11 +1,7 @@
 /* eslint-disable no-shadow */
 const { Schema, model } = require("mongoose");
 const { hash, genSalt } = require("bcrypt");
-const {
-  validateEmail,
-  validatePassword,
-  validateName,
-} = require("../utils/validationUtils");
+const { validateEmail, validatePassword, validateName, } = require("../utils/validationUtils");
 
 const userSchema = new Schema(
   {
@@ -33,12 +29,33 @@ const userSchema = new Schema(
       type: String,
       required: "Requires Password",
     },
+    isadmin: {
+      type: Boolean,
+      default: false,
+    },
     scripts: [
       {
         type: Schema.Types.ObjectId,
         ref: "script",
       },
     ],
+    subscription: {
+      type: {
+        type: String,
+        enum: ["Yearly", "Monthly", "Hourly", "Days"],
+      },
+      startDate: {
+        type: Date,
+        default: Date.now,
+      },
+      expirationDate: {
+        type: Date,
+      },
+    },
+    status: {
+      type: String,
+      default: 'Active'
+    }
   },
   { timestamps: true }
 );

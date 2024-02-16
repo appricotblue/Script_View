@@ -77,6 +77,7 @@ const SignupForm = () => {
           lastname: signUpCreds.lastname,
           email: signUpCreds.email,
           password: signUpCreds.password,
+
         });
         if (response.status === 201) {
           const userId = response.data.newUser._id;
@@ -91,7 +92,7 @@ const SignupForm = () => {
             timer: 1000,
           });
           setTimeout(() => {
-            navigate('/');
+            navigate('/subscribe');
           }, 1000);
           // console.log(response);
           // console.log(userId);

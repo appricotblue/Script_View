@@ -8,10 +8,13 @@ const path = require("node:path");
 const scriptRouter = require("./src/routes/scriptRouter");
 const fontsRouter = require("./src/routes/fontsRouter");
 const authRouter = require("./src/routes/authRouter");
+const adminRoutes = require("./src/routes/adminRoutes");
 const subscriptionRouter = require("./src/routes/subscriptionRouter");
+const paymentRoutes = require("./src/routes/paymentRoutes");
 const socket = require("./src/socket");
 const establishDB = require("./src/configs/db");
 const corsConfig = require("./src/configs/cors");
+const checkSubscription = require("./src/middlewares/checkSubscription");
 
 const { PORT, NODE_ENV } = process.env;
 
@@ -30,6 +33,7 @@ if (!isProduction) app.use(morgan("combined"));
 if (isProduction) app.use(cors(corsConfig));
 else app.use(cors());
 
+
 // establish db and socket
 socket(server);
 establishDB();
@@ -39,6 +43,8 @@ app.use("/api/scripts/", scriptRouter);
 app.use("/fonts/", fontsRouter);
 app.use("/auth/", authRouter);
 app.use("/subscription/", subscriptionRouter);
+app.use("/admin/", adminRoutes);
+app.use("/scriptview/payment/gateway/", paymentRoutes)
 
 // point the static files to production build of frontend
 if (isProduction) {

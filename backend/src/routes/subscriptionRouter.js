@@ -3,7 +3,7 @@ const SubscriptionModel = require("../model/subscriptionModel");
 
 router.post("/addSubscription", async (req, res) => {
     try {
-        const { planTitle, billingCycle, price, description, subscribeButtonText, isRecomended } = req.body
+        const { planTitle, type, periodinHoursOrMonths, price, description, subscribeButtonText, isRecomended } = req.body;
 
         const plan = await SubscriptionModel.findOne({ planTitle });
 
@@ -13,7 +13,8 @@ router.post("/addSubscription", async (req, res) => {
 
         const newPlan = new SubscriptionModel({
             planTitle,
-            billingCycle,
+            type,
+            periodinHoursOrMonths,
             price,
             description,
             subscribeButtonText,
@@ -22,10 +23,9 @@ router.post("/addSubscription", async (req, res) => {
 
         await newPlan.save();
 
-        res.status(201).json({ message: 'Plan added Succesfully' });
-    }
-    catch (error) {
-        res.status(500).json({ error: error.message })
+        res.status(201).json({ message: 'Plan added Successfully' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
@@ -48,7 +48,7 @@ router.get("/getSubscriptions", async (req, res) => {
 
 router.put("/updateSubscription/:planTitle", async (req, res) => {
     try {
-        const { billingCycle, price, description, subscribeButtonText, isRecomended } = req.body;
+        const { type, periodinHoursOrMonths, price, description, subscribeButtonText, isRecomended } = req.body;
         const planTitle = req.params.planTitle;
 
         const plan = await SubscriptionModel.findOne({ planTitle });
@@ -57,7 +57,8 @@ router.put("/updateSubscription/:planTitle", async (req, res) => {
             return res.status(404).json({ message: 'Plan not found' });
         }
 
-        plan.billingCycle = billingCycle;
+        plan.type = type;
+        plan.periodinHoursOrMonths = periodinHoursOrMonths;
         plan.price = price;
         plan.description = description;
         plan.subscribeButtonText = subscribeButtonText;
@@ -71,23 +72,22 @@ router.put("/updateSubscription/:planTitle", async (req, res) => {
     }
 });
 
-router.delete("/deleteSubscription/:planTitle", async (req, res) => {
+router.delete("/deleteSubscription/:planId", async (req, res) => {
     try {
-        const planTitle = req.params.planTitle;
+        const { planId } = req.params;
 
-        const plan = await SubscriptionModel.findOne({ planTitle });
+        const plan = await SubscriptionModel.findByIdAndDelete(planId);
 
         if (!plan) {
             return res.status(404).json({ message: 'Plan not found' });
         }
-
-        await plan.remove();
 
         return res.status(200).json({ message: 'Plan deleted successfully' });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 });
+
 
 
 module.exports = router;

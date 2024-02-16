@@ -11,6 +11,9 @@ import { VITE_BASE_URL } from '@/constants';
 import IndexPage from '@pages/indexPage';
 import { useZoom } from '@/context/ZoomContext';
 import PricingPlans from '@common/pricing plans/PricingPlans';
+import SubscriptionExpired from '@common/Subscription Expiry Page/SubscriptionExpired';
+import UserProfile from '@common/Profile/UserProfile';
+import DisplayPage from '@/components/Admin/DisplayPage';
 
 const loadScriptData = async ({ params: { id } }) => {
   try {
@@ -84,6 +87,18 @@ const appRouter = createBrowserRouter([
       {
         path: '/document/:id/index',
         element: <IndexPage />
+      },
+      {
+        path: '/upgradeplan',
+        element: <SubscriptionExpired/>
+      },
+      {
+        path: '/profile/:userId',
+        element: <UserProfile/>
+      },
+      {
+        path: '/adminpanel',
+        element: <DisplayPage/>
       }
     ],
   },

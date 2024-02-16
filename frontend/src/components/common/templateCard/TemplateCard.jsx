@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { VITE_BASE_URL } from '@/constants';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const TemplateCard = () => {
   const { palette } = useTheme();
@@ -38,6 +39,10 @@ const TemplateCard = () => {
     }
     catch (err) {
       console.error('Error creating script:', err);
+      if (err.response.data.error == "Subscription expired. Please renew your subscription.") {
+        navigate('/upgradeplan')
+        // navigate(`/document/${id}`);
+      }
     } finally {
       setLoading(false);
     }

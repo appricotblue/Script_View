@@ -9,11 +9,11 @@ const DocCard = ({ onOpen, data, handleDelete }) => {
   const formattedDate = formatDistanceToNow(parsedDate, { addSuffix: true });
 
   return (
-    <Stack height="16rem" width="16rem" borderRadius="0.4rem" component="a" style={{cursor:'pointer'}}>
+    <Stack height="16rem" width="16rem" borderRadius="0.4rem" component="a" style={{ cursor: 'pointer', }}>
       <Box
         width="100%"
         height="70%"
-        sx={{ backgroundColor: palette.secondary.main }}
+        sx={{ backgroundColor: palette.secondary.main, }}
         onClick={onOpen}
       ></Box>
       <Box

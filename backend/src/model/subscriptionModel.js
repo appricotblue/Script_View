@@ -3,12 +3,15 @@ const mongoose = require("mongoose");
 const SubscriptionSchema = new mongoose.Schema({
     planTitle: {
         type: String,
-        required: ' require plan name',
+        required: 'require plan name',
         required: true
     },
-    billingCycle: {
+    type: {
         type: String,
-        enum: ["Monthly", "Yearly", "Free Demo"],
+        required: true
+    },
+    periodinHoursOrMonths: {
+        type: String,
         required: true
     },
     price: {
@@ -21,14 +24,14 @@ const SubscriptionSchema = new mongoose.Schema({
     },
     subscribeButtonText: {
         type: String,
-        default:'Subscribe Now'
+        default: 'Subscribe Now'
     },
     isRecomended: {
         type: Boolean,
         default: false
     },
 },
-{ timestamps: true });
+    { timestamps: true });
 
 const SubscriptionModel = mongoose.model("Subscription", SubscriptionSchema);
 
