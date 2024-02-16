@@ -33,7 +33,6 @@ if (!isProduction) app.use(morgan("combined"));
 if (isProduction) app.use(cors(corsConfig));
 else app.use(cors());
 
-
 // establish db and socket
 socket(server);
 establishDB();

@@ -3,32 +3,33 @@ name: scriptview.js CI
 on:
   push:
     branches: [master]
-#  pull_request:
-#    branches: [master]
 
 jobs:
   build:
-    runs-on: self-hosted # Update this based on your self-hosted runner configuration
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Use Node.js ${{ matrix.node-version }} # If you need a matrix, add it here
-        uses: actions/setup-node@v1
+      - name: Use Node.js 20 for Frontend
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-
+          node-version: 20
       - name: Install and Build Frontend
         working-directory: frontend
         env:
           VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
         run: |
           rm -rf node_modules
-          npm install
+          NODE_OPTIONS="--max_old_space_size=4096" npm install
           echo "hello" > test.txt
-          npm run build
+          NODE_OPTIONS="--max_old_space_size=4096" npm run build
 
+      - name: Use Node.js 20 for Backend
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
       - name: Install Backend
         working-directory: backend
         env:
@@ -39,7 +40,7 @@ jobs:
           echo -e "DB_URI=${DB_URI}\nORIGIN=${ORIGIN}\nNODE_ENV=${NODE_ENV}" > .env
           rm -rf node_modules
           npm install
-          pm2 stop 0
-          pm2 start 0
-          pm2 save
+          # pm2 stop 0
+          # pm2 start 0
+          # pm2 save
           sudo service nginx restart
