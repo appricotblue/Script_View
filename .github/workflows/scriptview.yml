@@ -21,10 +21,12 @@ jobs:
         env:
           VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
         run: |
+          echo "Installing dependencies..."
           rm -rf node_modules
           NODE_OPTIONS="--max_old_space_size=4096" npm install
-          echo "hello" > test.txt
+          echo "Building frontend..."
           NODE_OPTIONS="--max_old_space_size=4096" npm run build
+          echo "Frontend build completed."
 
       - name: Use Node.js 20 for Backend
         uses: actions/setup-node@v3
