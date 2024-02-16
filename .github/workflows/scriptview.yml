@@ -23,9 +23,9 @@ jobs:
           VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
         run: |
           rm -rf node_modules
-          npm install
+          NODE_OPTIONS="--max_old_space_size=4096" npm install
           echo "hello" > test.txt
-          npm run build
+          NODE_OPTIONS="--max_old_space_size=4096" npm run build
 
       - name: Install Backend
         working-directory: backend
