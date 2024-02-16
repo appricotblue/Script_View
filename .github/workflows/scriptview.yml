@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-      - name: Install and Build Frontend
+      - name: Install Frontend Dependencies
         working-directory: frontend
         env:
           VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
@@ -24,8 +24,13 @@ jobs:
           echo "Installing dependencies..."
           rm -rf node_modules
           NODE_OPTIONS="--max_old_space_size=4096" npm install
+          echo "Frontend dependencies installed.      "
+      
+      - name: Build Frontend
+        working-directory: frontend
+        run: |
           echo "Building frontend..."
-          NODE_OPTIONS="--max_old_space_size=4096" npm run build
+          NODE_OPTIONS="--max_old_space_size=8192" npm run build
           echo "Frontend build completed."
 
       - name: Use Node.js 20 for Backend
