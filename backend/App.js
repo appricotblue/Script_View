@@ -30,7 +30,7 @@ app.use(express.json());
 if (!isProduction) app.use(morgan("combined"));
 
 // set up cors
-if (isProduction) app.use(cors(corsConfig));
+if (isProduction) app.use(cors());
 else app.use(cors());
 
 // establish db and socket
