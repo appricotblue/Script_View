@@ -49,6 +49,21 @@ const PricingPlans = () => {
         }
     }
 
+    const handlePlanSelect = async (plan) => {
+        try {
+            const response = await axios.post(`${VITE_BASE_URL}/auth/set-subscription`, {
+                userId: userId,
+                subscriptionType: plan.type,
+                periodInYearsOrMonths: plan.periodinHoursOrMonths
+            })
+            if (response.status == 200) {
+                navigate('/')
+            }
+        } catch (error) {
+            console.error('Error setting subscription:', error.response.data.message);
+        }
+    }
+
     useEffect(() => {
         fetchSubscriptions()
     }, [])
@@ -207,7 +222,10 @@ const PricingPlans = () => {
                                                     background:
                                                         'linear-gradient(93.69deg, #C5AC57 10.11%, #C5AC57 46.89%, #E1D5AB 85.01%)',
                                                 }}
-                                                onClick={() => handlePayment(plan.price)}
+                                            onClick={
+                                                // () => handlePayment(plan.price)
+                                                () => handlePlanSelect(plan)
+                                            }
                                             >
                                                 Subscribe Now
                                             </Button>
@@ -231,10 +249,7 @@ const PricingPlans = () => {
                     <Link onClick={() => {
                         navigate('/login')
                     }} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '10px' }}> <CaretLeft />Back To Login</Link>
-                    <Link onClick={
-                        () => {
-                            navigate('/')
-                        }} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '10px' }}>Skip For Now <CaretRight /></Link>
+                    {/* <Link onClick={handlePlanSelect(plan)} style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: '10px' }}>Skip For Now <CaretRight /></Link> */}
                 </Box>
             </Box>
         </Box>

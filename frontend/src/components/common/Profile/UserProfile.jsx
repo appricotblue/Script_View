@@ -110,13 +110,12 @@ const UserProfile = () => {
                                         user.subscription.remainingDays >= 1 ? user.subscription.remainingDays + " Days Remaining" : 'Subscription Expired'
                                     } */}
                                         {
-                                            user.subscription.remainingDays >= 1 ?
-                                                user?.subscription.remainingDays + " Remaining" : 'Subscription Expired'
+                                            user.subscription.remainingDays + ' Remaining'
                                         }
                                     </Typography>
                                 </Box>
                                 <Box>
-                                    <Button onClick={() => navigate('/upgradeplan')} variant='contained' sx={{ fontSize: '15px', fontWeight: '400' }}>Upgrade</Button>
+                                    <Button onClick={() => navigate('/subscribe')} variant='contained' sx={{ fontSize: '15px', fontWeight: '400' }}>Upgrade</Button>
                                 </Box>
                             </Box>
                         }
