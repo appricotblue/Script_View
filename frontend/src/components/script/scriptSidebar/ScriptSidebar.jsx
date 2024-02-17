@@ -9,6 +9,10 @@ const ScriptSidebar = () => {
       width="16rem"
       height="calc(100vh - 4.5rem)"
       bgcolor={palette.primary.dark}
+      sx={{
+        overflowY: 'auto',
+        paddingBottom: '20px'
+      }}
     >
       <SideBarPlugin />
     </Box>
