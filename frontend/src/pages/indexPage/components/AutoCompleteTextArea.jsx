@@ -161,7 +161,6 @@ const AutoCompleteTextArea = ({
         <div className={styles.suggetionContainer} style={{ top: ModalHeight }}>
           {suggestions &&
             suggestions.length > 1 &&
-            tableOpen[name] &&
             suggestions.map((item, ind) => (
               <div
                 className={`${styles.suggetionItem} ${

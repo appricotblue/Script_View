@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Header() {
+export default function Header({ onSearchChange }) {
 
   const currentUser = localStorage.getItem('userName')
 
@@ -98,7 +98,10 @@ export default function Header() {
             src={full_logo_image}
           />
           <Box sx={{ marginInline: 'auto' }}>
-            <Search>
+            <Search onChange={(e) => {
+              const value = e.target.value;
+              onSearchChange(value);
+            }}>
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>

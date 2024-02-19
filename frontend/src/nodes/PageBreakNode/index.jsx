@@ -44,6 +44,47 @@ function PageBreakComponent({ nodeKey }) {
     [isSelected, nodeKey],
   );
 
+  // const onDelete = useCallback(
+  //   (event) => {
+  //     event.preventDefault();
+  //     if (isSelected && $isNodeSelection($getSelection())) {
+  //       const node = $getNodeByKey(nodeKey);
+  //       if ($isPageBreakNode(node)) {
+  //         const selection = $getSelection();
+  //         const nodeRange = selection.getRangeAt(0).cloneRange();
+  //         const pbElem = editor.getElementByKey(nodeKey); // Define pbElem
+
+  //         // Check if the cursor is at the beginning of the PageBreakNode
+  //         if (
+  //           nodeRange.startContainer === nodeRange.endContainer &&
+  //           nodeRange.startOffset === 0 &&
+  //           nodeRange.startContainer.compareDocumentPosition(pbElem) === Node.DOCUMENT_POSITION_PRECEDING
+  //         ) {
+  //           const previousNode = node.previousSibling;
+  //           if (previousNode) {
+  //             const parentNode = node.parentNode;
+  //             const contentToMove = Array.from(previousNode.childNodes);
+
+  //             // Insert content before the page break
+  //             for (let i = contentToMove.length - 1; i >= 0; i--) {
+  //               parentNode.insertBefore(contentToMove[i], node);
+  //             }
+
+  //             // Clear the selection and update the editor
+  //             clearSelection();
+  //             editor.update();
+
+  //             return true;
+  //           }
+  //         }
+  //       }
+  //     }
+  //     return false;
+  //   },
+  //   [clearSelection, editor, isSelected, nodeKey]
+  // );
+
+
   useEffect(() => {
     return mergeRegister(
       editor.registerCommand(

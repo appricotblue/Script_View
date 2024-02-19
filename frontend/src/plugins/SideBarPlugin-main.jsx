@@ -51,11 +51,31 @@ const SideBarPlugin = () => {
     }
 
     const insertContent = {
-      scene: () => handleNodeInsert(SceneNode, $createSceneNode),
-      subheader: () => handleNodeInsert(SubHeaderNode, $createSubHeaderNode),
-      slugline: () => handleNodeInsert(SluglineNode, $createSluglineNode),
-      action: () => handleNodeInsert(ActionNode, $createActionNode),
-      transition: () => handleNodeInsert(TransitionNode, $createTransitionNode),
+      scene: () => {
+        const newSceneNode = $createSceneNode();
+        $insertNodes([newSceneNode]);
+        return newSceneNode.select();
+      },
+      subheader: () => {
+        const newSubheaderNode = $createSubHeaderNode();
+        $insertNodes([newSubheaderNode]);
+        return newSubheaderNode.select();
+      },
+      slugline: () => {
+        const newSluglineNode = $createSluglineNode();
+        $insertNodes([newSluglineNode]);
+        return newSluglineNode.select();
+      },
+      action: () => {
+        const newActionNode = $createActionNode();
+        $insertNodes([newActionNode])
+        return newActionNode
+      },
+      transition: () => {
+        const newTransitionNode = $createTransitionNode();
+        $insertNodes([newTransitionNode]);
+        return newTransitionNode;
+      },
 
       dialogue: () => {
         const nodes = selection.getNodes();
@@ -103,9 +123,9 @@ const SideBarPlugin = () => {
 
       parenthetical: () => {
         const newParentheticalMain = $createParentheticalMainNode();
-
+      
         $insertNodes([newParentheticalMain]);
-
+        
         return newParentheticalMain.select();
       },
 
@@ -145,10 +165,7 @@ const SideBarPlugin = () => {
         : null;
 
       if (selection.isCollapsed() && !dialogueContainerParent) {
-        // if (selection.anchor.getNode().__type === 'text' ) {
-        //   return $insertNodes([createNodeToInsert()]);
-        // }
-        if (selection.anchor.getNode()) {
+        if (selection.anchor.getNode().__type === 'text') {
           return $insertNodes([createNodeToInsert()]);
         }
 
@@ -390,7 +407,7 @@ const SideBarPlugin = () => {
             Flash Cut
           </Typography>
         </MenuItem>
-        <Divider sx={{ backgroundColor: 'black' }} />
+        <Divider sx={{backgroundColor:'black'}}/>
         <MenuItem onClick={() => handleClick('transition')} sx={{ display: 'grid', width: '150px' }}>
           <Typography component="span" fontSize="0.75rem" fontWeight="200">
             Ctrl + Alt + T
@@ -399,7 +416,7 @@ const SideBarPlugin = () => {
             Cut to
           </Typography>
         </MenuItem>
-        <Divider sx={{ backgroundColor: 'black' }} />
+        <Divider sx={{backgroundColor:'black'}}/>
         <MenuItem onClick={() => handleClick('cutback')} sx={{ display: 'grid', width: '150px' }}>
           <Typography component="span" fontSize="0.75rem" fontWeight="200">
             Ctrl + Alt + C
@@ -408,7 +425,7 @@ const SideBarPlugin = () => {
             Cut Back
           </Typography>
         </MenuItem>
-        <Divider sx={{ backgroundColor: 'black' }} />
+        <Divider sx={{backgroundColor:'black'}}/>
         <MenuItem onClick={() => handleClick('intercut')} sx={{ display: 'grid', width: '150px' }}>
           <Typography component="span" fontSize="0.75rem" fontWeight="200">
             Ctrl + Alt + I

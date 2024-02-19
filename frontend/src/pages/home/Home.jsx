@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 import { DocCard, TemplateCard } from '@common';
 import { VITE_BASE_URL } from '@/constants';
 
-const Home = () => {
-  
+const Home = ({ searchValue }) => {
+
   const { isLoggedIn } = useSelector((state) => {
     return state.user;
   });
@@ -36,6 +36,12 @@ const Home = () => {
         console.error(err);
       });
   };
+
+  const filteredDocList = searchValue
+    ? updatedDocList?.filter((item) =>
+      item.title.toLowerCase().includes(searchValue.toLowerCase())
+    )
+    : updatedDocList;
 
   return (
     <Stack alignItems="center" width="100%" height="90vh">
@@ -70,7 +76,7 @@ const Home = () => {
         flexGrow={1}
         bgcolor={palette.primary.dark}
       >
-        {updatedDocList.map((item) => {
+        {filteredDocList?.map((item) => {
           return (
             <DocCard
               key={item._id}

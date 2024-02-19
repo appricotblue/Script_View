@@ -18,6 +18,7 @@ const InlineEditable = ({ onBlur, value, onChange }) => {
       e.target.blur();
     }
   };
+  
   return (
     <CustomInput
       startAdornment={

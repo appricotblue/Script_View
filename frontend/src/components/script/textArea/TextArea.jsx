@@ -143,7 +143,7 @@ const TextArea = ({ searchText }) => {
           }}
         ></Box>
       </Box>
-    </Paper>
+    </Paper >
   );
 };
 

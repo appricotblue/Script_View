@@ -21,7 +21,7 @@ const AuthPageLayout = ({ children }) => {
       <Stack
         width={{ lg: '34.625%', xs: '100%' }}
         p={{ xs: '0 4rem', lg: '0 4.88rem' }}
-        gap={{ xs: '1.5rem', lg: '2.5rem' }}
+        gap={{ xs: '0', md: '1', lg: '1.5rem' }}
         alignItems="center"
         justifyContent="center"
       >

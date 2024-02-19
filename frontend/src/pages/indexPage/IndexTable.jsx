@@ -27,7 +27,12 @@ const style = {
   overflowY: 'scroll',
 };
 
-const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOpen }) => {
+const IndexTable = ({
+  titleValue,
+  onTitleChange,
+  tableModalOpen,
+  setTableModalOpen,
+}) => {
   const [tableData, setTableData] = useState([
     {
       scene: '',
@@ -60,17 +65,15 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
 
   const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
-  const pageComponentRef = useRef()
+  const pageComponentRef = useRef();
 
   const handleRemoveRow = (index) => {
     const updatedTableData = tableData.filter((_, i) => i !== index);
     setTableData(updatedTableData);
-    handleSubmit()
   };
-  
+
   const handleInsertRowAbove = (index) => {
-    const newTableRow =
-    {
+    const newTableRow = {
       scene: '',
       location: '',
       time: '',
@@ -84,12 +87,11 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       ...tableData.slice(index),
     ];
     setTableData(updatedTableData);
-    // handleSubmit()
+    handleSubmit();
   };
 
   const handleInsertRowBelow = (index) => {
-    const newTableRow =
-    {
+    const newTableRow = {
       scene: '',
       location: '',
       time: '',
@@ -103,7 +105,6 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       ...tableData.slice(index + 1),
     ];
     setTableData(updatedTableData);
-    // handleSubmit()
   };
 
   const handleResetRow = (index) => {
@@ -117,9 +118,7 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       Character: '',
     };
     setTableData(updatedTableData);
-    handleSubmit();
   };
-
 
   const generatePDF = () => {
     const input = pageComponentRef.current;
@@ -145,27 +144,30 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
     });
   };
 
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const [characters, setCharacters] = useState([])
+  const [characters, setCharacters] = useState([]);
 
   const fetchCharacters = async () => {
     try {
-      const response = await axios.get(`${VITE_BASE_URL}/api/scripts/getCharacters/${id}`);
-      const { data } = response
-      setCharacters(data.characters)
+      const response = await axios.get(
+        `${VITE_BASE_URL}/api/scripts/getCharacters/${id}`,
+      );
+      const { data } = response;
+      setCharacters(data.characters);
+    } catch (error) {
+      console.error('runtime error while fetching characters', error);
     }
-    catch (error) {
-      console.error('runtime error while fetching characters', error)
-    }
-  }
+  };
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${VITE_BASE_URL}/api/scripts/getOnelines/${id}`);
+      const response = await axios.get(
+        `${VITE_BASE_URL}/api/scripts/getOnelines/${id}`,
+      );
       const { data } = response;
       // console.log("response", response.data.oneLiners[0].title);
-      onTitleChange(response.data.oneLiners[0].title)
+      onTitleChange(response.data.oneLiners[0].title);
       setTableData(response.data.oneLiners[0].oneLiners);
     } catch (error) {
       console.error('Error while fetching data:', error);
@@ -177,17 +179,19 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
   const handleSubmit = async () => {
     if (titleValue.trim() !== '') {
       try {
-        const response = await axios.post(`${VITE_BASE_URL}/api/scripts/storeOneLineData`, {
-          title: titleValue,
-          scriptId: id,
-          oneLiners: tableData,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await axios.post(
+          `${VITE_BASE_URL}/api/scripts/storeOneLineData`,
+          {
+            title: titleValue,
+            scriptId: id,
+            oneLiners: tableData,
           },
-        });
-
-        // console.log(tableData);
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
 
         if (response.status === 200) {
           console.log('Data stored successfully');
@@ -203,23 +207,29 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
   };
 
   useEffect(() => {
-    fetchCharacters()
+    fetchCharacters();
     fetchData();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleSubmit();
+    }, 500);
+  }, [titleValue]);
 
   const intExtSave = (value, index) => {
-    const tableCurrentValue = [...tableData]
-    tableCurrentValue[index]["IntOrExt"] = value.toString()
-    setTableData(tableCurrentValue)
-  }
+    const tableCurrentValue = [...tableData];
+    tableCurrentValue[index]['IntOrExt'] = value.toString();
+    setTableData(tableCurrentValue);
+  };
 
   const characterSave = (value, index) => {
-    const characterValues = value.join(',')
-    const tableCurrentValue = [...tableData]
-    tableCurrentValue[index]["Character"] = characterValues
+    const characterValues = value.join(',');
+    const tableCurrentValue = [...tableData];
+    tableCurrentValue[index]['Character'] = characterValues;
     setTableData(tableCurrentValue);
-    handleSubmit()
-  }
+    handleSubmit();
+  };
 
   return (
     <>
@@ -231,21 +241,26 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       >
         <Box sx={style}>
           <div ref={pageComponentRef}>
-            <OneLinePrintTable tableData={tableData} />
+            <OneLinePrintTable tableData={tableData} titleValue={titleValue} />
           </div>
+
           <div className="download-btn">
-            <GradientBtn
-              size="large"
-              sx={{
-                fontWeight: '600',
-                background: '#000',
-                color: '#fff',
-                ':hover': { background: '#000' },
-              }}
-              onClick={() => generatePDF()}
-            >
-              Download
-            </GradientBtn>
+            {titleValue.trim() !== '' ? (
+              <GradientBtn
+                size="large"
+                sx={{
+                  fontWeight: '600',
+                  background: '#000',
+                  color: '#fff',
+                  ':hover': { background: '#000' },
+                }}
+                onClick={() => generatePDF()}
+              >
+                Download
+              </GradientBtn>
+            ) : (
+              <div style={{ color: 'red' }}>No title Available </div>
+            )}
           </div>
         </Box>
       </Modal>
@@ -267,7 +282,7 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                 <th className="table-head">Time</th>
                 <th className="table-head">Int/Ext</th>
                 <th className="table-head">Action</th>
-                <th className="table-head">Charecter</th>
+                <th className="table-head">characters</th>
               </tr>
             </thead>
             <tbody className="tbody">
@@ -359,7 +374,11 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                       options={characters ? characters : []}
                       onBlur={handleSubmit}
                       filterSelectedOptions
-                      value={item.Character ? item.Character.split(',').map((word) => word.trim()) : []}
+                      value={
+                        item.Character
+                          ? item.Character.split(',').map((word) => word.trim())
+                          : []
+                      }
                       onChange={(e, newValue) => characterSave(newValue, ind)}
                       renderInput={(params) => (
                         <TextField
@@ -390,25 +409,36 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                       <div className="modal-tableInsert">
                         <div
                           className="modal-table-action"
-                          onClick={() => handleInsertRowBelow(ind)}
+                          onClick={() => {
+                            handleSubmit();
+                            handleInsertRowBelow(ind);
+                          }}
                         >
                           Insert Below
                         </div>
                         <div
                           className="modal-table-action"
-                          onClick={() => handleInsertRowAbove(ind)}
+                          onClick={() => {
+                            handleSubmit();
+                            handleInsertRowAbove(ind);
+                          }}
                         >
                           Insert Above
                         </div>
                         <div
                           className="modal-table-action"
-                          onClick={() => handleResetRow(ind)}
+                          onClick={() => {
+                            handleSubmit();
+                            handleResetRow(ind);
+                          }}
                         >
                           Reset Datas
                         </div>
                         <div
                           className="modal-table-action"
-                          onClick={() => handleRemoveRow(ind)}
+                          onClick={() => {
+                            handleRemoveRow(ind);
+                          }}
                         >
                           Remove
                         </div>
