@@ -16,9 +16,12 @@ export class FlashcutNode extends DefaultParagraphNode {
     const p = document.createElement('p');
     p.className = config.theme.flashcut;
     p.setAttribute('data-placeholder', 'Flashcut...');
+    p.style.fontSize = '18px';
+    p.style.fontWeight = 'bold';
     p.append(document.createTextNode('- flashcut to -'));
     return p;
   }
+  
   updateDOM() {
     return false;
   }

@@ -12,7 +12,7 @@ export class ParentheticalNode extends ElementNode {
   createDOM(config) {
     const div = document.createElement('div');
     div.className = config.theme.parenthetical;
-    div.setAttribute('data-placeholder', 'Parenthetical...');
+    div.setAttribute('data-placeholder', 'Character Name');
     return div;
   }
 

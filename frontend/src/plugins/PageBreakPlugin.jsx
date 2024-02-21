@@ -10,6 +10,7 @@ import {
   $isRootOrShadowRoot,
   $isTextNode,
   $splitNode,
+  COMMAND_PRIORITY_CRITICAL,
   COMMAND_PRIORITY_EDITOR,
   DEPRECATED_$isGridSelection,
   createCommand,
@@ -24,6 +25,7 @@ import {
 import { $isDialogueContainerNode } from '@/nodes/DialogueContainerNode';
 
 export const INSERT_PAGE_BREAK = createCommand();
+export const REMOVE_PAGE_BREAK = createCommand();
 
 export default function PageBreakPlugin() {
 
@@ -74,7 +76,25 @@ export default function PageBreakPlugin() {
           }
           return true;
         },
-        COMMAND_PRIORITY_EDITOR,
+        COMMAND_PRIORITY_CRITICAL,
+      ),
+
+      editor.registerCommand(
+        REMOVE_PAGE_BREAK,
+        () => {
+          const selection = $getSelection();
+          if (!$isRangeSelection(selection)) return false;
+
+          const focusNode = selection.focus.getNode();
+          if (focusNode !== null && $isPageBreakNode(focusNode)) {
+            const parentNode = focusNode.getParent();
+            if (parentNode) {
+              parentNode.remove(focusNode);
+            }
+          }
+          return true;
+        },
+        COMMAND_PRIORITY_CRITICAL,
       ),
     );
   }, [editor]);

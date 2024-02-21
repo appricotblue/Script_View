@@ -41,6 +41,7 @@ const LoginForm = () => {
         const userId = response.data.user._id;
         const userName = response.data.user.firstname
         if (response.data.user.isadmin) {
+          dispatch(setLogin(true));
           return (
             localStorage.setItem('Admin', true),
             localStorage.setItem('AdminId', userId),

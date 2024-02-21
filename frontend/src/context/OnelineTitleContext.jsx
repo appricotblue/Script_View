@@ -4,7 +4,7 @@ const OneLineTitleContext = createContext();
 
 export const OneLineTitleProvider = ({ children }) => {
 
-    const [oneLineTitle, setOneLineTitle] = useState('')
+    const [oneLineTitle, setOneLineTitle] = useState('untitled')
 
     const setTitleName = (title) => {
         setOneLineTitle(title)

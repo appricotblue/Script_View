@@ -47,11 +47,12 @@ import {
   Scissors,
 } from '@phosphor-icons/react';
 
-import { INSERT_PAGE_BREAK } from './PageBreakPlugin';
 import { INSERT_CONTENT_COMMAND } from './SideBarPlugin';
 import styled from 'styled-components';
 import { useZoom } from '@/context/ZoomContext';
 import { usePageNumber } from '@/context/PageNumberContext';
+import { SEARCH_BY_WORD } from './SearchByWord';
+import { INSERT_PAGE_BREAK } from './PageBreakPlugin';
 
 const LowPriority = 1;
 
@@ -112,7 +113,7 @@ const CustomTextActions = () => {
   const handleClick = (formatType) => {
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, formatType);
   };
-  
+
   return (
     <Stack direction="row">
       {[
@@ -173,7 +174,7 @@ const ToolbarPlugin = ({ setSearchText }) => {
     setFontSize(newFontSize);
     editor.dispatchCommand(FORMAT_TEXT_COMMAND, { fontSize: `${newFontSize}px` });
     // editor.dispatchCommand(UNDO_COMMAND)
-    };
+  };
 
   const handleFontFamilyChange = (event) => {
     const newFontFamily = event.target.value;
@@ -355,7 +356,7 @@ const ToolbarPlugin = ({ setSearchText }) => {
             </IconButton>
 
             <IconButton sx={{ color: 'white' }} onClick={testFunctions}>
-              <Binoculars size="1rem"/>
+              <Binoculars size="1rem" />
             </IconButton>
 
           </Stack>
@@ -389,7 +390,7 @@ const ToolbarPlugin = ({ setSearchText }) => {
           </Stack>
           <Stack direction="row" alignItems="center" gap="0.8rem">
 
-          <Button
+            <Button
               sx={{
                 color: 'white',
                 fontWeight: '400',
@@ -408,6 +409,10 @@ const ToolbarPlugin = ({ setSearchText }) => {
               <InputBase
                 // value={searchTerm}
                 onChange={handleSearchTermChange}
+                onBlur={(e) => {
+                  editor.dispatchCommand(SEARCH_BY_WORD, e.target.value)
+                  console.log(e.target.value)
+                }}
                 sx={{ ml: 1, flex: 1 }}
                 placeholder="Search by word"
                 inputProps={{ 'aria-label': 'search google maps' }}

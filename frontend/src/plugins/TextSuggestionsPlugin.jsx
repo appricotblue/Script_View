@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { $isSluglineNode } from '@/nodes/SluglineNode';
 import { $isSceneNode } from '@/nodes/SceneNode';
 import { $isParentheticalNode } from '@/nodes/ParentheticalNode';
+import { $isSubHeaderNode } from '@/nodes/SubHeaderNode';
 
 // Length of the input string sent to transliterate.
 const INPUT_LENGTH = 50;
@@ -73,6 +74,11 @@ function matchInputInSlugline(text) {
   }
   return null;
 }
+
+function matchInputInSubheader(text) {
+  console.log(text);
+}
+
 /**
  * checks and returns the result of type-ahead trigger
  * for Scene
@@ -158,6 +164,10 @@ function searchSceneSuggestion(input) {
   });
 }
 
+function handleSubheader(input) {
+  console.log(input);
+}
+
 /**
  * returns a list of suggestions depending on nodeType.
  * Normal text and suggestions for SlugLine nodes are implemented
@@ -177,18 +187,34 @@ function useSuggestionGenService(inputString, nodeType) {
       setResults(Array.isArray(result) ? result : []);
     });
   };
-  
+
   const transliterateDebounced = useDebounce(debounceCb, 50);
 
   //TODO - refactor this code
-  const searchCharacter = (inputString) => {
-    let filtered = characters.filter((value) => value.includes(inputString));
-    if (filtered.length > 0) return setResults(filtered);
+  // const searchCharacter = (inputString) => {
+  //   let filtered = characters.filter((value) => value.includes(inputString));
+  //   if (filtered.length > 0) return setResults(filtered);
 
-    transliterate(inputString).then((res) => {
-      filtered = characters.filter((value) => value.includes(res[0]));
-      setResults(filtered);
-    });
+  //   transliterate(inputString).then((res) => {
+  //     let filtered = characters.filter((value) => value.includes(res[0]));
+  //     setResults(filtered);
+  //   });
+  // };
+
+  const searchCharacter = async (inputString) => {
+    const filtered = characters.filter((value) => value.includes(inputString));
+    if (filtered.length > 0) {
+      return setResults(filtered);
+    }
+    const res = await transliterate(inputString);
+    const transliteratedFiltered = characters.filter((value) => value.includes(res[0]));
+    if (transliteratedFiltered?.length < 1) {
+      const result = transliterateDebounced(inputString)
+      setResults(Array.isArray(result) ? result : []);
+    }
+    else {
+      setResults(transliteratedFiltered);
+    }
   };
 
   useLayoutEffect(() => {
@@ -206,6 +232,9 @@ function useSuggestionGenService(inputString, nodeType) {
         break;
       case NODE_TYPES.PARENTHETICAL:
         searchCharacter(inputString);
+        break;
+      case NODE_TYPES.SUBHEADER:
+        handleSubheader(inputString);
         break;
       default:
         transliterateDebounced(inputString);
@@ -299,6 +328,8 @@ export default function TextSuggestionPlugin() {
         } else if ($isParentheticalNode(anchorParent)) {
           result = matchCommonText(text);
           setNodeType(NODE_TYPES.PARENTHETICAL);
+        } else if ($isSubHeaderNode(anchorParent)) {
+          result = matchInputInSubheader(text)
         } else {
           result = matchCommonText(text);
           setNodeType(NODE_TYPES.DEFAULT);
@@ -321,27 +352,27 @@ export default function TextSuggestionPlugin() {
       ) => {
         return anchorElementRef.current && results.length
           ? ReactDOM.createPortal(
-              <div className="typeahead-popover mentions-menu">
-                <ul>
-                  {options.map((option, i) => (
-                    <WordSuggestionAheadMenuItem
-                      index={i}
-                      isSelected={selectedIndex === i}
-                      onClick={() => {
-                        setHighlightedIndex(i);
-                        selectOptionAndCleanUp(option);
-                      }}
-                      onMouseEnter={() => {
-                        setHighlightedIndex(i);
-                      }}
-                      key={option.key}
-                      option={option}
-                    />
-                  ))}
-                </ul>
-              </div>,
-              anchorElementRef.current,
-            )
+            <div className="typeahead-popover mentions-menu">
+              <ul>
+                {options.map((option, i) => (
+                  <WordSuggestionAheadMenuItem
+                    index={i}
+                    isSelected={selectedIndex === i}
+                    onClick={() => {
+                      setHighlightedIndex(i);
+                      selectOptionAndCleanUp(option);
+                    }}
+                    onMouseEnter={() => {
+                      setHighlightedIndex(i);
+                    }}
+                    key={option.key}
+                    option={option}
+                  />
+                ))}
+              </ul>
+            </div>,
+            anchorElementRef.current,
+          )
           : null;
       }}
     />

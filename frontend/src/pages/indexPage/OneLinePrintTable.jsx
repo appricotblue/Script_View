@@ -4,14 +4,13 @@ import { VITE_BASE_URL } from '@/constants';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const OneLinePrintTable = ({titleValue}) => {
+const OneLinePrintTable = ({ titleValue }) => {
   const columnGroup = {
-    col1: '20%',
+    col1: '5%',
     col2: '20%',
     col3: '10%',
-    col4: '10%',
+    col4: '45%',
     col5: '20%',
-    col6: '20%',
   };
 
   const [tableData, setTableData] = useState([]);
@@ -57,13 +56,11 @@ const OneLinePrintTable = ({titleValue}) => {
           <col style={{ width: columnGroup.col3 }} />
           <col style={{ width: columnGroup.col4 }} />
           <col style={{ width: columnGroup.col5 }} />
-          <col style={{ width: columnGroup.col6 }} />
         </colgroup>
         <thead>
           <tr>
             <th className={styles.tableHead}>Scene</th>
             <th className={styles.tableHead}>Location</th>
-            <th className={styles.tableHead}>Time</th>
             <th className={styles.tableHead}>Int/Ext</th>
             <th className={styles.tableHead}>Action</th>
             <th className={styles.tableHead}>Charecter</th>
@@ -75,7 +72,6 @@ const OneLinePrintTable = ({titleValue}) => {
               <tr key={ind}>
                 <td className={styles.tableData}>{item?.scene}</td>
                 <td className={styles.tableData}>{item?.location}</td>
-                <td className={styles.tableData}>{item?.time}</td>
                 <td className={styles.tableData}>{item?.IntOrExt}</td>
                 <td className={styles.tableData}>{item?.Action}</td>
                 <td className={styles.tableData}>{item?.Character}</td>

@@ -91,24 +91,35 @@ const PrintPlugin = () => {
 
           // Write the necessary content with print-specific styles
           printWindow.document.write(`
-            <html>
-              <head>
-                <style>
-                  ${minifiedCss}
-                  @media print {
-                    /* Hide headers and footers */
-                    @page {
-                      size: auto;
-                    }
+          <html>
+          <head>
+            <style>
+              ${minifiedCss}
+              @media print {
+                /* Hide headers and footers */
+                @page {
+                 height:938px;
+                 width:600px;
 
-                    body {
-                      margin: 0;
-                    }
-                  }
-                </style>
-              </head>
-              <body>${htmlString}</body>
-            </html>
+                }
+
+                body {
+                  margin: 100px 20px;
+                }
+                .watermark {
+                  position: fixed;
+                  top: 50%;
+                  right: -70px;
+                  color: rgba(0, 0, 0, 0.5);
+                  font-size: 40px;
+                  transform:translate(0,-50%) rotate(-90deg);
+                }
+              }
+            </style>
+          </head>
+          <body>${htmlString}</body>
+          <div class="watermark">Script view </div>
+          </html>
           `);
 
           // Close the document after printing

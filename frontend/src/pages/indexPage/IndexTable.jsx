@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import IndexHeader from './IndexHeader';
 import './indexTableDesign.css';
 import { PlusCircle } from '@phosphor-icons/react';
 import { Autocomplete, Box, Modal, TextField } from '@mui/material';
@@ -7,11 +6,12 @@ import AutoCompleteTextArea from './components/AutoCompleteTextArea';
 import axios from 'axios';
 import { VITE_BASE_URL } from '@/constants';
 import { useParams } from 'react-router-dom';
-import { useTitle } from '@/context/OnelineTitleContext';
 import OneLinePrintTable from './OneLinePrintTable';
 import { GradientBtn } from '@common';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useTransliteration } from '@hooks';
+import { useTitle } from '@/context/OnelineTitleContext';
 
 const style = {
   position: 'absolute',
@@ -28,8 +28,6 @@ const style = {
 };
 
 const IndexTable = ({
-  titleValue,
-  onTitleChange,
   tableModalOpen,
   setTableModalOpen,
 }) => {
@@ -37,7 +35,6 @@ const IndexTable = ({
     {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
@@ -45,12 +42,11 @@ const IndexTable = ({
   ]);
 
   const columnGroup = {
-    col1: '20%',
+    col1: '5%',
     col2: '20%',
     col3: '10%',
-    col4: '10%',
+    col4: '45%',
     col5: '20%',
-    col6: '20%',
   };
 
   const intorextValues = [
@@ -63,9 +59,16 @@ const IndexTable = ({
     'Day/Night/Int/Ext',
   ];
 
+  const locationList = [];
+
+  const { oneLineTitle, setTitleName } = useTitle();
+
   const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const pageComponentRef = useRef();
+  const transliterate = useTransliteration();
+  const [freeSoloSugg, setfreeSoloSugg] = useState([]);
+  const [freeSoloSuggLocation, setfreeSoloSuggLocation] = useState([]);
 
   const handleRemoveRow = (index) => {
     const updatedTableData = tableData.filter((_, i) => i !== index);
@@ -76,7 +79,6 @@ const IndexTable = ({
     const newTableRow = {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
@@ -94,7 +96,6 @@ const IndexTable = ({
     const newTableRow = {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
@@ -112,7 +113,6 @@ const IndexTable = ({
     updatedTableData[index] = {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
@@ -140,14 +140,13 @@ const IndexTable = ({
         imageWidth * ratio,
         imageHeight * ratio,
       );
-      pdf.save(`${titleValue}`);
+      pdf.save(`${oneLineTitle}`);
     });
   };
 
   const { id } = useParams();
 
   const [characters, setCharacters] = useState([]);
-
   const fetchCharacters = async () => {
     try {
       const response = await axios.get(
@@ -167,22 +166,21 @@ const IndexTable = ({
       );
       const { data } = response;
       // console.log("response", response.data.oneLiners[0].title);
-      onTitleChange(response.data.oneLiners[0].title);
+      setTitleName(response.data.oneLiners[0].title);
       setTableData(response.data.oneLiners[0].oneLiners);
     } catch (error) {
       console.error('Error while fetching data:', error);
     }
   };
 
-  // const { oneLineTitle } = useTitle();
-
   const handleSubmit = async () => {
-    if (titleValue.trim() !== '') {
+    // console.log("abc");
+    if (oneLineTitle.trim() !== '') {
       try {
         const response = await axios.post(
           `${VITE_BASE_URL}/api/scripts/storeOneLineData`,
           {
-            title: titleValue,
+            title: oneLineTitle,
             scriptId: id,
             oneLiners: tableData,
           },
@@ -195,6 +193,7 @@ const IndexTable = ({
 
         if (response.status === 200) {
           console.log('Data stored successfully');
+          console.log('Post responce', response.data.oneLiners.oneLiners);
         } else {
           console.error('Failed to store data');
         }
@@ -215,7 +214,7 @@ const IndexTable = ({
     setTimeout(() => {
       handleSubmit();
     }, 500);
-  }, [titleValue]);
+  }, [oneLineTitle]);
 
   const intExtSave = (value, index) => {
     const tableCurrentValue = [...tableData];
@@ -223,13 +222,35 @@ const IndexTable = ({
     setTableData(tableCurrentValue);
   };
 
-  const characterSave = (value, index) => {
+  const characterSave = (value, index, nm) => {
     const characterValues = value.join(',');
     const tableCurrentValue = [...tableData];
-    tableCurrentValue[index]['Character'] = characterValues;
+    tableCurrentValue[index][nm] = characterValues;
     setTableData(tableCurrentValue);
     handleSubmit();
   };
+
+  const handlefreeSoloSugg = async (e, newValue) => {
+    if (!characters?.includes(newValue) && newValue.trim() !== '') {
+      const translatedValue = await transliterate(newValue);
+
+      setfreeSoloSugg(translatedValue)
+
+    } else if (newValue.trim() === '') {
+      setfreeSoloSugg([]);
+    }
+  };
+
+  const handlefreeSoloSuggLocation = async (e, newValue) => {
+    if (!locationList?.includes(newValue) && newValue.trim() !== '') {
+      const translatedValue = await transliterate(newValue);
+      setfreeSoloSuggLocation(translatedValue);
+    } else if (newValue.trim() === '') {
+      setfreeSoloSuggLocation([]);
+    }
+  };
+
+  console.log(tableData);
 
   return (
     <>
@@ -241,11 +262,11 @@ const IndexTable = ({
       >
         <Box sx={style}>
           <div ref={pageComponentRef}>
-            <OneLinePrintTable tableData={tableData} titleValue={titleValue} />
+            <OneLinePrintTable tableData={tableData} titleValue={oneLineTitle} />
           </div>
 
           <div className="download-btn">
-            {titleValue.trim() !== '' ? (
+            {oneLineTitle.trim() !== '' ? (
               <GradientBtn
                 size="large"
                 sx={{
@@ -273,16 +294,14 @@ const IndexTable = ({
               <col style={{ width: columnGroup.col3 }} />
               <col style={{ width: columnGroup.col4 }} />
               <col style={{ width: columnGroup.col5 }} />
-              <col style={{ width: columnGroup.col6 }} />
             </colgroup>
             <thead>
               <tr className="table-head-row">
                 <th className="table-head">Scene</th>
                 <th className="table-head">Location</th>
-                <th className="table-head">Time</th>
                 <th className="table-head">Int/Ext</th>
                 <th className="table-head">Action</th>
-                <th className="table-head">characters</th>
+                <th className="table-head">Characters</th>
               </tr>
             </thead>
             <tbody className="tbody">
@@ -300,27 +319,38 @@ const IndexTable = ({
                     />
                   </td>
                   <td>
-                    <AutoCompleteTextArea
-                      handleSubmit={handleSubmit}
-                      name="location"
-                      specifiedFieldName="location"
-                      index={ind}
-                      tableData={tableData}
-                      setTableData={setTableData}
-                      selectedItemIndex={selectedItemIndex}
-                      setSelectedItemIndex={setSelectedItemIndex}
+                    <Autocomplete
+                      freeSolo
+                      id="tags-outlined"
+                      options={
+                        freeSoloSuggLocation?.length > 0
+                          ? locationList.concat(freeSoloSuggLocation)
+                          : locationList
+                      }
+                      onBlur={handleSubmit}
+                      filterSelectedOptions
+                      value={item.location || ''}
+                      onChange={(e, newValue) => characterSave(newValue, ind, 'location')}
+                      onInputChange={handlefreeSoloSuggLocation}
+                      filterOptions={(x) => x}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="filled"
+                          onClick={handleSubmit}
+                          InputProps={{
+                            ...params.InputProps,
+                            disableUnderline: true,
+                            style: {
+                              border: 'none',
+                              backgroundColor: '#fff',
+                              padding: '0',
+                            },
+                          }}
+                        />
+                      )}
                     />
-                  </td>
-                  <td>
-                    <AutoCompleteTextArea
-                      handleSubmit={handleSubmit}
-                      name="time"
-                      index={ind}
-                      tableData={tableData}
-                      setTableData={setTableData}
-                      selectedItemIndex={selectedItemIndex}
-                      setSelectedItemIndex={setSelectedItemIndex}
-                    />
+
                   </td>
                   <td>
                     <Autocomplete
@@ -368,10 +398,15 @@ const IndexTable = ({
                   </td>
                   <td>
                     <Autocomplete
+                      freeSolo
                       onFocus={fetchCharacters}
                       multiple
                       id="tags-outlined"
-                      options={characters ? characters : []}
+                      options={
+                        freeSoloSugg.length > 0
+                          ? characters.concat(freeSoloSugg)
+                          : characters
+                      }
                       onBlur={handleSubmit}
                       filterSelectedOptions
                       value={
@@ -379,7 +414,11 @@ const IndexTable = ({
                           ? item.Character.split(',').map((word) => word.trim())
                           : []
                       }
-                      onChange={(e, newValue) => characterSave(newValue, ind)}
+                      onChange={(e, newValue) =>
+                        characterSave(newValue, ind, 'Character')
+                      }
+                      onInputChange={handlefreeSoloSugg}
+                      filterOptions={(x) => x}
                       renderInput={(params) => (
                         <TextField
                           {...params}

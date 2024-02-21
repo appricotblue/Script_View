@@ -36,6 +36,7 @@ import { $createFlashcutNode } from '@/nodes/FlashCutNode';
 import { $createIntercutNode } from '@/nodes/InterCutNode';
 import PopupState, { bindMenu, bindTrigger } from 'material-ui-popup-state';
 import { $createParentheticalMainNode } from '@/nodes/ParanthticalMain';
+import { $createFlashbackNode } from '@/nodes/FlashBackNode';
 
 export const INSERT_CONTENT_COMMAND = createCommand('insert-content');
 
@@ -132,6 +133,14 @@ const SideBarPlugin = () => {
 
         return newIntercut.select();
       },
+
+      flashback: () => {
+        const newFlashBack = $createFlashbackNode();
+
+        $insertNodes([newFlashBack]);
+
+        return newFlashBack.select();
+      }
 
     };
 
@@ -232,6 +241,7 @@ const SideBarPlugin = () => {
             KeyT: 'transition',
             KeyD: 'dialogue',
             KeyF: 'flashcut',
+            KeyB: 'flashback',
             KeyC: 'cutback',
             KeyI: 'intercut'
           }[event.code];
@@ -255,7 +265,6 @@ const SideBarPlugin = () => {
   const handleClick = (payload) => {
     editor.dispatchCommand(INSERT_CONTENT_COMMAND, payload);
     setAnchorEl(null);
-
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -307,7 +316,8 @@ const SideBarPlugin = () => {
           transition: isMac ? 'Cmd + Alt + T' : 'Ctrl + Alt + T',
           flashcut: isMac ? 'Cmd + Alt + F' : 'Ctrl + Alt + F',
           cutback: isMac ? 'Cmd + Alt + C' : 'Ctrl + Alt + C',
-          intercut: isMac ? 'Cmd + Alt + I' : 'Ctrl + Alt + I'
+          intercut: isMac ? 'Cmd + Alt + I' : 'Ctrl + Alt + I',
+          flashback: isMac ? 'Cmd + Alt + B' : 'Ctrl + Alt + B',
         };
 
         return (
@@ -388,6 +398,15 @@ const SideBarPlugin = () => {
           </Typography>
           <Typography>
             Flash Cut
+          </Typography>
+        </MenuItem>
+        <Divider sx={{backgroundColor:'black'}}/>
+        <MenuItem onClick={() => handleClick('flashback')} sx={{ display: 'grid', width: '150px' }}>
+          <Typography component="span" fontSize="0.75rem" fontWeight="200">
+            Ctrl + Alt + B
+          </Typography>
+          <Typography>
+            flashback
           </Typography>
         </MenuItem>
         <Divider sx={{ backgroundColor: 'black' }} />
