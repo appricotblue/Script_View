@@ -20,7 +20,7 @@ const Home = ({ searchValue }) => {
     setUpdatedDocList(docList);
   }, [docList]);
 
-  const currentUser = localStorage.getItem('userName')
+  const currentUser = sessionStorage.getItem('userName')
 
   if (!currentUser) return <Navigate to="/login" />;
 

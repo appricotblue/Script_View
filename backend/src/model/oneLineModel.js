@@ -12,7 +12,7 @@ const OneLineSchema = mongoose.model("oneline", {
   oneLiners: [
     {
       location: {
-        type: [String],
+        type: String,
       },
       scene: {
         type: String,

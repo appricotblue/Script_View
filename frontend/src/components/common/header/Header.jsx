@@ -58,7 +58,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function Header({ onSearchChange }) {
 
-  const currentUser = localStorage.getItem('userName')
+  const currentUser = sessionStorage.getItem('userName')
 
   const navigate = useNavigate();
 
@@ -73,11 +73,11 @@ export default function Header({ onSearchChange }) {
   };
 
   const handleLogOut = () => {
-    localStorage.clear()
+    sessionStorage.clear()
     navigate('/login')
   }
 
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   return (
     <Box sx={{ flexGrow: 1, }}>

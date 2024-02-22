@@ -43,15 +43,15 @@ const LoginForm = () => {
         if (response.data.user.isadmin) {
           dispatch(setLogin(true));
           return (
-            localStorage.setItem('Admin', true),
-            localStorage.setItem('AdminId', userId),
-            localStorage.setItem('userId', userId),
-            localStorage.setItem('userName', userName),
+            sessionStorage.setItem('Admin', true),
+            sessionStorage.setItem('AdminId', userId),
+            sessionStorage.setItem('userId', userId),
+            sessionStorage.setItem('userName', userName),
             navigate('/adminpanel')
           )
         }
-        localStorage.setItem('userId', userId);
-        localStorage.setItem('userName', userName)
+        sessionStorage.setItem('userId', userId);
+        sessionStorage.setItem('userName', userName)
         dispatch(setLogin(true));
 
         Swal.fire({
@@ -81,8 +81,8 @@ const LoginForm = () => {
       if (error.response.data.error == "Subscription expired. Please renew your subscription.") {
         const userId = error.response.data.user._id
         const userName = error.response.data.user.firstname
-        localStorage.setItem('userId', userId);
-        localStorage.setItem('userName', userName)
+        sessionStorage.setItem('userId', userId);
+        sessionStorage.setItem('userName', userName)
         console.log(userId);
         navigate('/upgradeplan')
       }

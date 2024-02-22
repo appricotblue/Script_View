@@ -89,8 +89,8 @@ const SignupForm = () => {
             password: '',
             confirmPass: '',
           });
-          localStorage.setItem('userId', userId);
-          localStorage.setItem('userName', userName)
+          sessionStorage.setItem('userId', userId);
+          sessionStorage.setItem('userName', userName)
           dispatch(setLogin(true));
           Swal.fire({
             icon: 'success',

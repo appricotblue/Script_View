@@ -67,7 +67,7 @@ const WithHeaderMargin = ({ children }) => {
   const [loading, setLoading] = useState(false)
   const [alertData, setAlertData] = useState(null)
 
-  const userId = localStorage.getItem("userId")
+  const userId = sessionStorage.getItem("userId")
 
   const fetchUserData = async () => {
     try {

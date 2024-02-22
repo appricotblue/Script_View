@@ -16,7 +16,7 @@ const DisplayPage = () => {
         setValue(newValue);
     };
 
-    const userStatus = localStorage.getItem('Admin')
+    const userStatus = sessionStorage.getItem('Admin')
 
     if (userStatus) {
         return (

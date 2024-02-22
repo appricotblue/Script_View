@@ -350,7 +350,6 @@ const IndexTable = ({
                         />
                       )}
                     />
-
                   </td>
                   <td>
                     <Autocomplete

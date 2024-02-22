@@ -10,8 +10,8 @@ import Recomended from '@assets/images/Recomended.svg';
 
 const PricingPlans = () => {
 
-    const userName = localStorage.getItem('userName');
-    const userId = localStorage.getItem('userId');
+    const userName = sessionStorage.getItem('userName');
+    const userId = sessionStorage.getItem('userId');
 
     const { palette } = useTheme();
     const [subscriptionPlans, SetSubscriptionPlans] = useState([]);
@@ -222,10 +222,10 @@ const PricingPlans = () => {
                                                     background:
                                                         'linear-gradient(93.69deg, #C5AC57 10.11%, #C5AC57 46.89%, #E1D5AB 85.01%)',
                                                 }}
-                                            onClick={
-                                                // () => handlePayment(plan.price)
-                                                () => handlePlanSelect(plan)
-                                            }
+                                                onClick={
+                                                    // () => handlePayment(plan.price)
+                                                    () => handlePlanSelect(plan)
+                                                }
                                             >
                                                 Subscribe Now
                                             </Button>

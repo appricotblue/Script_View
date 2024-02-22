@@ -121,7 +121,7 @@ const CustomTextActions = () => {
         ['I', 'italic'],
         ['U', 'underline'],
         ['A', ''],
-        ['pen', ''],
+        // ['pen', ''],
       ].map((value) => {
         return (
           <IconButton
@@ -351,13 +351,13 @@ const ToolbarPlugin = ({ setSearchText }) => {
           px="1rem"
         >
           <Stack direction="row" gap="1.5rem">
-            <IconButton onClick={fullscreen} sx={{ color: 'white' }}>
+            {/* <IconButton onClick={fullscreen} sx={{ color: 'white' }}>
               <ArrowsOut size="1rem" />
-            </IconButton>
+            </IconButton> */}
 
-            <IconButton sx={{ color: 'white' }} onClick={testFunctions}>
+            {/* <IconButton sx={{ color: 'white' }} onClick={testFunctions}>
               <Binoculars size="1rem" />
-            </IconButton>
+            </IconButton> */}
 
           </Stack>
           <Stack direction="row" alignItems="center">
@@ -402,7 +402,7 @@ const ToolbarPlugin = ({ setSearchText }) => {
               {zoomLevel}%
             </Button>
 
-            <Paper
+            {/* <Paper
               component="form"
               sx={{ p: '2px 4px', display: 'flex', backgroundColor: '#D9D9D9', alignItems: 'center', borderRadius: '10px', height: '1.5rem' }}
             >
@@ -420,15 +420,19 @@ const ToolbarPlugin = ({ setSearchText }) => {
               <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
                 <MagnifyingGlass size="1rem" />
               </IconButton>
-            </Paper>
+            </Paper> */}
 
 
-            <IconButton
-              onClick={() =>
-                editor.dispatchCommand(INSERT_PAGE_BREAK, undefined)
-              }
+            {/* <IconButton
+            onClick={() =>
+              editor.dispatchCommand(INSERT_PAGE_BREAK, undefined)
+            }
             >
               <Scissors color="white" />
+            </IconButton> */}
+
+            <IconButton onClick={fullscreen} sx={{ color: 'white' }}>
+              <ArrowsOut size="1rem" />
             </IconButton>
           </Stack>
         </Stack>
