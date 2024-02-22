@@ -1,5 +1,7 @@
-import './index.css';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+// import './index.css';
+import './index2.scss';
+
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
 import {
@@ -23,7 +25,9 @@ export function $isPageBreakNode(node) {
   return node instanceof PageBreakNode;
 }
 
-// eslint-disable-next-line react/prop-types
+// PageBreakComponent.js
+import React from 'react';
+
 function PageBreakComponent({ nodeKey }) {
   const [editor] = useLexicalComposerContext();
   const [isSelected, setSelected, clearSelection] =
@@ -86,6 +90,7 @@ function PageBreakComponent({ nodeKey }) {
   return null;
 }
 
+// PageBreakNode.js
 export class PageBreakNode extends DecoratorNode {
   static getType() {
     return 'page-break';
@@ -121,10 +126,32 @@ export class PageBreakNode extends DecoratorNode {
   }
 
   createDOM() {
-    const el = document.createElement('figure');
-    el.style.pageBreakAfter = 'always';
+    const el = document.createElement('div');
+    el.style.pageBreakBefore = 'always';
+    el.style.pageBreakAfter = 'avoid';
     el.setAttribute('type', this.getType());
     return el;
+  }
+
+  handleKeyDown(event) {
+    const { editor } = this.context;
+    if (event.key === 'Backspace' || event.key === 'Delete') {
+      const selection = editor.getSelection();
+      if (selection && selection.isCollapsed()) {
+        const nodeBefore = selection.getFirstNode();
+        const nodeAfter = selection.getLastNode();
+
+        if (nodeBefore && nodeBefore.classList.contains('page-break')) {
+          event.preventDefault();
+          return;
+        }
+
+        if (nodeAfter && nodeAfter.classList.contains('page-break')) {
+          event.preventDefault();
+          return;
+        }
+      }
+    }
   }
 
   getTextContent() {

@@ -22,12 +22,14 @@ import {
   PageBreakNode,
 } from '@/nodes/PageBreakNode';
 import { $isDialogueContainerNode } from '@/nodes/DialogueContainerNode';
+import { usePageNumber } from '@/context/PageNumberContext';
 
 export const INSERT_PAGE_BREAK = createCommand();
 
 export default function PageBreakPlugin() {
-
   const EXTRA_PAGE_HEIGHT = 938;
+
+  const { setPageNum } = usePageNumber()
 
   const [editor] = useLexicalComposerContext();
 
@@ -38,7 +40,9 @@ export default function PageBreakPlugin() {
       );
 
     if (!editor.hasNodes([PageBreakNode])) {
-      console.warn('PageBreakPlugin: PageBreakNode is not registered on editor');
+      console.warn(
+        'PageBreakPlugin: PageBreakNode is not registered on editor',
+      );
       return;
     }
 
@@ -49,14 +53,12 @@ export default function PageBreakPlugin() {
           const filtered = root
             .getChildren()
             .filter((node) => $isPageBreakNode(node));
+          console.log('root', filtered);
           filtered.forEach((node, index) => {
+            setPageNum(filtered.length)
             editor
               .getElementByKey(node.__key)
-              .setAttribute(
-                'count',
-                // `page ${index + 1}/${filtered.length + 1}`,
-                `page ${index + 1}/${filtered.length}`,
-              );
+              .setAttribute('count', `page ${index + 1}/${filtered.length}`);
           });
         });
       }),
@@ -124,8 +126,7 @@ function $insertNodeToNearestRoot(node) {
       rightTree.insertBefore(node);
       rightTree.selectStart();
     }
-  }
-  else {
+  } else {
     if ($isNodeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
       const nodes = selection.getNodes();
       nodes[nodes.length - 1].getTopLevelElementOrThrow().insertAfter(node);

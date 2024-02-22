@@ -18,13 +18,17 @@ const TextArea = ({ searchText }) => {
   // margin in rem
   const [margin] = useState(3);
   const [editor] = useLexicalComposerContext();
+  const [count, setCount] = useState(1);
+
+  const [minHeight, setMinHeight] = useState(A4_HEIGHT);
+  console.log('height', minHeight);
 
   const { zoomLevel } = useZoom();
 
   //Auto Page Break
   const prevHeightRef = useRef(0);
 
-  const { pageNumber, setPageNum } = usePageNumber()
+  const { pageNumber, setPageNum } = usePageNumber();
 
   useEffect(() => {
     // console.log(searchText);
@@ -33,11 +37,14 @@ const TextArea = ({ searchText }) => {
       const observer = new ResizeObserver((entries) => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
+          setMinHeight(newHeight);
           const pageCount = Math.floor(newHeight / A4_HEIGHT);
 
           if (pageCount > prevHeightRef.current) {
             prevHeightRef.current = pageCount; // Update the previous height reference
-            setPageNum(pageCount);
+            // setPageNum(pageCount);
+            // console.log('pageCount', pageCount);
+            setCount(pageCount);
             // Trigger function when a new A4 page is filled with text
             editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
             // editor.update(() => {
@@ -47,7 +54,8 @@ const TextArea = ({ searchText }) => {
           } else if (pageCount < prevHeightRef.current) {
             // Reset the previous height reference after clearing a page break
             prevHeightRef.current = pageCount;
-            setPageNum(pageCount);
+            setCount(pageCount);
+            // setPageNum(pageCount);
           }
         }
       });
@@ -58,7 +66,6 @@ const TextArea = ({ searchText }) => {
         observer.disconnect();
       };
     }
-
   }, [editor.dispatchCommand, pageNumber, setPageNum, searchText]);
 
   const marginLineConf = {
@@ -79,23 +86,31 @@ const TextArea = ({ searchText }) => {
     );
   }, []);
 
+  useEffect(() => {
+    // if (pageNumber === count) {
+    //   setMinHeight(938 * count);
+    // }
+  }, [count]);
+  console.log('minHeight', minHeight);
+
   const PlaceHolder = useMemo(() => {
     return <Box className={Style['editor-placeholder']}>Start Typing...</Box>;
   }, []);
 
-  const currentwidth = zoomLevel + 793
+  const currentwidth = zoomLevel + 793;
 
   return (
     <Paper
       sx={{
         width: '793px',
-        minHeight: '938px',
+        minHeight: minHeight<938 ? '938px' : `${minHeight}px`,
+        overflowY: 'hidden',
         boxShadow: '2.99253px 2.99253px 13.46637px 0px rgba(0, 0, 0, 0.10)',
         display: 'flex',
         flexDirection: 'column',
         transform: `scaleX(${zoomLevel / 100})`,
         position: 'sticky',
-        top: "-2rem",
+        top: '-2rem',
       }}
       className={Style['container']}
     >

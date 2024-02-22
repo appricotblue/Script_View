@@ -12,6 +12,8 @@ import OneLinePrintTable from './OneLinePrintTable';
 import { GradientBtn } from '@common';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { useTransliteration } from '@hooks';
+import autoTable from 'jspdf-autotable';
 
 const style = {
   position: 'absolute',
@@ -27,12 +29,16 @@ const style = {
   overflowY: 'scroll',
 };
 
-const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOpen }) => {
+const IndexTable = ({
+  titleValue,
+  onTitleChange,
+  tableModalOpen,
+  setTableModalOpen,
+}) => {
   const [tableData, setTableData] = useState([
     {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
@@ -40,12 +46,11 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
   ]);
 
   const columnGroup = {
-    col1: '20%',
+    col1: '5%',
     col2: '20%',
     col3: '10%',
-    col4: '10%',
+    col4: '45%',
     col5: '20%',
-    col6: '20%',
   };
 
   const intorextValues = [
@@ -58,22 +63,24 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
     'Day/Night/Int/Ext',
   ];
 
+  // const locationList = ['location 1', 'location 2', 'location 3', 'location 4'];
+  const locationList = [];
+
   const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
-  const pageComponentRef = useRef()
+  const pageComponentRef = useRef();
+  const transliterate = useTransliteration();
+  const [freeSoloSugg, setfreeSoloSugg] = useState([]);
 
   const handleRemoveRow = (index) => {
     const updatedTableData = tableData.filter((_, i) => i !== index);
     setTableData(updatedTableData);
-    handleSubmit()
   };
-  
+
   const handleInsertRowAbove = (index) => {
-    const newTableRow =
-    {
+    const newTableRow = {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
@@ -84,15 +91,13 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       ...tableData.slice(index),
     ];
     setTableData(updatedTableData);
-    // handleSubmit()
+    handleSubmit();
   };
 
   const handleInsertRowBelow = (index) => {
-    const newTableRow =
-    {
+    const newTableRow = {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
@@ -103,7 +108,6 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       ...tableData.slice(index + 1),
     ];
     setTableData(updatedTableData);
-    // handleSubmit()
   };
 
   const handleResetRow = (index) => {
@@ -111,15 +115,12 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
     updatedTableData[index] = {
       scene: '',
       location: '',
-      time: '',
       IntOrExt: '',
       Action: '',
       Character: '',
     };
     setTableData(updatedTableData);
-    handleSubmit();
   };
-
 
   const generatePDF = () => {
     const input = pageComponentRef.current;
@@ -145,52 +146,56 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
     });
   };
 
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const [characters, setCharacters] = useState([])
-
+  const [characters, setCharacters] = useState([]);
   const fetchCharacters = async () => {
     try {
-      const response = await axios.get(`${VITE_BASE_URL}/api/scripts/getCharacters/${id}`);
-      const { data } = response
-      setCharacters(data.characters)
+      const response = await axios.get(
+        `${VITE_BASE_URL}/api/scripts/getCharacters/${id}`,
+      );
+      const { data } = response;
+      setCharacters(data.characters);
+    } catch (error) {
+      console.error('runtime error while fetching characters', error);
     }
-    catch (error) {
-      console.error('runtime error while fetching characters', error)
-    }
-  }
+  };
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${VITE_BASE_URL}/api/scripts/getOnelines/${id}`);
+      const response = await axios.get(
+        `${VITE_BASE_URL}/api/scripts/getOnelines/${id}`,
+      );
       const { data } = response;
       // console.log("response", response.data.oneLiners[0].title);
-      onTitleChange(response.data.oneLiners[0].title)
+      onTitleChange(response.data.oneLiners[0].title);
       setTableData(response.data.oneLiners[0].oneLiners);
     } catch (error) {
       console.error('Error while fetching data:', error);
     }
   };
 
-  // const { oneLineTitle } = useTitle();
-
   const handleSubmit = async () => {
+    // console.log("abc");
     if (titleValue.trim() !== '') {
       try {
-        const response = await axios.post(`${VITE_BASE_URL}/api/scripts/storeOneLineData`, {
-          title: titleValue,
-          scriptId: id,
-          oneLiners: tableData,
-        }, {
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await axios.post(
+          `${VITE_BASE_URL}/api/scripts/storeOneLineData`,
+          {
+            title: titleValue,
+            scriptId: id,
+            oneLiners: tableData,
           },
-        });
-
-        // console.log(tableData);
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
 
         if (response.status === 200) {
           console.log('Data stored successfully');
+          console.log('Post responce', response.data.oneLiners.oneLiners);
         } else {
           console.error('Failed to store data');
         }
@@ -203,23 +208,53 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
   };
 
   useEffect(() => {
-    fetchCharacters()
+    fetchCharacters();
     fetchData();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      handleSubmit();
+    }, 500);
+  }, [titleValue]);
 
   const intExtSave = (value, index) => {
-    const tableCurrentValue = [...tableData]
-    tableCurrentValue[index]["IntOrExt"] = value.toString()
-    setTableData(tableCurrentValue)
-  }
-
-  const characterSave = (value, index) => {
-    const characterValues = value.join(',')
-    const tableCurrentValue = [...tableData]
-    tableCurrentValue[index]["Character"] = characterValues
+    const tableCurrentValue = [...tableData];
+    tableCurrentValue[index]['IntOrExt'] = value.toString();
     setTableData(tableCurrentValue);
-    handleSubmit()
-  }
+  };
+
+  const characterSave = (value, index, nm) => {
+    if (nm === 'Character') {
+      const characterValues = value.join(',');
+      const tableCurrentValue = [...tableData];
+      tableCurrentValue[index][nm] = characterValues;
+      setTableData(tableCurrentValue);
+    } else {
+      const locationValues = value;
+      const tableCurrentValue = [...tableData];
+      tableCurrentValue[index][nm] = locationValues;
+      setTableData(tableCurrentValue);
+    }
+
+    handleSubmit();
+  };
+
+  const handlefreeSoloSugg = async (e, newValue) => {
+    if (!characters?.includes(newValue) && newValue.trim() !== '') {
+      // console.log("abc");
+      // Call your translation function here and update options
+      const translatedValue = await transliterate(newValue); // Call your translation function here
+      setfreeSoloSugg(translatedValue);
+
+      // Update the options
+      // setfreeSoloSugg((prevOptions) => [...prevOptions, translatedValue]);
+    } else if (newValue.trim() === '') {
+      setfreeSoloSugg([]);
+    }
+  };
+
+  console.log('freeSoloSugg', freeSoloSugg);
 
   return (
     <>
@@ -231,21 +266,26 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
       >
         <Box sx={style}>
           <div ref={pageComponentRef}>
-            <OneLinePrintTable tableData={tableData} />
+            <OneLinePrintTable tableData={tableData} titleValue={titleValue} />
           </div>
+
           <div className="download-btn">
-            <GradientBtn
-              size="large"
-              sx={{
-                fontWeight: '600',
-                background: '#000',
-                color: '#fff',
-                ':hover': { background: '#000' },
-              }}
-              onClick={() => generatePDF()}
-            >
-              Download
-            </GradientBtn>
+            {titleValue.trim() !== '' ? (
+              <GradientBtn
+                size="large"
+                sx={{
+                  fontWeight: '600',
+                  background: '#000',
+                  color: '#fff',
+                  ':hover': { background: '#000' },
+                }}
+                onClick={() => generatePDF()}
+              >
+                Download
+              </GradientBtn>
+            ) : (
+              <div style={{ color: 'red' }}>No title Available </div>
+            )}
           </div>
         </Box>
       </Modal>
@@ -258,16 +298,14 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
               <col style={{ width: columnGroup.col3 }} />
               <col style={{ width: columnGroup.col4 }} />
               <col style={{ width: columnGroup.col5 }} />
-              <col style={{ width: columnGroup.col6 }} />
             </colgroup>
             <thead>
               <tr className="table-head-row">
                 <th className="table-head">Scene</th>
                 <th className="table-head">Location</th>
-                <th className="table-head">Time</th>
                 <th className="table-head">Int/Ext</th>
                 <th className="table-head">Action</th>
-                <th className="table-head">Charecter</th>
+                <th className="table-head">Characters</th>
               </tr>
             </thead>
             <tbody className="tbody">
@@ -285,7 +323,7 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                     />
                   </td>
                   <td>
-                    <AutoCompleteTextArea
+                    {/* <AutoCompleteTextArea
                       handleSubmit={handleSubmit}
                       name="location"
                       specifiedFieldName="location"
@@ -294,17 +332,42 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                       setTableData={setTableData}
                       selectedItemIndex={selectedItemIndex}
                       setSelectedItemIndex={setSelectedItemIndex}
-                    />
-                  </td>
-                  <td>
-                    <AutoCompleteTextArea
-                      handleSubmit={handleSubmit}
-                      name="time"
-                      index={ind}
-                      tableData={tableData}
-                      setTableData={setTableData}
-                      selectedItemIndex={selectedItemIndex}
-                      setSelectedItemIndex={setSelectedItemIndex}
+                      location
+                    /> */}
+                    <Autocomplete
+                      freeSolo
+                      // onFocus={fetchCharacters}
+                      // multiple
+                      id="tags-outlined"
+                      options={freeSoloSugg.length > 0 ? freeSoloSugg : []}
+                      onBlur={handleSubmit}
+                      filterSelectedOptions
+                      value={
+                        item.location || ''
+                        // ? item.location.split(',').map((word) => word.trim())
+                        // : []
+                      }
+                      onChange={(e, newValue) =>
+                        characterSave(newValue, ind, 'location')
+                      }
+                      onInputChange={handlefreeSoloSugg}
+                      filterOptions={(x) => x}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="filled"
+                          onClick={handleSubmit}
+                          InputProps={{
+                            ...params.InputProps,
+                            disableUnderline: true,
+                            style: {
+                              border: 'none',
+                              backgroundColor: '#fff',
+                              padding: '0',
+                            },
+                          }}
+                        />
+                      )}
                     />
                   </td>
                   <td>
@@ -353,14 +416,27 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                   </td>
                   <td>
                     <Autocomplete
+                      freeSolo
                       onFocus={fetchCharacters}
                       multiple
                       id="tags-outlined"
-                      options={characters ? characters : []}
+                      options={
+                        freeSoloSugg.length > 0
+                          ? characters.concat(freeSoloSugg)
+                          : characters
+                      }
                       onBlur={handleSubmit}
                       filterSelectedOptions
-                      value={item.Character ? item.Character.split(',').map((word) => word.trim()) : []}
-                      onChange={(e, newValue) => characterSave(newValue, ind)}
+                      value={
+                        item.Character
+                          ? item.Character.split(',').map((word) => word.trim())
+                          : []
+                      }
+                      onChange={(e, newValue) =>
+                        characterSave(newValue, ind, 'Character')
+                      }
+                      onInputChange={handlefreeSoloSugg}
+                      filterOptions={(x) => x}
                       renderInput={(params) => (
                         <TextField
                           {...params}
@@ -390,25 +466,36 @@ const IndexTable = ({ titleValue, onTitleChange, tableModalOpen, setTableModalOp
                       <div className="modal-tableInsert">
                         <div
                           className="modal-table-action"
-                          onClick={() => handleInsertRowBelow(ind)}
+                          onClick={() => {
+                            handleSubmit();
+                            handleInsertRowBelow(ind);
+                          }}
                         >
                           Insert Below
                         </div>
                         <div
                           className="modal-table-action"
-                          onClick={() => handleInsertRowAbove(ind)}
+                          onClick={() => {
+                            handleSubmit();
+                            handleInsertRowAbove(ind);
+                          }}
                         >
                           Insert Above
                         </div>
                         <div
                           className="modal-table-action"
-                          onClick={() => handleResetRow(ind)}
+                          onClick={() => {
+                            handleSubmit();
+                            handleResetRow(ind);
+                          }}
                         >
                           Reset Datas
                         </div>
                         <div
                           className="modal-table-action"
-                          onClick={() => handleRemoveRow(ind)}
+                          onClick={() => {
+                            handleRemoveRow(ind);
+                          }}
                         >
                           Remove
                         </div>

@@ -59,8 +59,6 @@
 
 // export default PrintPlugin;
 
-
-
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
@@ -98,16 +96,27 @@ const PrintPlugin = () => {
                   @media print {
                     /* Hide headers and footers */
                     @page {
-                      size: auto;
+                     height:938px;
+                     width:600px;
+
                     }
 
                     body {
-                      margin: 0;
+                      margin: 100px 20px;
+                    }
+                    .watermark {
+                      position: fixed;
+                      top: 50%;
+                      right: -70px;
+                      color: rgba(0, 0, 0, 0.5);
+                      font-size: 40px;
+                      transform:translate(0,-50%) rotate(-90deg);
                     }
                   }
                 </style>
               </head>
               <body>${htmlString}</body>
+              <div class="watermark">Script view </div>
             </html>
           `);
 
