@@ -4,8 +4,8 @@ import { Box } from '@mui/material';
 import IndexTable from './IndexTable';
 
 const IndexPage = () => {
+  
   const handleSubmit = async (id, tableData) => {
-    // console.log("abc");
     if (titleValue.trim() !== '') {
       try {
         const response = await axios.post(
