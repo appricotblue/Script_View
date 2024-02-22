@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import IndexHeader from './IndexHeader';
-
-import { WithHeaderMargin } from '@common';
 import { Box } from '@mui/material';
-import TextSuggestionPlugin from '@/plugins/TextSuggestionsPlugin';
-import { LexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import MemoizedIndexTable from './IndexTable';
 import IndexTable from './IndexTable';
 
 const IndexPage = () => {

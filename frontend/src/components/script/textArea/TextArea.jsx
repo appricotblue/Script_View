@@ -189,6 +189,7 @@ const TextArea = ({ searchText }) => {
       const observer = new ResizeObserver((entries) => {
         for (let entry of entries) {
           const newHeight = entry.contentRect.height;
+          setMinHeight(newHeight);
           const pageCount = Math.floor(newHeight / A4_HEIGHT);
 
           if (pageCount > prevHeightRef.current) {

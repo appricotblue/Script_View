@@ -3,6 +3,7 @@ import { Stack } from '@mui/material';
 import ToolbarPlugin from '@/plugins/ToolbarPlugin';
 import { TextArea } from '@script';
 import { useState } from 'react';
+import TextArea2 from '@script/textArea/TextArea2';
 
 const TextEditor = () => {
   const [searchText, setSearchText] = useState('');

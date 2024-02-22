@@ -27,10 +27,7 @@ const style = {
   overflowY: 'scroll',
 };
 
-const IndexTable = ({
-  tableModalOpen,
-  setTableModalOpen,
-}) => {
+const IndexTable = ({ tableModalOpen, setTableModalOpen }) => {
   const [tableData, setTableData] = useState([
     {
       scene: '',
@@ -174,7 +171,6 @@ const IndexTable = ({
   };
 
   const handleSubmit = async () => {
-    // console.log("abc");
     if (oneLineTitle.trim() !== '') {
       try {
         const response = await axios.post(
@@ -223,10 +219,17 @@ const IndexTable = ({
   };
 
   const characterSave = (value, index, nm) => {
-    const characterValues = value.join(',');
-    const tableCurrentValue = [...tableData];
-    tableCurrentValue[index][nm] = characterValues;
-    setTableData(tableCurrentValue);
+    if (nm === 'Character') {
+      const characterValues = value.join(',');
+      const tableCurrentValue = [...tableData];
+      tableCurrentValue[index][nm] = characterValues;
+      setTableData(tableCurrentValue);
+    } else {
+      const characterValues = value;
+      const tableCurrentValue = [...tableData];
+      tableCurrentValue[index][nm] = characterValues;
+      setTableData(tableCurrentValue);
+    }
     handleSubmit();
   };
 
@@ -234,8 +237,7 @@ const IndexTable = ({
     if (!characters?.includes(newValue) && newValue.trim() !== '') {
       const translatedValue = await transliterate(newValue);
 
-      setfreeSoloSugg(translatedValue)
-
+      setfreeSoloSugg(translatedValue);
     } else if (newValue.trim() === '') {
       setfreeSoloSugg([]);
     }
@@ -262,7 +264,10 @@ const IndexTable = ({
       >
         <Box sx={style}>
           <div ref={pageComponentRef}>
-            <OneLinePrintTable tableData={tableData} titleValue={oneLineTitle} />
+            <OneLinePrintTable
+              tableData={tableData}
+              titleValue={oneLineTitle}
+            />
           </div>
 
           <div className="download-btn">
@@ -324,13 +329,15 @@ const IndexTable = ({
                       id="tags-outlined"
                       options={
                         freeSoloSuggLocation?.length > 0
-                          ? locationList.concat(freeSoloSuggLocation)
-                          : locationList
+                          ? freeSoloSuggLocation
+                          : []
                       }
                       onBlur={handleSubmit}
                       filterSelectedOptions
                       value={item.location || ''}
-                      onChange={(e, newValue) => characterSave(newValue, ind, 'location')}
+                      onChange={(e, newValue) =>
+                        characterSave(newValue, ind, 'location')
+                      }
                       onInputChange={handlefreeSoloSuggLocation}
                       filterOptions={(x) => x}
                       renderInput={(params) => (
@@ -402,9 +409,9 @@ const IndexTable = ({
                       multiple
                       id="tags-outlined"
                       options={
-                        freeSoloSugg?.length > 0
+                        characters
                           ? characters?.concat(freeSoloSugg)
-                          : characters
+                          : freeSoloSugg
                       }
                       onBlur={handleSubmit}
                       filterSelectedOptions
