@@ -1,5 +1,5 @@
-// import './index2.scss';
-import './index.css';
+import './index2.scss';
+// import './index.css';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';

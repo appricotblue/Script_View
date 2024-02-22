@@ -402,15 +402,15 @@ const IndexTable = ({
                       multiple
                       id="tags-outlined"
                       options={
-                        freeSoloSugg.length > 0
-                          ? characters.concat(freeSoloSugg)
+                        freeSoloSugg?.length > 0
+                          ? characters?.concat(freeSoloSugg)
                           : characters
                       }
                       onBlur={handleSubmit}
                       filterSelectedOptions
                       value={
                         item.Character
-                          ? item.Character.split(',').map((word) => word.trim())
+                          ? item.Character?.split(',').map((word) => word.trim())
                           : []
                       }
                       onChange={(e, newValue) =>
@@ -436,7 +436,6 @@ const IndexTable = ({
                       )}
                     />
                   </td>
-
                   <div
                     className="button-table"
                     onMouseEnter={() => setHoveredRowIndex(ind)}
