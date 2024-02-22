@@ -12,7 +12,7 @@ const useGetDocList = () => {
   //   });
   // }, []);
 
-  const userId = localStorage.getItem('userId');
+  const userId = sessionStorage.getItem('userId');
 
   useEffect(() => {
     const fetchDocList = async () => {

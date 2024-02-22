@@ -9,7 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import full_logo_image from '@assets/images/logoBlack.svg';
-import { Avatar, Badge, Menu, MenuItem, Tooltip } from '@mui/material';
+import { Alert, Avatar, Badge, Menu, MenuItem, Tooltip } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Bell } from '@phosphor-icons/react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -56,9 +56,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function Header() {
+export default function Header({ onSearchChange }) {
 
-  const currentUser = localStorage.getItem('userName')
+  const currentUser = sessionStorage.getItem('userName')
 
   const navigate = useNavigate();
 
@@ -73,11 +73,11 @@ export default function Header() {
   };
 
   const handleLogOut = () => {
-    localStorage.clear()
+    sessionStorage.clear()
     navigate('/login')
   }
 
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   return (
     <Box sx={{ flexGrow: 1, }}>
@@ -98,7 +98,10 @@ export default function Header() {
             src={full_logo_image}
           />
           <Box sx={{ marginInline: 'auto' }}>
-            <Search>
+            <Search onChange={(e) => {
+              const value = e.target.value;
+              onSearchChange(value);
+            }}>
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
@@ -151,7 +154,7 @@ export default function Header() {
                 </Menu>
               </Box>
             </Box>
-            <Box>
+            {/* <Box>
               <IconButton
                 size="large"
                 aria-label="show 17 new notifications"
@@ -161,7 +164,7 @@ export default function Header() {
                   <Bell color="black" size={'30px'} />
                 </Badge>
               </IconButton>
-            </Box>
+            </Box> */}
           </Box>
         </Toolbar >
       </AppBar >

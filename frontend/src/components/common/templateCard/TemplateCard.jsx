@@ -13,7 +13,7 @@ const TemplateCard = () => {
   const [isLoading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const userId = localStorage.getItem('userId');
+  const userId = sessionStorage.getItem('userId');
 
   // const handleClick = (e) => {
   //   if (isLoading) return e.stopPropagation();

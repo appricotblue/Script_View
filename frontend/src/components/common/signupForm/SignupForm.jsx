@@ -82,8 +82,15 @@ const SignupForm = () => {
         if (response.status === 201) {
           const userId = response.data.newUser._id;
           const userName = response.data.newUser.firstname
-          localStorage.setItem('userId', userId);
-          localStorage.setItem('userName', userName)
+          setSignUpCreds({
+            firstname: '',
+            lastname: '',
+            email: '',
+            password: '',
+            confirmPass: '',
+          });
+          sessionStorage.setItem('userId', userId);
+          sessionStorage.setItem('userName', userName)
           dispatch(setLogin(true));
           Swal.fire({
             icon: 'success',
@@ -171,7 +178,7 @@ const SignupForm = () => {
         type="submit"
         size="extra-large"
         disableRipple
-        sx={{ mt: { xs: '1.5rem', lg: '3.5rem' } }}
+        sx={{ mt: { xs: '1.5rem', lg: '1.5rem' } }}
       >
         Sign Up
       </GradientBtn>

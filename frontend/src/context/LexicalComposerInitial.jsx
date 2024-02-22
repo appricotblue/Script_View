@@ -18,6 +18,7 @@ import FlashcutNode from '@/nodes/FlashCutNode';
 import CutbackNode from '@/nodes/CutBackNode';
 import IntercutNode from '@/nodes/InterCutNode';
 import ParentheticalMainNode from '@/nodes/ParanthticalMain';
+import FlashbackNode from '@/nodes/FlashBackNode';
 
 const LexicalComposerProvider = ({ children }) => {
   const editorState = useLoaderData().state;
@@ -40,7 +41,8 @@ const LexicalComposerProvider = ({ children }) => {
       FlashcutNode,
       CutbackNode,
       IntercutNode,
-      ParentheticalMainNode
+      ParentheticalMainNode,
+      FlashbackNode
     ],
     theme: {
       text: {

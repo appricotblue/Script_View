@@ -16,6 +16,8 @@ export class IntercutNode extends DefaultParagraphNode {
     const p = document.createElement('p');
     p.className = config.theme.intercut;
     p.setAttribute('data-placeholder', 'Intercut...');
+    p.style.fontSize = '18px';
+    p.style.fontWeight = 'bold';
     p.append(document.createTextNode('- intercut with -'));
     return p;
   }

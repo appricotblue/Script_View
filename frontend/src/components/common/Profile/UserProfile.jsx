@@ -11,7 +11,7 @@ const UserProfile = () => {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
-    const isadmin = localStorage.getItem("Admin")
+    const isadmin = sessionStorage.getItem("Admin")
 
     const { userId } = useParams()
 

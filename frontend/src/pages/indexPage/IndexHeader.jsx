@@ -1,12 +1,13 @@
 import { useTitle } from '@/context/OnelineTitleContext';
 import { ScriptSocketContext } from '@/context/ScriptSocketContext';
 import { PRINT_COMMAND } from '@/plugins/PrintPlugin';
+import { setCharacters } from '@/store/slices/scriptSlice';
 import { GradientBtn, InlineEditable } from '@common';
 import { AppBar, Box, Button, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material';
 import { CaretDown, CaretLeft, Keyboard, List as ListIcon } from '@phosphor-icons/react';
 import AddCharacterModal from '@script/addCharacterModal/AddCharacterModal';
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLoaderData, useParams } from 'react-router-dom';
 
 const IndexHeader = ({ onDownload, onTitleChange, titleValue, setTableModalOpen }) => {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -41,16 +42,16 @@ const IndexHeader = ({ onDownload, onTitleChange, titleValue, setTableModalOpen 
 
     const { oneLineTitle, setTitleName } = useTitle()
 
-    // const onInputChange = (e) => {
-    //     const oneLineTitle = e.target.value
-    //     setTitleValue(oneLineTitle)
-    //     setTitleName(oneLineTitle)
-    // }
-
     const onInputChange = (e) => {
-        const newTitle = e.target.value;
-        onTitleChange(newTitle);
-    };
+        const oneLineTitle = e.target.value
+        // setTitleValue(oneLineTitle)
+        setTitleName(oneLineTitle)
+    }
+
+    // const onInputChange = (e) => {
+    //     const newTitle = e.target.value;
+    //     onTitleChange(newTitle);
+    // };
 
     useEffect(() => {
         // console.log(oneLineTitle);
@@ -97,12 +98,12 @@ const IndexHeader = ({ onDownload, onTitleChange, titleValue, setTableModalOpen 
                                     Go to Script
                                 </Button>
                             </Link>
-                            <Button sx={{padding:0, margin:0}}><AddCharacterModal socket={socket} id={id} /></Button>
+                            <Button sx={{ padding: 0, margin: 0 }}><AddCharacterModal socket={socket} id={id} /></Button>
                         </Stack>
                         <InlineEditable
                             onBlur={onTitleBlur}
                             onChange={onInputChange}
-                            value={titleValue}
+                            value={oneLineTitle}
                         />
                         <Stack direction="row" gap="0.94rem">
                             <GradientBtn

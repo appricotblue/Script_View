@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import IndexHeader from './IndexHeader';
 import './indexTableDesign.css';
 import { PlusCircle } from '@phosphor-icons/react';
 import { Autocomplete, Box, Modal, TextField } from '@mui/material';
@@ -7,13 +6,12 @@ import AutoCompleteTextArea from './components/AutoCompleteTextArea';
 import axios from 'axios';
 import { VITE_BASE_URL } from '@/constants';
 import { useParams } from 'react-router-dom';
-import { useTitle } from '@/context/OnelineTitleContext';
 import OneLinePrintTable from './OneLinePrintTable';
 import { GradientBtn } from '@common';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useTransliteration } from '@hooks';
-import autoTable from 'jspdf-autotable';
+import { useTitle } from '@/context/OnelineTitleContext';
 
 const style = {
   position: 'absolute',
@@ -29,12 +27,7 @@ const style = {
   overflowY: 'scroll',
 };
 
-const IndexTable = ({
-  titleValue,
-  onTitleChange,
-  tableModalOpen,
-  setTableModalOpen,
-}) => {
+const IndexTable = ({ tableModalOpen, setTableModalOpen }) => {
   const [tableData, setTableData] = useState([
     {
       scene: '',
@@ -63,14 +56,16 @@ const IndexTable = ({
     'Day/Night/Int/Ext',
   ];
 
-  // const locationList = ['location 1', 'location 2', 'location 3', 'location 4'];
   const locationList = [];
+
+  const { oneLineTitle, setTitleName } = useTitle();
 
   const [hoveredRowIndex, setHoveredRowIndex] = useState(null);
   const [selectedItemIndex, setSelectedItemIndex] = useState(0);
   const pageComponentRef = useRef();
   const transliterate = useTransliteration();
   const [freeSoloSugg, setfreeSoloSugg] = useState([]);
+  const [freeSoloSuggLocation, setfreeSoloSuggLocation] = useState([]);
 
   const handleRemoveRow = (index) => {
     const updatedTableData = tableData.filter((_, i) => i !== index);
@@ -142,7 +137,7 @@ const IndexTable = ({
         imageWidth * ratio,
         imageHeight * ratio,
       );
-      pdf.save(`${titleValue}`);
+      pdf.save(`${oneLineTitle}`);
     });
   };
 
@@ -168,7 +163,7 @@ const IndexTable = ({
       );
       const { data } = response;
       // console.log("response", response.data.oneLiners[0].title);
-      onTitleChange(response.data.oneLiners[0].title);
+      setTitleName(response.data.oneLiners[0].title);
       setTableData(response.data.oneLiners[0].oneLiners);
     } catch (error) {
       console.error('Error while fetching data:', error);
@@ -176,13 +171,12 @@ const IndexTable = ({
   };
 
   const handleSubmit = async () => {
-    // console.log("abc");
-    if (titleValue.trim() !== '') {
+    if (oneLineTitle.trim() !== '') {
       try {
         const response = await axios.post(
           `${VITE_BASE_URL}/api/scripts/storeOneLineData`,
           {
-            title: titleValue,
+            title: oneLineTitle,
             scriptId: id,
             oneLiners: tableData,
           },
@@ -216,7 +210,7 @@ const IndexTable = ({
     setTimeout(() => {
       handleSubmit();
     }, 500);
-  }, [titleValue]);
+  }, [oneLineTitle]);
 
   const intExtSave = (value, index) => {
     const tableCurrentValue = [...tableData];
@@ -231,30 +225,34 @@ const IndexTable = ({
       tableCurrentValue[index][nm] = characterValues;
       setTableData(tableCurrentValue);
     } else {
-      const locationValues = value;
+      const characterValues = value;
       const tableCurrentValue = [...tableData];
-      tableCurrentValue[index][nm] = locationValues;
+      tableCurrentValue[index][nm] = characterValues;
       setTableData(tableCurrentValue);
     }
-
     handleSubmit();
   };
 
   const handlefreeSoloSugg = async (e, newValue) => {
     if (!characters?.includes(newValue) && newValue.trim() !== '') {
-      // console.log("abc");
-      // Call your translation function here and update options
-      const translatedValue = await transliterate(newValue); // Call your translation function here
-      setfreeSoloSugg(translatedValue);
+      const translatedValue = await transliterate(newValue);
 
-      // Update the options
-      // setfreeSoloSugg((prevOptions) => [...prevOptions, translatedValue]);
+      setfreeSoloSugg(translatedValue);
     } else if (newValue.trim() === '') {
       setfreeSoloSugg([]);
     }
   };
 
-  console.log('freeSoloSugg', freeSoloSugg);
+  const handlefreeSoloSuggLocation = async (e, newValue) => {
+    if (!locationList?.includes(newValue) && newValue.trim() !== '') {
+      const translatedValue = await transliterate(newValue);
+      setfreeSoloSuggLocation(translatedValue);
+    } else if (newValue.trim() === '') {
+      setfreeSoloSuggLocation([]);
+    }
+  };
+
+  console.log(tableData);
 
   return (
     <>
@@ -266,11 +264,14 @@ const IndexTable = ({
       >
         <Box sx={style}>
           <div ref={pageComponentRef}>
-            <OneLinePrintTable tableData={tableData} titleValue={titleValue} />
+            <OneLinePrintTable
+              tableData={tableData}
+              titleValue={oneLineTitle}
+            />
           </div>
 
           <div className="download-btn">
-            {titleValue.trim() !== '' ? (
+            {oneLineTitle.trim() !== '' ? (
               <GradientBtn
                 size="large"
                 sx={{
@@ -323,34 +324,21 @@ const IndexTable = ({
                     />
                   </td>
                   <td>
-                    {/* <AutoCompleteTextArea
-                      handleSubmit={handleSubmit}
-                      name="location"
-                      specifiedFieldName="location"
-                      index={ind}
-                      tableData={tableData}
-                      setTableData={setTableData}
-                      selectedItemIndex={selectedItemIndex}
-                      setSelectedItemIndex={setSelectedItemIndex}
-                      location
-                    /> */}
                     <Autocomplete
                       freeSolo
-                      // onFocus={fetchCharacters}
-                      // multiple
                       id="tags-outlined"
-                      options={freeSoloSugg.length > 0 ? freeSoloSugg : []}
+                      options={
+                        freeSoloSuggLocation?.length > 0
+                          ? freeSoloSuggLocation
+                          : []
+                      }
                       onBlur={handleSubmit}
                       filterSelectedOptions
-                      value={
-                        item.location || ''
-                        // ? item.location.split(',').map((word) => word.trim())
-                        // : []
-                      }
+                      value={item.location || ''}
                       onChange={(e, newValue) =>
                         characterSave(newValue, ind, 'location')
                       }
-                      onInputChange={handlefreeSoloSugg}
+                      onInputChange={handlefreeSoloSuggLocation}
                       filterOptions={(x) => x}
                       renderInput={(params) => (
                         <TextField
@@ -421,9 +409,9 @@ const IndexTable = ({
                       multiple
                       id="tags-outlined"
                       options={
-                        freeSoloSugg.length > 0
-                          ? characters.concat(freeSoloSugg)
-                          : characters
+                        characters
+                          ? characters?.concat(freeSoloSugg)
+                          : freeSoloSugg
                       }
                       onBlur={handleSubmit}
                       filterSelectedOptions

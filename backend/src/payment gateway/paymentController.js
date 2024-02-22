@@ -1,6 +1,9 @@
 const crypto = require('crypto');
 const axios = require('axios');
-const { merchant_id, salt_key } = require('../../secret');
+// const { merchant_id, salt_key } = require('../../secret');
+require("dotenv").config();
+
+const { merchant_id, salt_key } = process.env;
 
 const newPayment = async (req, res) => {
     try {

@@ -17,9 +17,6 @@ const OneLineSchema = mongoose.model("oneline", {
       scene: {
         type: String,
       },
-      time: {
-        type: String,
-      },
       IntOrExt: {
         type: String,
       },

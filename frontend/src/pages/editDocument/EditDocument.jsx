@@ -10,18 +10,29 @@ import useOnlineStatus from '@/utils/hooks/useOnlineStatus';
 import PageBreakPlugin from '@/plugins/PageBreakPlugin';
 import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import { useZoom } from '@/context/ZoomContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const EditDocument = () => {
-  
+
   const isOnline = useOnlineStatus();
   const { enlargeValue, showSidebars } = useZoom();
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    console.log(userId);
+    if (!userId) {
+      return navigate('/login')
+    }
+  }, [])
 
   if (isOnline)
     return (
       <Stack display="flex" direction="row" width="100%" maxHeight="100vh">
         {showSidebars && <ScriptSidebar />}
-        <Box sx={{ transform: `scale(${enlargeValue / 100})`, width:'100%',}}><TextEditor/></Box>
+        <Box sx={{ transform: `scale(${enlargeValue / 100})`, width: '100%', }}><TextEditor /></Box>
         {/* <TextEditor/> */}
         <AutoSavePlugin />
         <TextSuggestionPlugin />

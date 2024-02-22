@@ -16,6 +16,8 @@ export class TransitionNode extends DefaultParagraphNode {
     const p = document.createElement('p');
     p.className = config.theme.transition;
     p.setAttribute('data-placeholder', 'Transition...');
+    p.style.fontSize = '18px';
+    p.style.fontWeight = 'bold';
     p.append(document.createTextNode('cut to'));
     return p;
   }

@@ -14,6 +14,7 @@ import PricingPlans from '@common/pricing plans/PricingPlans';
 import SubscriptionExpired from '@common/Subscription Expiry Page/SubscriptionExpired';
 import UserProfile from '@common/Profile/UserProfile';
 import DisplayPage from '@/components/Admin/DisplayPage';
+import Homepage from './Homepage';
 
 const loadScriptData = async ({ params: { id } }) => {
   try {
@@ -56,10 +57,11 @@ const appRouter = createBrowserRouter([
         path: '/',
         element: (
           <>
-            <Header />
+            {/* <Header />
             <WithHeaderMargin>
               <Home />
-            </WithHeaderMargin>
+            </WithHeaderMargin> */}
+            <Homepage/>
           </>
         ),
       },

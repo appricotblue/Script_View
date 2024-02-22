@@ -1,8 +1,6 @@
 import { ElementNode } from 'lexical';
-import { $createDialogueNode, $isDialogueNode } from './DialogueNode';
-import { $createMentionNode } from './MentionNode';
-import { $isDialogueContainerNode } from './DialogueContainerNode';
 
+import { $createDialogueNode, $isDialogueNode } from './DialogueNode';
 export const $createParentheticalNode = () => new ParentheticalNode();
 export const $isParentheticalNode = (node) => node instanceof ParentheticalNode;
 
@@ -13,15 +11,8 @@ export class ParentheticalNode extends ElementNode {
 
   createDOM(config) {
     const div = document.createElement('div');
-    const placeholder = this.isDialogueParent() ? 'Enter character' : 'Enter parenthetical...';
-
-    div.className = this.isDialogueParent() ? config.theme.parenthetical : config.theme.dialogue;
-    div.setAttribute('data-placeholder', placeholder);
-
-    // if (!this.isDialogueParent()) {
-    //   div.style.fontStyle = 'italic';
-    // }
-    
+    div.className = config.theme.parenthetical;
+    div.setAttribute('data-placeholder', 'Character Name');
     return div;
   }
 
@@ -32,11 +23,9 @@ export class ParentheticalNode extends ElementNode {
   static clone(node) {
     return new ParentheticalNode(node.__key);
   }
-
   static getType() {
     return 'parenthetical';
   }
-
   static importJSON() {
     return new ParentheticalNode();
   }
@@ -45,17 +34,14 @@ export class ParentheticalNode extends ElementNode {
     return true;
   }
 
-  isDialogueParent() {
-    const dialogueContainer = this.getParent();
-    return dialogueContainer && $isDialogueContainerNode(dialogueContainer);
-  }
-
+  /** inserts dialogueNode if doesn't exist. select next if does. */
   insertNewAfter(_, restoreSelection) {
     if (!$isDialogueNode(this.getNextSibling())) {
       const dialogue = $createDialogueNode();
       this.insertAfter(dialogue, restoreSelection);
       return dialogue;
     }
+
     return this.selectNext();
   }
 

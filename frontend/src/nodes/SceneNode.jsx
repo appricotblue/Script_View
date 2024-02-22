@@ -4,6 +4,7 @@ import DefaultActionNode from './DefaultActionNode';
 import DefaultParagraphNode from './DefaultParagraphNode';
 
 export const $createSceneNode = () => $applyNodeReplacement(new SceneNode());
+
 export const $isSceneNode = (node) => node instanceof SceneNode;
 
 export class SceneNode extends DefaultParagraphNode {
@@ -25,6 +26,7 @@ export class SceneNode extends DefaultParagraphNode {
   static clone(node) {
     return new SceneNode(node.__key);
   }
+  
   static getType() {
     return 'scene';
   }
