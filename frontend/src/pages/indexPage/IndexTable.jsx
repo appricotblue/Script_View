@@ -206,12 +206,6 @@ const IndexTable = ({ tableModalOpen, setTableModalOpen }) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      handleSubmit();
-    }, 500);
-  }, [oneLineTitle]);
-
   const intExtSave = (value, index) => {
     const tableCurrentValue = [...tableData];
     tableCurrentValue[index]['IntOrExt'] = value.toString();

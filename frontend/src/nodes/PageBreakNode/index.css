@@ -1,63 +1,17 @@
 [type='page-break'] {
-  position: absolute;
+  position: relative;
   display: block;
-  top: 938px;
   width: 100%;
-  margin-block: 10px;
   overflow: unset;
   /* margin-left: calc(var(--editor-input-padding, 28px) * -1);
   margin-top: var(--editor-input-padding, 28px);
   margin-bottom: var(--editor-input-padding, 28px); */
   margin: 3rem 0;
-  /* top: 938px; */
   border: none;
   border-top: 1px dashed;
   border-bottom: 1px dashed;
   background-color: #eeeeee;
 }
-
-/* [type='page-break']:nth-child(odd) {
-    
-} */
-
-/* Selects elements with even index */
-/* Styles for even-indexed elements */
-/* [type='page-break']:nth-child(even) {
-} */
-
-[type='page-break']:nth-of-type(2) {
-  top: calc(938px * 2);
-}
-[type='page-break']:nth-of-type(3) {
-  top: calc(938px * 3);
-}
-[type='page-break']:nth-of-type(4) {
-  top: calc(938px * 4);
-}
-[type='page-break']:nth-of-type(5) {
-  top: calc(938px * 5);
-}
-[type='page-break']:nth-of-type(6) {
-  top: calc(938px * 6);
-}
-[type='page-break']:nth-of-type(7) {
-  top: calc(938px * 7);
-}
-[type='page-break']:nth-of-type(8) {
-  top: calc(938px * 8);
-}
-[type='page-break']:nth-of-type(9) {
-  top: calc(938px * 9);
-}
-[type='page-break']:nth-of-type(10) {
-  top: calc(938px * 10);
-}
-/* [type='page-break']:nth-of-type(5) {
-  top: calc(938px * 5);
-}
-[type='page-break']:nth-of-type(5) {
-  top: calc(938px * 5);
-} */
 
 [type='page-break']::before {
   content: '';
