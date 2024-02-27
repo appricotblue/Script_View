@@ -22,4 +22,11 @@ module.exports = {
       await doc.updateOne({ characters });
     }
   },
+  updateLocationList: async ({ locations, id }) => {
+    if (!Array.isArray(locations)) throw Error("Invalid payload");
+    const doc = await ScriptModel.findOne({ _id: id });
+    if (doc) {
+      await doc.updateOne({ locations });
+    }
+  },
 };

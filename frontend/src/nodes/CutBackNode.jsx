@@ -16,9 +16,12 @@ export class CutbackNode extends DefaultParagraphNode {
     const p = document.createElement('p');
     p.className = config.theme.cutback;
     p.setAttribute('data-placeholder', 'Cutback...');
+    p.style.fontSize = '18px';
+    p.style.fontWeight = 'bold';
     p.append(document.createTextNode('- cutback to -'));
     return p;
   }
+  
   updateDOM() {
     return false;
   }

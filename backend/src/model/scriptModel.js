@@ -13,6 +13,7 @@ const scriptSchema = new Schema(
       ref: "user",
       required: "Requires Author",
     },
+    locations: { type: Array, default: [] },
     editorState: { type: String, default: null },
   },
   { timestamps: true },

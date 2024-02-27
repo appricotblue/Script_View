@@ -9,6 +9,7 @@ const {
   addOneLine,
   getOneLinesByScriptId,
   getCharacters,
+  getLocations,
 } = require("../controllers/scriptControllers");
 const checkScriptSubscription = require("../middlewares/checkScriptSubscription");
 const checkSubscription = require("../middlewares/checkSubscription");
@@ -36,5 +37,8 @@ router.get("/getOnelines/:id", getOneLinesByScriptId);
 
 // fetch characters
 router.get("/getCharacters/:scriptId", getCharacters);
+
+//fetch locations
+router.get("/getLocations/:scriptId", getLocations);
 
 module.exports = router;

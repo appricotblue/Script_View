@@ -73,11 +73,11 @@ function PageBreakComponent({ nodeKey }) {
         onDelete,
         COMMAND_PRIORITY_LOW,
       ),
-      editor.registerCommand(
-        KEY_BACKSPACE_COMMAND,
-        onDelete,
-        COMMAND_PRIORITY_LOW,
-      ),
+      // editor.registerCommand(
+      //   KEY_BACKSPACE_COMMAND,
+      //   onDelete,
+      //   COMMAND_PRIORITY_LOW,
+      // ),
     );
   }, [clearSelection, editor, isSelected, nodeKey, onDelete, setSelected]);
 
@@ -110,7 +110,6 @@ export class PageBreakNode extends DecoratorNode {
       figure: (domNode) => {
         const tp = domNode.getAttribute('type');
         if (tp !== this.getType()) return null;
-
         return {
           conversion: convertPageBreakElement,
           priority: COMMAND_PRIORITY_HIGH,
@@ -141,19 +140,20 @@ export class PageBreakNode extends DecoratorNode {
       if (selection && selection.isCollapsed()) {
         const nodeBefore = selection.getFirstNode();
         const nodeAfter = selection.getLastNode();
-
-        if (nodeBefore && nodeBefore.classList.contains('page-break')) {
+  
+        if (nodeBefore && nodeBefore.classList.contains('page-break') && !nodeBefore.hasContentBeforeSelection()) {
           event.preventDefault();
           return;
         }
-
-        if (nodeAfter && nodeAfter.classList.contains('page-break')) {
+  
+        if (nodeAfter && nodeAfter.classList.contains('page-break') && !nodeAfter.hasContentAfterSelection()) {
           event.preventDefault();
           return;
         }
       }
     }
   }
+  
 
   getTextContent() {
     return '\n';

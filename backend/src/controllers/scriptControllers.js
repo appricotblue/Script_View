@@ -257,4 +257,26 @@ module.exports = {
       res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  getLocations: async (req, res) => {
+    try {
+      const { scriptId } = req.params;
+
+      const script = await ScriptModel.findById(scriptId);
+
+      if (!script) {
+        return res.status(404).json({ error: "script not found" });
+      } else {
+        const { locations } = script;
+        if (locations.length < 1) {
+          res.json("No locations found, add from Script page");
+        } else {
+          res.json({ locations });
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
 };

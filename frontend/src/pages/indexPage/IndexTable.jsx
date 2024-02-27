@@ -437,52 +437,54 @@ const IndexTable = ({ tableModalOpen, setTableModalOpen }) => {
                       )}
                     />
                   </td>
-                  <div
-                    className="button-table"
-                    onMouseEnter={() => setHoveredRowIndex(ind)}
-                    onMouseLeave={() => setHoveredRowIndex(null)}
-                  >
-                    <PlusCircle size={23} />
-                    {hoveredRowIndex === ind && (
-                      <div className="modal-tableInsert">
-                        <div
-                          className="modal-table-action"
-                          onClick={() => {
-                            handleSubmit();
-                            handleInsertRowBelow(ind);
-                          }}
-                        >
-                          Insert Below
+                  <td style={{ padding: '0', border: 'none' }}>
+                    <div
+                      className="button-table"
+                      onMouseEnter={() => setHoveredRowIndex(ind)}
+                      onMouseLeave={() => setHoveredRowIndex(null)}
+                    >
+                      <PlusCircle size={23} />
+                      {hoveredRowIndex === ind && (
+                        <div className="modal-tableInsert">
+                          <div
+                            className="modal-table-action"
+                            onClick={() => {
+                              handleSubmit();
+                              handleInsertRowBelow(ind);
+                            }}
+                          >
+                            Insert Below
+                          </div>
+                          <div
+                            className="modal-table-action"
+                            onClick={() => {
+                              handleSubmit();
+                              handleInsertRowAbove(ind);
+                            }}
+                          >
+                            Insert Above
+                          </div>
+                          <div
+                            className="modal-table-action"
+                            onClick={() => {
+                              handleSubmit();
+                              handleResetRow(ind);
+                            }}
+                          >
+                            Reset Datas
+                          </div>
+                          <div
+                            className="modal-table-action"
+                            onClick={() => {
+                              handleRemoveRow(ind);
+                            }}
+                          >
+                            Remove
+                          </div>
                         </div>
-                        <div
-                          className="modal-table-action"
-                          onClick={() => {
-                            handleSubmit();
-                            handleInsertRowAbove(ind);
-                          }}
-                        >
-                          Insert Above
-                        </div>
-                        <div
-                          className="modal-table-action"
-                          onClick={() => {
-                            handleSubmit();
-                            handleResetRow(ind);
-                          }}
-                        >
-                          Reset Datas
-                        </div>
-                        <div
-                          className="modal-table-action"
-                          onClick={() => {
-                            handleRemoveRow(ind);
-                          }}
-                        >
-                          Remove
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

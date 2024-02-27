@@ -185,6 +185,8 @@ const TextArea = ({ searchText }) => {
   useEffect(() => {
     // console.log(searchText);
     const textareaElement = document.querySelector(`.${Style['editor-inner']}`);
+    console.log(editor.getDecorators());
+
     if (textareaElement) {
       const observer = new ResizeObserver((entries) => {
         for (let entry of entries) {
@@ -195,14 +197,14 @@ const TextArea = ({ searchText }) => {
           if (pageCount > prevHeightRef.current) {
             prevHeightRef.current = pageCount; // Update the previous height reference
             setPageNum(pageCount);
-            // console.log('pageCount', pageCount);
             setCount(pageCount);
             // Trigger function when a new A4 page is filled with text
             editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
-            // editor.update(() => {
-            //   $getRoot().__size(A4_HEIGHT*2)
+            // editor.toJSON((data) => {
+            //   console.log(data.stringify);
+            //   // $getRoot().__size(A4_HEIGHT*2)
             // })
-            // textareaElement.Style
+            textareaElement.Style
           } else if (pageCount < prevHeightRef.current) {
             // Reset the previous height reference after clearing a page break
             editor.dispatchCommand(REMOVE_PAGE_BREAK, undefined);

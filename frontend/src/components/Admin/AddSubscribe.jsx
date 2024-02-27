@@ -107,6 +107,7 @@ const AddSubscribe = () => {
                     title: 'Please fill in all required fields.',
                     showConfirmButton: false,
                     timer: 1000,
+
                 });
                 return;
             }

@@ -240,3 +240,7 @@ html {
 .MuiAutocomplete-endAdornment {
   display: none !important;
 }
+
+.swal2-container {
+  z-index: 999999;
+}

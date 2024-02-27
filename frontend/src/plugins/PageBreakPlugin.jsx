@@ -55,7 +55,6 @@ export default function PageBreakPlugin() {
           const filtered = root
             .getChildren()
             .filter((node) => $isPageBreakNode(node));
-          console.log('root', filtered);
           filtered.forEach((node, index) => {
             setPageNum(filtered.length)
             editor
@@ -122,7 +121,7 @@ function $insertNodeToNearestRoot(node) {
     } else if ($isRootOrShadowRoot(focusNode)) {
       const focusChild = focusNode.getChildAtIndex(focusOffset);
       if (focusChild == null) {
-        focusNode.append(node);
+        focusNode.insertBefore(node);
       } else {
         focusChild.insertBefore(node);
       }
@@ -149,10 +148,10 @@ function $insertNodeToNearestRoot(node) {
   } else {
     if ($isNodeSelection(selection) || DEPRECATED_$isGridSelection(selection)) {
       const nodes = selection.getNodes();
-      nodes[nodes.length - 1].getTopLevelElementOrThrow().insertAfter(node);
+      nodes[nodes.length - 1].getTopLevelElementOrThrow().insertBefore(node);
     } else {
       const root = $getRoot();
-      root.append(node);
+      root.insertBefore(node);  // Change from append to insertBefore
     }
     const paragraphNode = $createParagraphNode();
     node.insertAfter(paragraphNode);

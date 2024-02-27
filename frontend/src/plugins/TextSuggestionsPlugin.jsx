@@ -75,9 +75,9 @@ function matchInputInSlugline(text) {
   return null;
 }
 
-function matchInputInSubheader(text) {
-  console.log(text);
-}
+// function matchInputInSubheader(text) {
+//   console.log(text);
+// }
 
 /**
  * checks and returns the result of type-ahead trigger
@@ -164,10 +164,6 @@ function searchSceneSuggestion(input) {
   });
 }
 
-function handleSubheader(input) {
-  console.log(input);
-}
-
 /**
  * returns a list of suggestions depending on nodeType.
  * Normal text and suggestions for SlugLine nodes are implemented
@@ -202,18 +198,51 @@ function useSuggestionGenService(inputString, nodeType) {
   // };
 
   const searchCharacter = async (inputString) => {
-    const filtered = characters.filter((value) => value.includes(inputString));
+    const inputLowerCase = inputString.toLowerCase();
+
+    const filtered = characters.filter((value) => value.toLowerCase().includes(inputLowerCase));
     if (filtered.length > 0) {
       return setResults(filtered);
     }
+
     const res = await transliterate(inputString);
-    const transliteratedFiltered = characters.filter((value) => value.includes(res[0]));
+    const transliteratedFiltered = characters.filter((value) => value.toLowerCase().includes(res[0].toLowerCase()));
+
     if (transliteratedFiltered?.length < 1) {
-      const result = transliterateDebounced(inputString)
+      const result = transliterateDebounced(inputString);
       setResults(Array.isArray(result) ? result : []);
+    } else {
+      setResults(Array.isArray(transliteratedFiltered) ? transliteratedFiltered : []);
     }
-    else {
-      setResults(transliteratedFiltered);
+  };
+
+
+  /**
+ * searches in subheading suggestion list
+ * for matching results
+ *
+ */
+
+  const SUBHEADING_SUGGESTIONS = ['Heading 1', 'Heading 2', "ഫ്ലാഷ്ക്കട്"];
+
+  const searchSubheadingSuggestion = async (input) => {
+    const inputLowerCase = input.toLowerCase();
+
+    const filtered = SUBHEADING_SUGGESTIONS.filter((value) => value.toLowerCase().includes(inputLowerCase));
+    if (filtered.length > 0) {
+      setResults(filtered);
+      return;
+    }
+
+    const res = await transliterate(input);
+
+    const translatedFiltered = SUBHEADING_SUGGESTIONS?.filter((value) => value.toLowerCase().includes(res[0].toLowerCase()));
+
+    if (translatedFiltered?.length < 1) {
+      const result = transliterateDebounced(input);
+      setResults(Array.isArray(result) ? result : []);
+    } else {
+      setResults(Array.isArray(translatedFiltered) ? translatedFiltered : []);
     }
   };
 
@@ -230,11 +259,11 @@ function useSuggestionGenService(inputString, nodeType) {
       case NODE_TYPES.SCENE:
         setResults(searchSceneSuggestion(inputString));
         break;
+      case NODE_TYPES.SUBHEADER:
+        searchSubheadingSuggestion(inputString);
+        break;
       case NODE_TYPES.PARENTHETICAL:
         searchCharacter(inputString);
-        break;
-      case NODE_TYPES.SUBHEADER:
-        handleSubheader(inputString);
         break;
       default:
         transliterateDebounced(inputString);
@@ -294,7 +323,7 @@ export default function TextSuggestionPlugin() {
   }, [suggestions]);
 
   const options = useMemo(
-    () => results.map((result) => new WordSuggestionAhead(result)),
+    () => results?.map((result) => new WordSuggestionAhead(result)),
     [results],
   );
 
@@ -328,8 +357,9 @@ export default function TextSuggestionPlugin() {
         } else if ($isParentheticalNode(anchorParent)) {
           result = matchCommonText(text);
           setNodeType(NODE_TYPES.PARENTHETICAL);
-        } else if ($isSubHeaderNode(anchorParent)) {
-          result = matchInputInSubheader(text)
+        } else if ($isSubHeaderNode(anchorParent)) { // Check if it's a Subheader node
+          result = matchCommonText(text);
+          setNodeType(NODE_TYPES.SUBHEADER);
         } else {
           result = matchCommonText(text);
           setNodeType(NODE_TYPES.DEFAULT);

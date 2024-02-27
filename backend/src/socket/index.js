@@ -3,6 +3,7 @@ const {
   saveScript,
   editScriptTitle,
   updateCharacterList,
+  updateLocationList,
 } = require("../helpers/socketHelpers");
 /**
  * This function handles all operations related to web socket connection
@@ -25,7 +26,7 @@ module.exports = function (appServer) {
         io.emit("SaveStateError", { message: err.message, stack: err.stack });
       }
     });
-    
+
     // TODO - You may have to create a route for this one, to rename it
     socket.on("edit-title", async (data) => {
       try {
@@ -37,6 +38,15 @@ module.exports = function (appServer) {
     socket.on("save-character", async (data, cb) => {
       try {
         await updateCharacterList(data);
+      } catch (err) {
+        io.emit("editTitleError", { message: err.message, stack: err.stack });
+      } finally {
+        cb("got it");
+      }
+    });
+    socket.on("save-location", async (data, cb) => {
+      try {
+        await updateLocationList(data);
       } catch (err) {
         io.emit("editTitleError", { message: err.message, stack: err.stack });
       } finally {
