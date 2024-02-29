@@ -163,6 +163,7 @@ import Style from './TextArea.module.css';
 import { useZoom } from '@/context/ZoomContext';
 import { usePageNumber } from '@/context/PageNumberContext';
 import { $getRoot } from 'lexical';
+import { ArrowBack } from '@mui/icons-material';
 
 const A4_HEIGHT = 938; // Height of an A4 page in pixels
 
@@ -199,15 +200,14 @@ const TextArea = ({ searchText }) => {
             setPageNum(pageCount);
             setCount(pageCount);
             // Trigger function when a new A4 page is filled with text
-            editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
+            // editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
             // editor.toJSON((data) => {
             //   console.log(data.stringify);
             //   // $getRoot().__size(A4_HEIGHT*2)
             // })
-            textareaElement.Style
           } else if (pageCount < prevHeightRef.current) {
             // Reset the previous height reference after clearing a page break
-            editor.dispatchCommand(REMOVE_PAGE_BREAK, undefined);
+            // editor.dispatchCommand(REMOVE_PAGE_BREAK, undefined);
             prevHeightRef.current = pageCount;
             setCount(pageCount);
             setPageNum(pageCount);
@@ -235,10 +235,12 @@ const TextArea = ({ searchText }) => {
 
   const CustomContentEditable = useMemo(() => {
     return (
-      <ContentEditable
-        className={Style['editor-input']}
-        id="#contentEditable"
-      />
+      <>
+        <ContentEditable
+          className={Style['editor-input']}
+          id="#contentEditable"
+        />
+      </>
     );
   }, []);
 
@@ -250,6 +252,10 @@ const TextArea = ({ searchText }) => {
   const PlaceHolder = useMemo(() => {
     return <Box className={Style['editor-placeholder']}>Start Typing...</Box>;
   }, []);
+
+  const PageBreak = () => (
+    <div style={{ width: '100%', borderTop: '1px dashed #000', marginTop: '20px', marginBottom: '20px' }} />
+  );
 
   const currentwidth = zoomLevel + 793;
 
@@ -277,12 +283,36 @@ const TextArea = ({ searchText }) => {
         position="relative"
         className={Style['editor-inner']}
       >
+
         {/* Content Editable */}
         <RichTextPlugin
           contentEditable={CustomContentEditable}
           placeholder={PlaceHolder}
           ErrorBoundary={ScriptErrorBoundary}
         ></RichTextPlugin>
+
+        {Array.from({ length: pageNumber - 1 }).map((_, index) => (
+          <div
+            key={index} style={{
+              position: 'absolute',
+              top: `${965 * (index + 1)}px`,
+              left: '-40px',
+              display: 'flex',
+              width: '780px',
+              justifyContent: 'space-between',
+              // borderBottom: '1px dashed #000',
+            }}
+          >
+            <div style={{ display: 'flex', gap: '5px', }}>
+              {/* <p style={{ borderBottom: '1px dashed #000' }}>Pg</p> */}
+              <strong style={{ textAlign: 'center', borderBottom: '1px dashed #000', width: '41px' }}>{index + 1}/{pageNumber}</strong>
+            </div>
+            <div style={{ borderBottom: '1px dashed #000', width: '41px' }} >
+              <strong style={{ textAlign: 'center', width: '41px' }}>{index + 1}/{pageNumber}</strong>
+
+            </div>
+          </div>
+        ))}
 
         {/* Margin Lines */}
         <Box

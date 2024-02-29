@@ -67,12 +67,14 @@ import MinifyCss from 'minify-css-string';
 import css from '@/pages/editDocument/Editor.css';
 import { VITE_BASE_URL } from '@/constants';
 import { $generateHtmlFromNodes } from '@lexical/html';
+import { useWatermarkContent } from '@/context/WaterMarkContext';
 
 export const PRINT_COMMAND = createCommand('print-command');
 
 const PrintPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const { id } = useParams();
+  const { waterMark } = useWatermarkContent();
 
   useLayoutEffect(() => {
     return editor.registerCommand(
@@ -89,37 +91,6 @@ const PrintPlugin = () => {
 
           // Write the necessary content with print-specific styles
           printWindow.document.write(`
-<<<<<<< HEAD
-            <html>
-              <head>
-                <style>
-                  ${minifiedCss}
-                  @media print {
-                    /* Hide headers and footers */
-                    @page {
-                     height:938px;
-                     width:600px;
-
-                    }
-
-                    body {
-                      margin: 100px 20px;
-                    }
-                    .watermark {
-                      position: fixed;
-                      top: 50%;
-                      right: -70px;
-                      color: rgba(0, 0, 0, 0.5);
-                      font-size: 40px;
-                      transform:translate(0,-50%) rotate(-90deg);
-                    }
-                  }
-                </style>
-              </head>
-              <body>${htmlString}</body>
-              <div class="watermark">Script view </div>
-            </html>
-=======
           <html>
           <head>
             <style>
@@ -133,23 +104,24 @@ const PrintPlugin = () => {
                 }
 
                 body {
-                  margin: 100px 20px;
+                  position: relative;
                 }
                 .watermark {
-                  position: fixed;
-                  top: 50%;
-                  right: -70px;
-                  color: rgba(0, 0, 0, 0.5);
-                  font-size: 40px;
-                  transform:translate(0,-50%) rotate(-90deg);
+                  position:fixed;
+                  top:50%;
+                  left:50%;
+                  transform:translate(-50%,-50%) rotate(-45deg);
+                  font-size:90px;
+                  opacity:0.04;
+                  font-weight:700;
+                  white-space: nowrap;
                 }
               }
             </style>
           </head>
           <body>${htmlString}</body>
-          <div class="watermark">Script view </div>
+          <div class="watermark">${waterMark}</div>
           </html>
->>>>>>> cf69b324130c9b5df9a10db1fcd2371d26534d86
           `);
 
           // Close the document after printing
@@ -161,7 +133,7 @@ const PrintPlugin = () => {
       },
       COMMAND_PRIORITY_NORMAL,
     );
-  }, [editor, id]);
+  }, [editor, id, waterMark]);
 
   return null;
 };

@@ -33,24 +33,7 @@ sup {
   /* height: 25px; */
   margin-bottom: 6px;
 }
-.paragraph:nth-child(33){
-  padding-bottom: 50px;
-}
-.paragraph:nth-child(60){
-   padding-bottom: 50px;
-}
-.paragraph:nth-child(89){
-   padding-bottom: 50px;
-}
-/* .paragraph:nth-child(168){
-   padding-bottom: 50px;
-}
-.paragraph:nth-child(210){
-   padding-bottom: 50px;
-} */
-/* .paragraph:nth-child(42){
-  margin-top: 30px;
-} */
+
 .scene,
 .slugline {
   color: #000;
